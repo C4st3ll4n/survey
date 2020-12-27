@@ -4,10 +4,16 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 void main() {
+  RemoteAuthentication sut;
+  HttpClient httpClient;
+  String url;
+  setUp((){
+    httpClient = HttpClientSpy();
+    url = faker.internet.httpUrl();
+    sut = RemoteAuthentication(httpClient: httpClient, url: url);
+  });
   test('Should call HttpClient with correct values', () async {
-    final httpClient = HttpClientSpy();
-    final url = faker.internet.httpUrl();
-    final sut = RemoteAuthentication(httpClient: httpClient, url: url);
+    
 
     await sut.auth();
 
