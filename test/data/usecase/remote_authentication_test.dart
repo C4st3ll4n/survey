@@ -11,7 +11,7 @@ void main() {
 
     await sut.auth();
 
-    verify(httpClient.request(url: url, method: 'get'));
+    verify(httpClient.request(url: url, method: 'post'));
   });
 }
 
