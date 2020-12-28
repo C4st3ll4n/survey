@@ -6,6 +6,8 @@ import 'package:test/test.dart';
 import 'package:survey/data/usecases/usecases.dart';
 import 'package:survey/domain/usecases/usecases.dart';
 
+class HttpClientSpy extends Mock implements HttpClient {}
+
 void main() {
   RemoteAuthentication sut;
   HttpClient httpClient;
@@ -32,4 +34,3 @@ void main() {
   );
 }
 
-class HttpClientSpy extends Mock implements HttpClient {}
