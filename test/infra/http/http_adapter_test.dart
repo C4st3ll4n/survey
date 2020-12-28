@@ -18,7 +18,7 @@ class HttpAdapter implements HttpClient {
 
   @override
   Future<Map> request({@required String url, @required  String method, Map body}) async {
-    throw UnimplementedError();
+    await client.post(url);
   }
 	
 }
