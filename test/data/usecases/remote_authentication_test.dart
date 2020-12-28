@@ -33,6 +33,17 @@ void main() {
   test(
     'Should call HttpClient with correct values',
     () async {
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenAnswer((_) async {
+        final accessToken = faker.guid.guid();
+        return {"accessToken": accessToken, "name": faker.person.name()};
+      });
+
       await sut.auth(params);
 
       verify(
@@ -69,7 +80,7 @@ void main() {
   /// TEST ON 404
   test(
     "Shoud throw an UnexpectedError if HttpClient returns 404",
-        () async {
+    () async {
       when(
         httpClient.request(
           url: anyNamed("url"),
@@ -77,9 +88,9 @@ void main() {
           body: anyNamed("body"),
         ),
       ).thenThrow(HttpError.notFound);
-    
+
       final future = sut.auth(params);
-    
+
       expect(
         future,
         throwsA(DomainError.unexpected),
@@ -90,7 +101,7 @@ void main() {
   /// TEST ON 500
   test(
     "Shoud throw an UnexpectedError if HttpClient returns 500",
-        () async {
+    () async {
       when(
         httpClient.request(
           url: anyNamed("url"),
@@ -98,9 +109,9 @@ void main() {
           body: anyNamed("body"),
         ),
       ).thenThrow(HttpError.serverError);
-    
+
       final future = sut.auth(params);
-    
+
       expect(
         future,
         throwsA(DomainError.unexpected),
@@ -111,7 +122,7 @@ void main() {
   /// TEST ON 500
   test(
     "Shoud throw an InvalidCrendential if HttpClient returns 401",
-        () async {
+    () async {
       when(
         httpClient.request(
           url: anyNamed("url"),
@@ -119,13 +130,35 @@ void main() {
           body: anyNamed("body"),
         ),
       ).thenThrow(HttpError.unauthorized);
-    
+
       final future = sut.auth(params);
-    
+
       expect(
         future,
         throwsA(DomainError.invalidCredentials),
       );
+    },
+  );
+
+  /// TEST ON 200
+  test(
+    "Shoud return an Account if HttpClient returns 200",
+    () async {
+      final accessToken = faker.guid.guid();
+
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenAnswer((_) async {
+        return {"accessToken": accessToken, "name": faker.person.name()};
+      });
+
+      final account = await sut.auth(params);
+
+      expect(account.token, accessToken);
     },
   );
 }
