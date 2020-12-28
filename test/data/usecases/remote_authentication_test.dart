@@ -52,17 +52,6 @@ void main() {
   test(
     'Should call HttpClient with correct values',
     () async {
-      when(
-        httpClient.request(
-          url: anyNamed("url"),
-          method: anyNamed("method"),
-          body: anyNamed("body"),
-        ),
-      ).thenAnswer((_) async {
-        final accessToken = faker.guid.guid();
-        return {"accessToken": accessToken, "name": faker.person.name()};
-      });
-
       await sut.auth(params);
 
       verify(
@@ -79,6 +68,8 @@ void main() {
   test(
     "Shoud throw an UnexpectedError if HttpClient returns 400",
     () async {
+      _mockHttpError(HttpError.badRequest);
+  
       final future = sut.auth(params);
 
       expect(
@@ -138,7 +129,7 @@ void main() {
     "Shoud return an Account if HttpClient returns 200",
     () async {
       final validData = _mockValidData();
-      _mockValidData();
+      _mockHttpData(validData);
       
       final account = await sut.auth(params);
 
