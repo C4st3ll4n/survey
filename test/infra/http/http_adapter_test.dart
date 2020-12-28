@@ -99,6 +99,28 @@ void main() {
           expect(response, {"any_key": "any_value"});
         },
       );
+
+      test(
+        'Should return null if post return 200 wihtout data',
+            () async {
+          when(
+            client.post(
+              any,
+              headers: anyNamed("headers"),
+            ),
+          ).thenAnswer(
+                (realInvocation) async
+                => Response('', 200),
+          );
+    
+          final response = await sut.request(
+            url: url,
+            method: "post",
+          );
+    
+          expect(response, null);
+        },
+      );
     },
   );
 
