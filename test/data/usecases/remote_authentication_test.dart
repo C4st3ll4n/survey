@@ -45,6 +45,7 @@ void main() {
     },
   );
 
+  /// TEST ON 400
   test(
     "Shoud throw an UnexpectedError if HttpClient returns 400",
     () async {
@@ -58,6 +59,27 @@ void main() {
 
       final future = sut.auth(params);
 
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );
+    },
+  );
+
+  /// TEST ON 404
+  test(
+    "Shoud throw an UnexpectedError if HttpClient returns 404",
+        () async {
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenThrow(HttpError.notFound);
+    
+      final future = sut.auth(params);
+    
       expect(
         future,
         throwsA(DomainError.unexpected),
