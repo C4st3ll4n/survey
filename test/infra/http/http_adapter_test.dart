@@ -21,9 +21,20 @@ void main() {
   group(
     "POST",
     () {
+      
       test(
         'Should call post with correct values',
         () async {
+  
+          when(
+            client.post(
+              any, body: anyNamed("body"),
+              headers: anyNamed("headers"),
+            ),
+          ).thenAnswer(
+                (realInvocation) async => Response('{"any_key":"any_value"}', 200),
+          );
+          
           await sut.request(
             url: url,
             method: "post",
@@ -43,16 +54,49 @@ void main() {
 
       test(
         'Should call post without body',
-            () async {
+        () async {
+  
+          when(
+            client.post(
+              any,
+              headers: anyNamed("headers"),
+            ),
+          ).thenAnswer(
+                (realInvocation) async => Response('{"any_key":"any_value"}', 200),
+          );
+          
           await sut.request(
             url: url,
             method: "post",
           );
-    
+
           verify(
-            client.post(any,
-                headers: anyNamed('headers'),
-          ),);
+            client.post(
+              any,
+              headers: anyNamed('headers'),
+            ),
+          );
+        },
+      );
+
+      test(
+        'Should return data if post return 200',
+        () async {
+          when(
+            client.post(
+              any,
+              headers: anyNamed("headers"),
+            ),
+          ).thenAnswer(
+            (realInvocation) async => Response('{"any_key":"any_value"}', 200),
+          );
+
+          final response = await sut.request(
+            url: url,
+            method: "post",
+          );
+
+          expect(response, {"any_key": "any_value"});
         },
       );
     },
