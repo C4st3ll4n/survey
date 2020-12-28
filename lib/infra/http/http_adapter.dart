@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
@@ -15,6 +17,7 @@ class HttpAdapter implements HttpClient {
       'content-type': 'application/json',
       'accept': 'application/json',
     };
-    await client.post(url, headers: headers);
+    var jsonBody = body!=null?jsonEncode(body):null;
+    await client.post(url, headers: headers, body: jsonBody);
   }
 }

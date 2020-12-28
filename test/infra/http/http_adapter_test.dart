@@ -10,30 +10,49 @@ void main() {
   Client client;
   HttpAdapter sut;
   String url;
+
   /// SETUP GLOBAL
-  setUp((){
+  setUp(() {
     client = ClientSpy();
     sut = HttpAdapter(client);
     url = faker.internet.httpUrl();
   });
-  
+
   group(
     "POST",
     () {
       test(
         'Should call post with correct values',
         () async {
-          await sut.request(url: url, method: "post");
+          await sut.request(
+            url: url,
+            method: "post",
+            body: {'any_key': 'any_value'},
+          );
 
           verify(
-            client.post(
-              url,
-              headers: {
-                'content-type': 'application/json',
-                'accept': 'application/json',
-              },
-            ),
+            client.post(url,
+                headers: {
+                  'content-type': 'application/json',
+                  'accept': 'application/json',
+                },
+                body: '{"any_key":"any_value"}'),
           );
+        },
+      );
+
+      test(
+        'Should call post without body',
+            () async {
+          await sut.request(
+            url: url,
+            method: "post",
+          );
+    
+          verify(
+            client.post(any,
+                headers: anyNamed('headers'),
+          ),);
         },
       );
     },
