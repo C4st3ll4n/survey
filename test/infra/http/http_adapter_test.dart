@@ -135,5 +135,4 @@ void main() {
     },
   );
 
-  group("GET", () {});
 }
