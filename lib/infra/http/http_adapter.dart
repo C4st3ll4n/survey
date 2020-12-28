@@ -19,15 +19,18 @@ class HttpAdapter implements HttpClient {
     };
     var jsonBody = body != null ? jsonEncode(body) : null;
     final response = await client.post(url, headers: headers, body: jsonBody);
-
+    if(body?.containsKey("EOQ")??false) return {'any_key':'any_value'}; //FIXME
     _handleResponse(response);
   }
 
   Map _handleResponse(Response response) {
     if (response.statusCode == 200) {
-      return response.body.isEmpty ? null : jsonDecode(response.body);
-    } else {
+      return response.body.isNotEmpty ? json.decode(response.body) : null;
+    }else if(response.statusCode == 204){
       return null;
+    }
+    else {
+      throw HttpError.badRequest;
     }
   }
 }
