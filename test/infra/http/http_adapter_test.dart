@@ -31,7 +31,7 @@ void main() {
       void mockResponse(int statusCode,
           {String body = '{"any_key":"any_value"}'}) {
         mockRequest().thenAnswer(
-          (_) async => Response(body, 200),
+          (_) async => Response(body, statusCode),
         );
       }
 
@@ -108,6 +108,20 @@ void main() {
         'Should return null if post return 204',
             () async {
           mockResponse(204, body: '');
+    
+          final response = await sut.request(
+            url: url,
+            method: "post",
+          );
+    
+          expect(response, null);
+        },
+      );
+
+      test(
+        'Should return null if post return 204 with data',
+            () async {
+          mockResponse(204);
     
           final response = await sut.request(
             url: url,

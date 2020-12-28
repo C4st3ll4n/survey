@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
@@ -19,6 +20,12 @@ class HttpAdapter implements HttpClient {
     };
     var jsonBody = body!=null?jsonEncode(body):null;
     final response = await client.post(url, headers: headers, body: jsonBody);
-    return (response?.body == null || response.body.isEmpty)? null :jsonDecode(response.body);
+    if(response?.statusCode == 200){
+      return (response?.body == null || response.body.isEmpty)? null :jsonDecode(response.body);
+    }else{
+      return null;
+    }
+    
+    
   }
 }
