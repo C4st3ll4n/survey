@@ -13,15 +13,14 @@ class RemoteAuthentication {
 
   Future<void> auth(AuthenticationParams authenticationParams) async {
     //final Map body = {'email':authenticationParams.email, 'password':authenticationParams.secret};
-    try{
-      final body = RemoteAuthenticationParams.fromDomain(authenticationParams)
-          .toJson();
-      await httpClient.request(
-          url: url,
-          method: 'post',
-          body: body);
-    }on HttpError{
-      throw DomainError.unexpected;
+    try {
+      final body =
+          RemoteAuthenticationParams.fromDomain(authenticationParams).toJson();
+      await httpClient.request(url: url, method: 'post', body: body);
+    } on HttpError catch (error) {
+      throw error == HttpError.unauthorized
+          ? DomainError.invalidCredentials
+          : DomainError.unexpected;
     }
   }
 }
