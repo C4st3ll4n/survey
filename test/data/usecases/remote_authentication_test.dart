@@ -161,4 +161,28 @@ void main() {
       expect(account.token, accessToken);
     },
   );
+
+  /// TEST ON 200
+  test(
+    "Shoud throw an UnexpectedError if HttpClient returns 200 with invalid data",
+        () async {
+      final accessToken = faker.guid.guid();
+    
+      when(
+        httpClient.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+        ),
+      ).thenAnswer((_) async {
+        return {"random": faker.randomGenerator.string(50)};
+      });
+
+      final future = sut.auth(params);
+      
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );    },
+  );
 }
