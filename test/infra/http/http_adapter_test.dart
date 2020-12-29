@@ -182,6 +182,23 @@ void main() {
           );
         },
       );
+
+      test(
+        'Should return UnauthorizedError if post return 401',
+            () async {
+          mockResponse(401, body: '');
+    
+          final response = sut.request(
+            url: url,
+            method: "post",
+          );
+    
+          expect(
+            response,
+            throwsA(HttpError.unauthorized),
+          );
+        },
+      );
     },
   );
 }
