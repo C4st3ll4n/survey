@@ -52,6 +52,10 @@ void main() {
             },
           );
 
+      void mockError() =>
+          mockRequest().thenThrow(Exception(""));
+      
+
       setUp(
         () {
           mockResponse(200);
@@ -235,6 +239,24 @@ void main() {
             method: "post",
           );
 
+          expect(
+            response,
+            throwsA(HttpError.notFound),
+          );
+        },
+      );
+
+
+      test(
+        'Should return ServerError if post return 500',
+            () async {
+          mockResponse(500, body: '');
+    
+          final response = sut.request(
+            url: url,
+            method: "post",
+          );
+    
           expect(
             response,
             throwsA(HttpError.notFound),
