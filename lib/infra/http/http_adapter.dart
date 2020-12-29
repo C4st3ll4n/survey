@@ -19,31 +19,34 @@ class HttpAdapter implements HttpClient {
     };
     var jsonBody = body != null ? jsonEncode(body) : null;
     Response response = Response('', 500);
-    
-    if(method == 'post'){
-      response = await client.post(url, headers: headers, body: jsonBody);
+    try {
+      if (method == 'post') {
+        response = await client.post(url, headers: headers, body: jsonBody);
+      }
+    } catch (e) {
+      throw HttpError.serverError;
+  
     }
-    
+
     //if(body?.containsKey("EOQ")??false) return {'any_key':'any_value'}; //FIXME
-    
+
     return _handleResponse(response);
   }
 
   Map _handleResponse(Response response) {
     if (response.statusCode == 200) {
       return response.body.isNotEmpty ? json.decode(response.body) : null;
-    }else if(response.statusCode == 204){
+    } else if (response.statusCode == 204) {
       return null;
-    }else if(response.statusCode == 400){
+    } else if (response.statusCode == 400) {
       throw HttpError.badRequest;
-    }else if(response.statusCode == 401){
+    } else if (response.statusCode == 401) {
       throw HttpError.unauthorized;
-    }else if(response.statusCode == 403){
+    } else if (response.statusCode == 403) {
       throw HttpError.forbidden;
-    }else if(response.statusCode == 404){
+    } else if (response.statusCode == 404) {
       throw HttpError.notFound;
-    }
-    else {
+    } else {
       throw HttpError.serverError;
     }
   }

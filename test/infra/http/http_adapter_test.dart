@@ -246,23 +246,21 @@ void main() {
         },
       );
 
-
       test(
-        'Should return ServerError if post return 500',
+        'Should throw serverError if post throws',
             () async {
-          mockResponse(500, body: '');
-    
-          final response = sut.request(
+          mockError();
+          
+          final future = sut.request(
             url: url,
             method: "post",
           );
     
-          expect(
-            response,
-            throwsA(HttpError.notFound),
-          );
+          expect( future, throwsA(HttpError.serverError));
         },
       );
+
+
     },
   );
 }
