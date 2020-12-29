@@ -19,6 +19,20 @@ void main() {
     url = faker.internet.httpUrl();
   });
 
+  group("Shared", () {
+    test(
+      'Should throw serverError if invalid method is provided',
+      () async {
+        final future = sut.request(
+          url: url,
+          method: "invalid",
+        );
+        
+        expect( future, throwsA(HttpError.serverError));
+      },
+    );
+  });
+
   group(
     "POST",
     () {
@@ -151,14 +165,14 @@ void main() {
 
       test(
         'Should return BadRequestError if post return 400',
-            () async {
+        () async {
           mockResponse(400, body: '');
-    
+
           final response = sut.request(
             url: url,
             method: "post",
           );
-    
+
           expect(
             response,
             throwsA(HttpError.badRequest),
@@ -168,14 +182,14 @@ void main() {
 
       test(
         'Should return ServerError if post return 500',
-            () async {
+        () async {
           mockResponse(500, body: '');
-    
+
           final response = sut.request(
             url: url,
             method: "post",
           );
-    
+
           expect(
             response,
             throwsA(HttpError.serverError),
@@ -183,19 +197,47 @@ void main() {
         },
       );
 
+      test('Should return UnauthorizedError if post return 401', () async {
+        mockResponse(401, body: '');
+
+        final response = sut.request(
+          url: url,
+          method: "post",
+        );
+
+        expect(
+          response,
+          throwsA(HttpError.unauthorized),
+        );
+      });
+
+      test('Should return ForbiddenError if post return 403', () async {
+        mockResponse(403, body: '');
+
+        final response = sut.request(
+          url: url,
+          method: "post",
+        );
+
+        expect(
+          response,
+          throwsA(HttpError.forbidden),
+        );
+      });
+
       test(
-        'Should return UnauthorizedError if post return 401',
-            () async {
-          mockResponse(401, body: '');
-    
+        'Should return NotFoundError if post return 404',
+        () async {
+          mockResponse(404, body: '');
+
           final response = sut.request(
             url: url,
             method: "post",
           );
-    
+
           expect(
             response,
-            throwsA(HttpError.unauthorized),
+            throwsA(HttpError.notFound),
           );
         },
       );

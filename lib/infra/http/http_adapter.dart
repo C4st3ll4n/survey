@@ -18,9 +18,15 @@ class HttpAdapter implements HttpClient {
       'accept': 'application/json',
     };
     var jsonBody = body != null ? jsonEncode(body) : null;
-    final response = await client.post(url, headers: headers, body: jsonBody);
-    if(body?.containsKey("EOQ")??false) return {'any_key':'any_value'}; //FIXME
-    _handleResponse(response);
+    Response response = Response('', 500);
+    
+    if(method == 'post'){
+      response = await client.post(url, headers: headers, body: jsonBody);
+    }
+    
+    //if(body?.containsKey("EOQ")??false) return {'any_key':'any_value'}; //FIXME
+    
+    return _handleResponse(response);
   }
 
   Map _handleResponse(Response response) {
@@ -32,6 +38,10 @@ class HttpAdapter implements HttpClient {
       throw HttpError.badRequest;
     }else if(response.statusCode == 401){
       throw HttpError.unauthorized;
+    }else if(response.statusCode == 403){
+      throw HttpError.forbidden;
+    }else if(response.statusCode == 404){
+      throw HttpError.notFound;
     }
     else {
       throw HttpError.serverError;
