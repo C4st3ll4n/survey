@@ -198,6 +198,20 @@ void main() {
     expect(raisedButton.onPressed, isNull);
   
   });
+
+
+  testWidgets("Shoud call authentication on form submit", (tester) async {
+    await loadPage(tester);
+    isFormValidController.add(true);
+    await tester.pump();
+    
+    await tester.tap(find.byType(RaisedButton));
+    await tester.pump();
+    
+    verify(presenter.auth()).called(1);
+  },);
+  
+  
 }
 
 class LoginPresenterSpy extends Mock implements LoginPresenter {}
