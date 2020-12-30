@@ -14,7 +14,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Survey",
-      home: LoginPage(),
+      home: LoginPage(presenter: null,),
       theme: ThemeData(
         primaryColor: primaryColor,
         primaryColorDark: primaryColorDark,

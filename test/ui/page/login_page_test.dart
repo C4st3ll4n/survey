@@ -1,15 +1,18 @@
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:survey/ui/pages/login_page.dart';
+import 'package:mockito/mockito.dart';
+import 'package:survey/ui/pages/pages.dart';
 
 void main() {
-  
+  LoginPresenter presenter;
   setUp((){
   
   });
   
   Future<void> loadPage(WidgetTester tester) async{
-    final loginPage = MaterialApp(home: LoginPage());
+    presenter = LoginPresenterSpy();
+    final loginPage = MaterialApp(home: LoginPage(presenter: presenter,));
     await tester.pumpWidget(loginPage);
   }
   testWidgets(
@@ -45,8 +48,25 @@ void main() {
   testWidgets(
       "Shoud call validate with correct values",
   (tester) async {
-    final loginPage = MaterialApp(home: LoginPage());
+    await loadPage(tester);
+    final email = faker.internet.email();
+    await tester.enterText(find.bySemanticsLabel("Email"), email);
+    
+    
+    verify(
+      presenter.validateEmail(email)
+    );
+    final password = faker.internet.password();
+    await tester.enterText(find.bySemanticsLabel("Senha"), password);
+
+
+    verify(
+        presenter.validatePassword(password)
+    );
     
   });
   
+}
+
+class LoginPresenterSpy extends Mock implements LoginPresenter {
 }
