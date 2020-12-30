@@ -26,7 +26,7 @@ class LoginPage extends StatelessWidget {
                       builder:(ctx, snap)=> TextFormField(
                         onChanged: presenter.validateEmail,
                         decoration: InputDecoration(
-                          errorText: snap.data,
+                          errorText: snap.data?.isEmpty==true? null : snap.data,
                           labelText: "Email",
                           icon: Icon(
                             Icons.email,

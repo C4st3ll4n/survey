@@ -19,7 +19,8 @@ void main() {
   Future<void> loadPage(WidgetTester tester) async {
     presenter = LoginPresenterSpy();
     emailErrorController = StreamController();
-    when(presenter.emailErrorStream).thenAnswer((_)=>emailErrorController.stream);
+    when(presenter.emailErrorStream)
+        .thenAnswer((_) => emailErrorController.stream);
 
     final loginPage = MaterialApp(
         home: LoginPage(
@@ -80,6 +81,40 @@ void main() {
       await tester.pump();
 
       expect(find.text("invalid email"), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Shoud present no error email is valid",
+    (tester) async {
+      await loadPage(tester);
+      emailErrorController.add(null);
+      await tester.pump();
+
+      expect(
+        find.descendant(
+          of: find.bySemanticsLabel("Email"),
+          matching: find.byType(Text),
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    "Shoud present no error email is valid",
+    (tester) async {
+      await loadPage(tester);
+      emailErrorController.add('');
+      await tester.pump();
+
+      expect(
+        find.descendant(
+          of: find.bySemanticsLabel("Email"),
+          matching: find.byType(Text),
+        ),
+        findsOneWidget,
+      );
     },
   );
 }
