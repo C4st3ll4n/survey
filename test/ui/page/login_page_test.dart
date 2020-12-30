@@ -10,6 +10,7 @@ void main() {
   LoginPresenter presenter;
   StreamController<String> emailErrorController;
   StreamController<String> passwordErrorController;
+  StreamController<bool> isFormValidController;
   setUp(() {});
 
   tearDown(() {
@@ -21,12 +22,16 @@ void main() {
     presenter = LoginPresenterSpy();
     emailErrorController = StreamController();
     passwordErrorController = StreamController();
+    isFormValidController = StreamController();
 
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
 
     when(presenter.passwordErrorStream)
         .thenAnswer((_) => passwordErrorController.stream);
+
+    when(presenter.isFormValidStream)
+        .thenAnswer((_) => isFormValidController.stream);
 
     final loginPage = MaterialApp(
         home: LoginPage(
@@ -126,11 +131,11 @@ void main() {
 
   testWidgets(
     "Shoud present no error if password is valid",
-        (tester) async {
+    (tester) async {
       await loadPage(tester);
       passwordErrorController.add(null);
       await tester.pump();
-    
+
       expect(
         find.descendant(
           of: find.bySemanticsLabel("Senha"),
@@ -143,11 +148,11 @@ void main() {
 
   testWidgets(
     "Shoud present no error password is valid",
-        (tester) async {
+    (tester) async {
       await loadPage(tester);
       passwordErrorController.add('');
       await tester.pump();
-    
+
       expect(
         find.descendant(
           of: find.bySemanticsLabel("Senha"),
@@ -160,15 +165,39 @@ void main() {
 
   testWidgets(
     "Shoud present error if password is invalid",
-        (tester) async {
+    (tester) async {
       await loadPage(tester);
       passwordErrorController.add("any error");
       await tester.pump();
-    
+
       expect(find.text("any error"), findsOneWidget);
     },
   );
 
+  testWidgets("Shoud enable buttom if form is valid", (tester) async {
+    await loadPage(tester);
+    isFormValidController.add(true);
+    
+    await tester.pump();
+
+    final raisedButton =
+    tester.widget<RaisedButton>(find.byType(RaisedButton));
+    expect(raisedButton.onPressed, isNotNull);
+    
+  });
+
+
+  testWidgets("Shoud disable buttom if form is invalid", (tester) async {
+    await loadPage(tester);
+    isFormValidController.add(false);
+  
+    await tester.pump();
+  
+    final raisedButton =
+    tester.widget<RaisedButton>(find.byType(RaisedButton));
+    expect(raisedButton.onPressed, isNull);
+  
+  });
 }
 
 class LoginPresenterSpy extends Mock implements LoginPresenter {}
