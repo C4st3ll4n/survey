@@ -9,18 +9,24 @@ import 'package:survey/ui/pages/pages.dart';
 void main() {
   LoginPresenter presenter;
   StreamController<String> emailErrorController;
-
+  StreamController<String> passwordErrorController;
   setUp(() {});
 
   tearDown(() {
     emailErrorController.close();
+    passwordErrorController.close();
   });
 
   Future<void> loadPage(WidgetTester tester) async {
     presenter = LoginPresenterSpy();
     emailErrorController = StreamController();
+    passwordErrorController = StreamController();
+
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
+
+    when(presenter.passwordErrorStream)
+        .thenAnswer((_) => passwordErrorController.stream);
 
     final loginPage = MaterialApp(
         home: LoginPage(
@@ -117,6 +123,52 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    "Shoud present no error if password is valid",
+        (tester) async {
+      await loadPage(tester);
+      passwordErrorController.add(null);
+      await tester.pump();
+    
+      expect(
+        find.descendant(
+          of: find.bySemanticsLabel("Senha"),
+          matching: find.byType(Text),
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    "Shoud present no error password is valid",
+        (tester) async {
+      await loadPage(tester);
+      passwordErrorController.add('');
+      await tester.pump();
+    
+      expect(
+        find.descendant(
+          of: find.bySemanticsLabel("Senha"),
+          matching: find.byType(Text),
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    "Shoud present error if password is invalid",
+        (tester) async {
+      await loadPage(tester);
+      passwordErrorController.add("any error");
+      await tester.pump();
+    
+      expect(find.text("any error"), findsOneWidget);
+    },
+  );
+
 }
 
 class LoginPresenterSpy extends Mock implements LoginPresenter {}
