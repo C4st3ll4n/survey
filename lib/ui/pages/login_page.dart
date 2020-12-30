@@ -42,7 +42,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     RaisedButton(
                       child: Text("Entrar".toUpperCase()),
-                      onPressed: () {},
+                      onPressed: null,
                     ),
                     FlatButton.icon(
                         onPressed: () {},

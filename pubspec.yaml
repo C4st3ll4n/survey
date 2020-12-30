@@ -13,12 +13,24 @@ dependencies:
   http:
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.8.0"
   test:
   mockito:
   faker:
   flutter_test:
     sdk: flutter
+
 flutter:
   uses-material-design: true
   assets:
     - lib/ui/assets/
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path_android: "lib/ui/assets/icon/android.png"
+  image_path_ios: "lib/ui/assets/icon/android.png"
+  adaptive_icon_background: "lib/ui/assets/icon/background.png"
+  adaptive_icon_foreground: "lib/ui/assets/icon/foreground.png"
+
+
