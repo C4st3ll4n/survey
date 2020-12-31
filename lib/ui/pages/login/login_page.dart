@@ -59,7 +59,10 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         children: [
                           EmailInput(),
-                          PasswordInput(),
+                          Padding(
+                            padding: const EdgeInsets.only(top:8.0, bottom: 32),
+                            child: PasswordInput(),
+                          ),
                           LoginButton(),
                           FlatButton.icon(
                               onPressed: () {},

@@ -13,24 +13,20 @@ class PasswordInput extends StatelessWidget {
 		final presenter = Provider.of<LoginPresenter>(context);
 		return StreamBuilder<String>(
 			stream: presenter.passwordErrorStream,
-			builder: (ctx, snap) => Padding(
-				padding:
-				const EdgeInsets.only(top: 8.0, bottom: 32),
-				child: TextFormField(
-					onChanged: presenter.validatePassword,
-					decoration: InputDecoration(
-						labelText: "Senha",
-						errorText: snap.data?.isEmpty == true
-								? null
-								: snap.data,
-						icon: Icon(
-							Icons.lock,
-							color: Theme.of(context).primaryColorLight,
-						),
+			builder: (ctx, snap) => TextFormField(
+				onChanged: presenter.validatePassword,
+				decoration: InputDecoration(
+					labelText: "Senha",
+					errorText: snap.data?.isEmpty == true
+							? null
+							: snap.data,
+					icon: Icon(
+						Icons.lock,
+						color: Theme.of(context).primaryColorLight,
 					),
-					keyboardType: TextInputType.visiblePassword,
-					obscureText: true,
 				),
+				keyboardType: TextInputType.visiblePassword,
+				obscureText: true,
 			),
 		);
 	}
