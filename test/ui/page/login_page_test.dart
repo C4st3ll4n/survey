@@ -13,24 +13,24 @@ void main() {
   StreamController<String> mainErrorController;
   StreamController<bool> isFormValidController;
   StreamController<bool> isLoadingController;
-  setUp(() {});
 
-  tearDown(() {
-    emailErrorController.close();
-    passwordErrorController.close();
-    isFormValidController.close();
-    isLoadingController.close();
-    mainErrorController.close();
-  });
-
-  Future<void> loadPage(WidgetTester tester) async {
-    presenter = LoginPresenterSpy();
+  void _initStreams() {
     emailErrorController = StreamController();
     passwordErrorController = StreamController();
     isFormValidController = StreamController();
     isLoadingController = StreamController();
     mainErrorController = StreamController();
+  }
 
+  void _closeStreams() {
+    emailErrorController.close();
+    passwordErrorController.close();
+    isFormValidController.close();
+    isLoadingController.close();
+    mainErrorController.close();
+  }
+
+  void _mockStreams() {
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
 
@@ -42,14 +42,28 @@ void main() {
 
     when(presenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
-    
+
     when(presenter.mainErrorStream)
         .thenAnswer((_) => mainErrorController.stream);
+  }
 
+  setUp(() {});
+
+  tearDown(
+    () {
+      _closeStreams();
+    },
+  );
+
+  Future<void> loadPage(WidgetTester tester) async {
+    presenter = LoginPresenterSpy();
+    _initStreams();
+    _mockStreams();
     final loginPage = MaterialApp(
-        home: LoginPage(
-      presenter: presenter,
-    ));
+      home: LoginPage(
+        presenter: presenter,
+      ),
+    );
     await tester.pumpWidget(loginPage);
   }
 
@@ -82,9 +96,7 @@ void main() {
           tester.widget<RaisedButton>(find.byType(RaisedButton));
       expect(raisedButton.onPressed, null);
 
-
       expect(find.byType(CircularProgressIndicator), findsNothing);
-  
     },
   );
 
@@ -224,54 +236,49 @@ void main() {
       verify(presenter.auth()).called(1);
     },
   );
-  
+
   testWidgets(
-      "Shoud call loading on form submit",
-  (tester) async {
-    await loadPage(tester);
-    isLoadingController.add(true);
-    await tester.pump();
-  
-  
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-  },
+    "Shoud call loading on form submit",
+    (tester) async {
+      await loadPage(tester);
+      isLoadingController.add(true);
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    },
   );
 
   testWidgets(
     "Shoud hide loading",
-        (tester) async {
+    (tester) async {
       await loadPage(tester);
       isLoadingController.add(true);
       await tester.pump();
 
       isLoadingController.add(false);
       await tester.pump();
-    
-    
+
       expect(find.byType(CircularProgressIndicator), findsNothing);
     },
   );
 
-
   testWidgets(
     "Shoud present error message if authentication fails",
-        (tester) async {
+    (tester) async {
       await loadPage(tester);
       mainErrorController.add("main error");
       await tester.pump();
-    
-    
+
       expect(find.text("main error"), findsOneWidget);
     },
   );
-  
-  testWidgets("Should close streams on dispose", (tester)async{
+
+  testWidgets("Should close streams on dispose", (tester) async {
     await loadPage(tester);
-    addTearDown((){
+    addTearDown(() {
       verify(presenter.dispose()).called(1);
     });
   });
-  
 }
 
 class LoginPresenterSpy extends Mock implements LoginPresenter {}
