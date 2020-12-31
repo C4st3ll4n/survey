@@ -11,29 +11,38 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(
-        builder: (_) {
-          presenter.isLoadingStream.listen((isLoading) {
-            if (isLoading) {
-              showDialog(
-                context: _,
-                barrierDismissible: false,
-                child: SimpleDialog(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text("Aguarde", textAlign: TextAlign.center,),
-                      ],
-                    )
-                  ],
-                ),
-              );
-            }
-          });
+        builder: (contexto) {
+          presenter.isLoadingStream.listen(
+            (isLoading) {
+              if (isLoading) {
+                showDialog(
+                  context: contexto,
+                  barrierDismissible: false,
+                  child: SimpleDialog(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Aguarde",
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              }else{
+                if(Navigator.canPop(contexto)){
+                  Navigator.pop(contexto);
+                }
+              }
+            },
+          );
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

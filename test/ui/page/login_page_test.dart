@@ -75,6 +75,10 @@ void main() {
       final raisedButton =
           tester.widget<RaisedButton>(find.byType(RaisedButton));
       expect(raisedButton.onPressed, null);
+
+
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+  
     },
   );
 
@@ -225,6 +229,21 @@ void main() {
   
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   },
+  );
+
+  testWidgets(
+    "Shoud hide loading",
+        (tester) async {
+      await loadPage(tester);
+      isLoadingController.add(true);
+      await tester.pump();
+
+      isLoadingController.add(false);
+      await tester.pump();
+    
+    
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    },
   );
 }
 
