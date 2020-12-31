@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:survey/ui/pages/pages.dart';
 import '../../components/components.dart';
+import 'components/components.dart';
 
 class LoginPage extends StatefulWidget {
   final LoginPresenter presenter;
@@ -51,62 +53,29 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(32),
-                  child: Form(
-                    child: Column(
-                      children: [
-                        StreamBuilder<String>(
-                          stream: widget.presenter.emailErrorStream,
-                          builder: (ctx, snap) => TextFormField(
-                            onChanged: widget.presenter.validateEmail,
-                            decoration: InputDecoration(
-                              errorText:
-                                  snap.data?.isEmpty == true ? null : snap.data,
-                              labelText: "Email",
-                              icon: Icon(
-                                Icons.email,
-                                color: Theme.of(context).primaryColorLight,
-                              ),
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                          ),
-                        ),
-                        StreamBuilder<String>(
-                          stream: widget.presenter.passwordErrorStream,
-                          builder: (ctx, snap) => Padding(
-                            padding:
-                                const EdgeInsets.only(top: 8.0, bottom: 32),
-                            child: TextFormField(
-                              onChanged: widget.presenter.validatePassword,
-                              decoration: InputDecoration(
-                                labelText: "Senha",
-                                errorText: snap.data?.isEmpty == true
-                                    ? null
-                                    : snap.data,
-                                icon: Icon(
-                                  Icons.lock,
-                                  color: Theme.of(context).primaryColorLight,
-                                ),
-                              ),
-                              keyboardType: TextInputType.visiblePassword,
-                              obscureText: true,
-                            ),
-                          ),
-                        ),
-                        StreamBuilder<bool>(
-                            stream: widget.presenter.isFormValidStream,
-                            builder: (context, snapshot) {
-                              return RaisedButton(
-                                child: Text("Entrar".toUpperCase()),
-                                onPressed: snapshot.data == true
-                                    ? widget.presenter.auth
-                                    : null,
-                              );
-                            }),
-                        FlatButton.icon(
-                            onPressed: () {},
-                            icon: Icon(Icons.person_add),
-                            label: Text("Criar conta")),
-                      ],
+                  child: Provider(
+                    create: (BuildContext context) => widget.presenter,
+                    child: Form(
+                      child: Column(
+                        children: [
+                          EmailInput(),
+                          PasswordInput(),
+                          StreamBuilder<bool>(
+                              stream: widget.presenter.isFormValidStream,
+                              builder: (context, snapshot) {
+                                return RaisedButton(
+                                  child: Text("Entrar".toUpperCase()),
+                                  onPressed: snapshot.data == true
+                                      ? widget.presenter.auth
+                                      : null,
+                                );
+                              }),
+                          FlatButton.icon(
+                              onPressed: () {},
+                              icon: Icon(Icons.person_add),
+                              label: Text("Criar conta")),
+                        ],
+                      ),
                     ),
                   ),
                 )
@@ -118,3 +87,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
