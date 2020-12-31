@@ -10,6 +10,7 @@ void main() {
   LoginPresenter presenter;
   StreamController<String> emailErrorController;
   StreamController<String> passwordErrorController;
+  StreamController<String> mainErrorController;
   StreamController<bool> isFormValidController;
   StreamController<bool> isLoadingController;
   setUp(() {});
@@ -19,6 +20,7 @@ void main() {
     passwordErrorController.close();
     isFormValidController.close();
     isLoadingController.close();
+    mainErrorController.close();
   });
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -27,6 +29,7 @@ void main() {
     passwordErrorController = StreamController();
     isFormValidController = StreamController();
     isLoadingController = StreamController();
+    mainErrorController = StreamController();
 
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
@@ -39,6 +42,9 @@ void main() {
 
     when(presenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
+    
+    when(presenter.mainErrorStream)
+        .thenAnswer((_) => mainErrorController.stream);
 
     final loginPage = MaterialApp(
         home: LoginPage(
@@ -245,6 +251,20 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsNothing);
     },
   );
+
+
+  testWidgets(
+    "Shoud present error message if authentication fails",
+        (tester) async {
+      await loadPage(tester);
+      mainErrorController.add("error");
+      await tester.pump();
+    
+    
+      expect(find.text("main error"), findsOneWidget);
+    },
+  );
+  
 }
 
 class LoginPresenterSpy extends Mock implements LoginPresenter {}
