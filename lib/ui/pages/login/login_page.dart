@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:survey/ui/components/spinner_dialog.dart';
 import 'package:survey/ui/pages/pages.dart';
 import '../../components/components.dart';
 
@@ -37,15 +36,10 @@ class _LoginPageState extends State<LoginPage> {
 
           widget.presenter.mainErrorStream.listen(
             (error) {
-              if (error != null && error.isNotEmpty) {
-                Scaffold.of(contexto).showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.red[900],
-                    content: Text(error, textAlign: TextAlign.center,),
-                  ),
-                );
-              }
-            },
+              if (error != null && error.trim().isNotEmpty) {
+                showErrorMessage(contexto, error);
+            }
+            }
           );
           return SingleChildScrollView(
             child: Column(
