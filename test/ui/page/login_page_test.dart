@@ -257,13 +257,20 @@ void main() {
     "Shoud present error message if authentication fails",
         (tester) async {
       await loadPage(tester);
-      mainErrorController.add("error");
+      mainErrorController.add("main error");
       await tester.pump();
     
     
       expect(find.text("main error"), findsOneWidget);
     },
   );
+  
+  testWidgets("Should close streams on dispose", (tester)async{
+    await loadPage(tester);
+    addTearDown((){
+      verify(presenter.dispose()).called(1);
+    });
+  });
   
 }
 
