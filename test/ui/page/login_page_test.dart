@@ -11,11 +11,14 @@ void main() {
   StreamController<String> emailErrorController;
   StreamController<String> passwordErrorController;
   StreamController<bool> isFormValidController;
+  StreamController<bool> isLoadingController;
   setUp(() {});
 
   tearDown(() {
     emailErrorController.close();
     passwordErrorController.close();
+    isFormValidController.close();
+    isLoadingController.close();
   });
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -23,6 +26,7 @@ void main() {
     emailErrorController = StreamController();
     passwordErrorController = StreamController();
     isFormValidController = StreamController();
+    isLoadingController = StreamController();
 
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
@@ -32,6 +36,9 @@ void main() {
 
     when(presenter.isFormValidStream)
         .thenAnswer((_) => isFormValidController.stream);
+
+    when(presenter.isLoadingStream)
+        .thenAnswer((_) => isLoadingController.stream);
 
     final loginPage = MaterialApp(
         home: LoginPage(
@@ -177,41 +184,48 @@ void main() {
   testWidgets("Shoud enable buttom if form is valid", (tester) async {
     await loadPage(tester);
     isFormValidController.add(true);
-    
+
     await tester.pump();
 
-    final raisedButton =
-    tester.widget<RaisedButton>(find.byType(RaisedButton));
+    final raisedButton = tester.widget<RaisedButton>(find.byType(RaisedButton));
     expect(raisedButton.onPressed, isNotNull);
-    
   });
-
 
   testWidgets("Shoud disable buttom if form is invalid", (tester) async {
     await loadPage(tester);
     isFormValidController.add(false);
-  
+
     await tester.pump();
-  
-    final raisedButton =
-    tester.widget<RaisedButton>(find.byType(RaisedButton));
+
+    final raisedButton = tester.widget<RaisedButton>(find.byType(RaisedButton));
     expect(raisedButton.onPressed, isNull);
-  
   });
 
+  testWidgets(
+    "Shoud call authentication on form submit",
+    (tester) async {
+      await loadPage(tester);
+      isFormValidController.add(true);
+      await tester.pump();
 
-  testWidgets("Shoud call authentication on form submit", (tester) async {
+      await tester.tap(find.byType(RaisedButton));
+      await tester.pump();
+
+      verify(presenter.auth()).called(1);
+    },
+  );
+  
+  testWidgets(
+      "Shoud call loading on form submit",
+  (tester) async {
     await loadPage(tester);
-    isFormValidController.add(true);
+    isLoadingController.add(true);
     await tester.pump();
-    
-    await tester.tap(find.byType(RaisedButton));
-    await tester.pump();
-    
-    verify(presenter.auth()).called(1);
-  },);
   
   
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  },
+  );
 }
 
 class LoginPresenterSpy extends Mock implements LoginPresenter {}
