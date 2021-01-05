@@ -2,6 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/domain/entities/account_entity.dart';
+import 'package:survey/domain/helpers/domain_error.dart';
 import 'package:survey/domain/usecases/authentication.dart';
 import 'package:survey/presentation/presenters/presenters.dart';
 import 'package:survey/presentation/protocols/protocols.dart';
@@ -36,17 +37,20 @@ void main() {
   void mockAuthentication() => mockAuthenticationCall()
       .thenAnswer((_) async => AccountEntity(faker.guid.guid()));
 
+  void mockAuthenticationError(DomainError error) =>
+      mockAuthenticationCall().thenThrow(error);
+
   setUp(
     () {
       validation = ValidationSpy();
       authentication = AuthenticationSpy();
-      
+
       sut = StreamLoginPresenter(
           validation: validation, authentication: authentication);
-      
+
       email = faker.internet.email();
       password = faker.internet.password();
-      
+
       mockValidation();
       mockAuthentication();
     },
@@ -243,10 +247,56 @@ void main() {
           [!false, !true],
         ),
       );
-      
+
       await sut.auth();
+    },
+  );
+
+  test(
+    "Should emit correct event on Authentication invalid credentials error",
+    () async {
+      mockAuthenticationError(DomainError.invalidCredentials);
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      expectLater(
+        sut.isLoadingStream,
+        emits(false),
+      );
+
+      sut.mainErrorStream.listen(
+        expectAsync1(
+              (error) => expect(error, DomainError.invalidCredentials.description),
+        ),
+      );
       
-      
+
+      await sut.auth();
+    },
+  );
+
+  test(
+    "Should emit correct event on Authentication invalid credentials error",
+        () async {
+      mockAuthenticationError(DomainError.unexpected);
+    
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+    
+      expectLater(
+        sut.isLoadingStream,
+        emits(false),
+      );
+    
+      sut.mainErrorStream.listen(
+        expectAsync1(
+              (error) => expect(error, DomainError.unexpected.description),
+        ),
+      );
+    
+    
+      await sut.auth();
     },
   );
 }
