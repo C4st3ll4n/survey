@@ -48,14 +48,16 @@ class StreamLoginPresenter implements LoginPresenter {
 	@override
 	void validateEmail(String email) {
 		_state.emailError = validation.validate(field: "email", value: email);
-		_controller.add(_state);
+		_update();
 	}
 	
 	@override
 	void validatePassword(String password) {
 		_state.passwordError = validation.validate(field: "password", value: password);
-		_controller.add(_state);
+		_update();
 	}
+	
+	void _update()=> _controller.add(_state);
 }
 
 class LoginState{
