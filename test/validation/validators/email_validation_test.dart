@@ -1,7 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:survey/validation/protocols/field_validate.dart';
+import 'package:survey/validation/validators/validators.dart';
 
 void main(){
 	EmailValidation sut;
@@ -25,17 +24,4 @@ void main(){
 	test("Should return null if email is valid",(){
 		expect(sut.validate("p13dr0h"), "Campo inválido.");
 	});
-}
-
-class EmailValidation implements FieldValidation {
-  EmailValidation(this.field);
-  
-  final String field;
-
-  @override
-  String validate(String value) {
-  	final RegExp regExp = RegExp(r"^[\w+.]+@\w+\.\w{2,}(?:\.\w{2})?$/");
-  	final isValid = value?.isNotEmpty != true || regExp.hasMatch(value)? true:false;
-  	return !isValid?null:"Campo inválido.";
-  }
 }
