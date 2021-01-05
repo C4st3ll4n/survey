@@ -1,9 +1,11 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
 import 'package:survey/domain/entities/account_entity.dart';
 import 'package:survey/domain/helpers/domain_error.dart';
 import 'package:survey/domain/usecases/authentication.dart';
+
 import 'package:survey/presentation/presenters/presenters.dart';
 import 'package:survey/presentation/protocols/protocols.dart';
 
@@ -267,10 +269,9 @@ void main() {
 
       sut.mainErrorStream.listen(
         expectAsync1(
-              (error) => expect(error, DomainError.invalidCredentials.description),
+          (error) => expect(error, DomainError.invalidCredentials.description),
         ),
       );
-      
 
       await sut.auth();
     },
@@ -278,24 +279,23 @@ void main() {
 
   test(
     "Should emit correct event on Authentication invalid credentials error",
-        () async {
+    () async {
       mockAuthenticationError(DomainError.unexpected);
-    
+
       sut.validateEmail(email);
       sut.validatePassword(password);
-    
+
       expectLater(
         sut.isLoadingStream,
         emits(false),
       );
-    
+
       sut.mainErrorStream.listen(
         expectAsync1(
-              (error) => expect(error, DomainError.unexpected.description),
+          (error) => expect(error, DomainError.unexpected.description),
         ),
       );
-    
-    
+
       await sut.auth();
     },
   );

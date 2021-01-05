@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:meta/meta.dart';
-import 'package:survey/domain/helpers/domain_error.dart';
 
 import '../protocols/protocols.dart';
 
+import '../../domain/helpers/domain_error.dart';
 import '../../domain/usecases/authentication.dart';
+
 import '../../ui/pages/login/login_presenter.dart';
 
 class StreamLoginPresenter implements LoginPresenter {
