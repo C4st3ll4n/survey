@@ -18,9 +18,15 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   Future<void> auth() async {
+    _state.isLoading = true;
+    _update();
+    
     await authentication.auth(
       AuthenticationParams(email: _state.email, secret: _state.password),
     );
+    
+    _state.isLoading = false;
+    _update();
   }
 
   @override
@@ -40,7 +46,8 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   // TODO: implement isLoadingStream
-  Stream<bool> get isLoadingStream => throw UnimplementedError();
+  Stream<bool> get isLoadingStream =>
+      _controller.stream.map((state) => state.isLoading).distinct();
 
   @override
   // TODO: implement mainErrorStream
@@ -73,7 +80,7 @@ class LoginState {
   String email, password;
   String emailError;
   String passwordError;
-
+  bool isLoading = false;
   bool get isFormValid =>
       emailError == null &&
       passwordError == null &&

@@ -1,12 +1,14 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:survey/domain/entities/account_entity.dart';
 import 'package:survey/domain/usecases/authentication.dart';
 import 'package:survey/presentation/presenters/presenters.dart';
 import 'package:survey/presentation/protocols/protocols.dart';
 
 class ValidationSpy extends Mock implements Validation {}
-class AuthenticationSpy extends Mock implements Authentication{}
+
+class AuthenticationSpy extends Mock implements Authentication {}
 
 void main() {
   String email;
@@ -20,20 +22,35 @@ void main() {
           field: field != null ? field : anyNamed("field"),
           value: anyNamed("value"),
         ),
-    
       );
 
   void mockValidation({String field, String value}) =>
       mockValidationCall(field).thenReturn(value);
 
-  setUp(() {
-    validation = ValidationSpy();
-    authentication = AuthenticationSpy();
-    sut = StreamLoginPresenter(validation: validation, authentication: authentication);
-    email = faker.internet.email();
-    password = faker.internet.password();
-    mockValidation();
-  });
+  PostExpectation mockAuthenticationCall() => when(
+        authentication.auth(
+          any,
+        ),
+      );
+
+  void mockAuthentication() => mockAuthenticationCall()
+      .thenAnswer((_) async => AccountEntity(faker.guid.guid()));
+
+  setUp(
+    () {
+      validation = ValidationSpy();
+      authentication = AuthenticationSpy();
+      
+      sut = StreamLoginPresenter(
+          validation: validation, authentication: authentication);
+      
+      email = faker.internet.email();
+      password = faker.internet.password();
+      
+      mockValidation();
+      mockAuthentication();
+    },
+  );
 
   test(
     "Should call validation with correct e-mail",
@@ -201,16 +218,35 @@ void main() {
 
   test(
     "Should call authentication with correct values",
-        () async {
-    
+    () async {
       sut.validateEmail(email);
       sut.validatePassword(password);
+
+      await sut.auth();
+
+      verify(
+        authentication.auth(
+          AuthenticationParams(email: email, secret: password),
+        ),
+      ).called(1);
+    },
+  );
+  test(
+    "Should emit correct event on Authentication success",
+    () async {
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      expectLater(
+        sut.isLoadingStream,
+        emitsInOrder(
+          [!false, !true],
+        ),
+      );
       
       await sut.auth();
       
-      verify(
-        authentication.auth(AuthenticationParams(email: email, secret: password),),
-      ).called(1);
+      
     },
   );
 }
