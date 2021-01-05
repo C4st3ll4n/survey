@@ -18,9 +18,12 @@ void main(){
 		expect(sut.validate(null), null);
 	});
 	
-	
 	test("Should return null if email is valid",(){
 		expect(sut.validate(faker.internet.email()), null);
+	});
+	
+	test("Should return null if email is valid",(){
+		expect(sut.validate("p13dr0h"), "Campo inválido.");
 	});
 }
 
@@ -31,6 +34,8 @@ class EmailValidation implements FieldValidation {
 
   @override
   String validate(String value) {
-    return null;
+  	final RegExp regExp = RegExp(r"^[\w+.]+@\w+\.\w{2,}(?:\.\w{2})?$/");
+  	final isValid = value?.isNotEmpty != true || regExp.hasMatch(value)? true:false;
+  	return !isValid?null:"Campo inválido.";
   }
 }
