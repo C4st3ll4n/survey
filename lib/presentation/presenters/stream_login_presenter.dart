@@ -8,7 +8,9 @@ class StreamLoginPresenter implements LoginPresenter {
 	final Validation validation;
 	var _state = LoginState();
 	final _controller = StreamController<LoginState>.broadcast();
-	Stream<String> get emailErrorController => _controller.stream.map((state) => state.emailError).distinct();
+	
+	//Stream<String> get emailErrorController => _controller.stream.map((state) => state.emailError).distinct();
+	//Stream<bool> get emailErrorController => _controller.stream.map((state) => state.emailError).distinct();
 	
 	StreamLoginPresenter({this.validation});
 	
@@ -25,11 +27,11 @@ class StreamLoginPresenter implements LoginPresenter {
 	
 	@override
 	// TODO: implement emailErrorStream
-	Stream<String> get emailErrorStream => emailErrorController;
+	Stream<String> get emailErrorStream => _controller.stream.map((state) => state.emailError).distinct();
 	
 	@override
 	// TODO: implement isFormValidStream
-	Stream<bool> get isFormValidStream => throw UnimplementedError();
+	Stream<bool> get isFormValidStream =>  _controller.stream.map((state) => state.isFormValid).distinct();
 	
 	@override
 	// TODO: implement isLoadingStream
@@ -57,4 +59,5 @@ class StreamLoginPresenter implements LoginPresenter {
 
 class LoginState{
 	String emailError;
+	bool get isFormValid => false;
 }
