@@ -12,6 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   http:
   provider:
+  equatable:
 
 dev_dependencies:
   flutter_launcher_icons: "^0.8.0"

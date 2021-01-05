@@ -1,15 +1,18 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:survey/domain/usecases/authentication.dart';
 import 'package:survey/presentation/presenters/presenters.dart';
 import 'package:survey/presentation/protocols/protocols.dart';
 
 class ValidationSpy extends Mock implements Validation {}
+class AuthenticationSpy extends Mock implements Authentication{}
 
 void main() {
   String email;
   String password;
   Validation validation;
+  Authentication authentication;
   StreamLoginPresenter sut;
 
   PostExpectation mockValidationCall(String field) => when(
@@ -17,6 +20,7 @@ void main() {
           field: field != null ? field : anyNamed("field"),
           value: anyNamed("value"),
         ),
+    
       );
 
   void mockValidation({String field, String value}) =>
@@ -24,7 +28,8 @@ void main() {
 
   setUp(() {
     validation = ValidationSpy();
-    sut = StreamLoginPresenter(validation: validation);
+    authentication = AuthenticationSpy();
+    sut = StreamLoginPresenter(validation: validation, authentication: authentication);
     email = faker.internet.email();
     password = faker.internet.password();
     mockValidation();
@@ -181,13 +186,6 @@ void main() {
           (error) => expect(error, null),
         ),
       );
-
-      sut.isFormValidStream.listen(
-        expectAsync1(
-          (isValid) => expect(isValid, true),
-        ),
-      );
-
       expectLater(
         sut.isFormValidStream,
         emitsInOrder(
@@ -198,6 +196,21 @@ void main() {
       sut.validateEmail(email);
       await Future.delayed(Duration.zero);
       sut.validatePassword(password);
+    },
+  );
+
+  test(
+    "Should call authentication with correct values",
+        () async {
+    
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+      
+      await sut.auth();
+      
+      verify(
+        authentication.auth(AuthenticationParams(email: email, secret: password),),
+      ).called(1);
     },
   );
 }

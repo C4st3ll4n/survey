@@ -1,23 +1,26 @@
 import 'dart:async';
 
-import '../../ui/pages/login/login_presenter.dart';
+import 'package:meta/meta.dart';
 
 import '../protocols/protocols.dart';
 
+import '../../domain/usecases/authentication.dart';
+import '../../ui/pages/login/login_presenter.dart';
+
 class StreamLoginPresenter implements LoginPresenter {
   final Validation validation;
+  final Authentication authentication;
   var _state = LoginState();
   final _controller = StreamController<LoginState>.broadcast();
 
-  //Stream<String> get emailErrorController => _controller.stream.map((state) => state.emailError).distinct();
-  //Stream<bool> get emailErrorController => _controller.stream.map((state) => state.emailError).distinct();
-
-  StreamLoginPresenter({this.validation});
+  StreamLoginPresenter(
+      {@required this.validation, @required this.authentication});
 
   @override
-  Future<void> auth() {
-    // TODO: implement auth
-    throw UnimplementedError();
+  Future<void> auth() async {
+    await authentication.auth(
+      AuthenticationParams(email: _state.email, secret: _state.password),
+    );
   }
 
   @override
