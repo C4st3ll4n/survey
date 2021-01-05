@@ -8,7 +8,7 @@ class StreamLoginPresenter implements LoginPresenter {
 	final Validation validation;
 	var _state = LoginState();
 	final _controller = StreamController<LoginState>.broadcast();
-	Stream<String> get emailErrorController => _controller.stream.map((state) => state.emailError);
+	Stream<String> get emailErrorController => _controller.stream.map((state) => state.emailError).distinct();
 	
 	StreamLoginPresenter({this.validation});
 	
