@@ -5,63 +5,75 @@ import '../../ui/pages/login/login_presenter.dart';
 import '../protocols/protocols.dart';
 
 class StreamLoginPresenter implements LoginPresenter {
-	final Validation validation;
-	var _state = LoginState();
-	final _controller = StreamController<LoginState>.broadcast();
-	
-	//Stream<String> get emailErrorController => _controller.stream.map((state) => state.emailError).distinct();
-	//Stream<bool> get emailErrorController => _controller.stream.map((state) => state.emailError).distinct();
-	
-	StreamLoginPresenter({this.validation});
-	
-	@override
-	Future<void> auth() {
-		// TODO: implement auth
-		throw UnimplementedError();
-	}
-	
-	@override
-	void dispose() {
-		// TODO: implement dispose
-	}
-	
-	@override
-	// TODO: implement emailErrorStream
-	Stream<String> get emailErrorStream => _controller.stream.map((state) => state.emailError).distinct();
-	
-	@override
-	// TODO: implement isFormValidStream
-	Stream<bool> get isFormValidStream =>  _controller.stream.map((state) => state.isFormValid).distinct();
-	
-	@override
-	// TODO: implement isLoadingStream
-	Stream<bool> get isLoadingStream => throw UnimplementedError();
-	
-	@override
-	// TODO: implement mainErrorStream
-	Stream<String> get mainErrorStream => throw UnimplementedError();
-	
-	@override
-	// TODO: implement passwordErrorStream
-	Stream<String> get passwordErrorStream => _controller.stream.map((state) => state.passwordError).distinct();
-	
-	@override
-	void validateEmail(String email) {
-		_state.emailError = validation.validate(field: "email", value: email);
-		_update();
-	}
-	
-	@override
-	void validatePassword(String password) {
-		_state.passwordError = validation.validate(field: "password", value: password);
-		_update();
-	}
-	
-	void _update()=> _controller.add(_state);
+  final Validation validation;
+  var _state = LoginState();
+  final _controller = StreamController<LoginState>.broadcast();
+
+  //Stream<String> get emailErrorController => _controller.stream.map((state) => state.emailError).distinct();
+  //Stream<bool> get emailErrorController => _controller.stream.map((state) => state.emailError).distinct();
+
+  StreamLoginPresenter({this.validation});
+
+  @override
+  Future<void> auth() {
+    // TODO: implement auth
+    throw UnimplementedError();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+  }
+
+  @override
+  // TODO: implement emailErrorStream
+  Stream<String> get emailErrorStream =>
+      _controller.stream.map((state) => state.emailError).distinct();
+
+  @override
+  // TODO: implement isFormValidStream
+  Stream<bool> get isFormValidStream =>
+      _controller.stream.map((state) => state.isFormValid).distinct();
+
+  @override
+  // TODO: implement isLoadingStream
+  Stream<bool> get isLoadingStream => throw UnimplementedError();
+
+  @override
+  // TODO: implement mainErrorStream
+  Stream<String> get mainErrorStream => throw UnimplementedError();
+
+  @override
+  // TODO: implement passwordErrorStream
+  Stream<String> get passwordErrorStream =>
+      _controller.stream.map((state) => state.passwordError).distinct();
+
+  @override
+  void validateEmail(String email) {
+    _state.email = email;
+    _state.emailError = validation.validate(field: "email", value: email);
+    _update();
+  }
+
+  @override
+  void validatePassword(String password) {
+    _state.password = password;
+    _state.passwordError =
+        validation.validate(field: "password", value: password);
+    _update();
+  }
+
+  void _update() => _controller.add(_state);
 }
 
-class LoginState{
-	String emailError;
-	String passwordError;
-	bool get isFormValid => false;
+class LoginState {
+  String email, password;
+  String emailError;
+  String passwordError;
+
+  bool get isFormValid =>
+      emailError == null &&
+      passwordError == null &&
+      email != null &&
+      password != null;
 }
