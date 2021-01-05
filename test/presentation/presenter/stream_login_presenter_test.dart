@@ -1,15 +1,24 @@
+import 'dart:async';
+
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/ui/pages/login/login_presenter.dart';
 import 'package:meta/meta.dart';
 
-class StreamLoginPresenter implements LoginPresenter {
-  
-  final Validation validation;
 
-  StreamLoginPresenter({this.validation});
+class LoginState{
+  String emailError;
+}
+
+class StreamLoginPresenter implements LoginPresenter {
+  final Validation validation;
+  var _state = LoginState();
+  final _controller = StreamController<LoginState>.broadcast();
+  Stream<String> get emailErrorController => _controller.stream.map((state) => state.emailError);
   
+  StreamLoginPresenter({this.validation});
+
   @override
   Future<void> auth() {
     // TODO: implement auth
@@ -23,7 +32,7 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   // TODO: implement emailErrorStream
-  Stream<String> get emailErrorStream => throw UnimplementedError();
+  Stream<String> get emailErrorStream => emailErrorController;
 
   @override
   // TODO: implement isFormValidStream
@@ -43,7 +52,8 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   void validateEmail(String email) {
-    validation.validate(field: "email", value: email);
+    _state.emailError = validation.validate(field: "email", value: email);
+    _controller.add(_state);
   }
 
   @override
@@ -52,36 +62,46 @@ class StreamLoginPresenter implements LoginPresenter {
   }
 }
 
-class ValidationSpy extends Mock implements Validation{}
+class ValidationSpy extends Mock implements Validation {}
 
-abstract class Validation{
-  void validate({@required String field, @required String value});
+abstract class Validation {
+  String validate({@required String field, @required String value});
 }
 
 void main() {
   String email;
   Validation validation;
   StreamLoginPresenter sut;
-  
-  setUp((){
-     validation =  ValidationSpy();
-     sut = StreamLoginPresenter(validation: validation);
-     email = faker.internet.email();
-  
+
+  setUp(() {
+    validation = ValidationSpy();
+    sut = StreamLoginPresenter(validation: validation);
+    email = faker.internet.email();
   });
-  
+
   test(
     "Should call validation with correct e-mail",
     () {
-     
       sut.validateEmail(email);
-      
-      verify(validation.validate(field:"email", value:email)).called(1);
+
+      verify(validation.validate(field: "email", value: email)).called(1);
     },
   );
 
   test(
-    "Should call validation with correct password",
-        () {},
+    "Should emit email error if validation fails",
+    () {
+      when(
+        validation.validate(
+          field: anyNamed("field"),
+          value: anyNamed("value"),
+        ),
+      ).thenReturn("error");
+      
+      expectLater(sut.emailErrorStream, emits("error"),);
+      
+      sut.validateEmail(email);
+      
+    },
   );
 }
