@@ -2,7 +2,7 @@ import 'dart:async';
 
 import '../../ui/pages/login/login_presenter.dart';
 
-import '../../presentation/protocols/validation.dart';
+import '../protocols/protocols.dart';
 
 class StreamLoginPresenter implements LoginPresenter {
 	final Validation validation;

@@ -1,12 +1,9 @@
-import 'dart:async';
 
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:survey/presentation/presenters/stream_login_presenter.dart';
-import 'package:survey/presentation/protocols/validation.dart';
-import 'package:survey/ui/pages/login/login_presenter.dart';
-import 'package:meta/meta.dart';
+import 'package:survey/presentation/presenters/presenters.dart';
+import 'package:survey/presentation/protocols/protocols.dart';
 
 
 
