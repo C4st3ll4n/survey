@@ -43,7 +43,7 @@ class StreamLoginPresenter implements LoginPresenter {
 	
 	@override
 	// TODO: implement passwordErrorStream
-	Stream<String> get passwordErrorStream => throw UnimplementedError();
+	Stream<String> get passwordErrorStream => _controller.stream.map((state) => state.passwordError).distinct();
 	
 	@override
 	void validateEmail(String email) {
@@ -53,11 +53,13 @@ class StreamLoginPresenter implements LoginPresenter {
 	
 	@override
 	void validatePassword(String password) {
-		// TODO: implement validatePassword
+		_state.passwordError = validation.validate(field: "password", value: password);
+		_controller.add(_state);
 	}
 }
 
 class LoginState{
 	String emailError;
+	String passwordError;
 	bool get isFormValid => false;
 }

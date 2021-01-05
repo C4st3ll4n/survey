@@ -8,6 +8,7 @@ class ValidationSpy extends Mock implements Validation {}
 
 void main() {
   String email;
+  String password;
   Validation validation;
   StreamLoginPresenter sut;
 
@@ -25,6 +26,7 @@ void main() {
     validation = ValidationSpy();
     sut = StreamLoginPresenter(validation: validation);
     email = faker.internet.email();
+    password = faker.internet.password();
     mockValidation();
   });
 
@@ -82,4 +84,63 @@ void main() {
       sut.validateEmail(email);
     },
   );
+  
+  /* PASSWORD VALIDATION */
+
+
+  test(
+    "Should call validation with correct password",
+        () {
+      sut.validatePassword(password);
+    
+      verify(validation.validate(field: "password", value: password)).called(1);
+    },
+  );
+
+  test(
+    "Should emit password error if validation fails",
+        () {
+      //mockValidationCall().thenReturn("error");
+      mockValidation(value: "error");
+    
+      sut.passwordErrorStream.listen(
+        expectAsync1(
+              (error) => expect(error, "error"),
+        ),
+      );
+    
+    
+      sut.isFormValidStream.listen(
+        expectAsync1(
+              (isValid) => expect(isValid, false),
+        ),
+      );
+    
+      sut.validatePassword(password);
+      sut.validatePassword(password);
+    },
+  );
+
+
+  test(
+    "Should emit null if password validation succeeds",
+        () {
+      sut.passwordErrorStream.listen(
+        expectAsync1(
+              (error) => expect(error, null),
+        ),
+      );
+    
+    
+      sut.isFormValidStream.listen(
+        expectAsync1(
+              (isValid) => expect(isValid, false),
+        ),
+      );
+
+      sut.validatePassword(password);
+      sut.validatePassword(password);
+    },
+  );
+  
 }
