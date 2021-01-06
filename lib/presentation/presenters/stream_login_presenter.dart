@@ -2,36 +2,41 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
+import '../../domain/entities/entities.dart';
+
 import '../protocols/protocols.dart';
 
-import '../../domain/helpers/domain_error.dart';
-import '../../domain/usecases/authentication.dart';
+import '../../domain/helpers/helpers.dart';
+import '../../domain/usecases/usecases.dart';
 
 import '../../ui/pages/login/login_presenter.dart';
 
 class StreamLoginPresenter implements LoginPresenter {
   final Validation validation;
   final Authentication authentication;
+  final SaveCurrentAccount saveCurrentAccount;
+
   var _state = LoginState();
   var _controller = StreamController<LoginState>.broadcast();
 
   StreamLoginPresenter(
-      {@required this.validation, @required this.authentication});
+      {@required this.validation,
+      @required this.authentication,
+      @required this.saveCurrentAccount});
 
   @override
   Future<void> auth() async {
     _state.isLoading = true;
     _update();
-    try{
-    
-    await authentication.auth(
-      AuthenticationParams(email: _state.email, secret: _state.password),
-    );
-    
-    }on DomainError catch(error){
+    try {
+      final AccountEntity account = await authentication.auth(
+        AuthenticationParams(email: _state.email, secret: _state.password),
+      );
+      await saveCurrentAccount.save(account);
+    } on DomainError catch (error) {
       _state.mainError = error.description;
     }
-    
+
     _state.isLoading = false;
     _update();
   }
@@ -85,9 +90,9 @@ class LoginState {
   String emailError;
   String passwordError;
   String mainError;
-  
+
   bool isLoading = false;
-  
+
   bool get isFormValid =>
       emailError == null &&
       passwordError == null &&
