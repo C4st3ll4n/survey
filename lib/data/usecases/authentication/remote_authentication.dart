@@ -1,11 +1,11 @@
 import 'package:meta/meta.dart';
 import 'package:survey/data/models/remote_account_model.dart';
 
-import '../../domain/helpers/helpers.dart';
-import '../../domain/usecases/usecases.dart';
-import '../../domain/entities/entities.dart';
+import '../../../domain/helpers/helpers.dart';
+import '../../../domain/usecases/usecases.dart';
+import '../../../domain/entities/entities.dart';
 
-import '../http/http.dart';
+import '../../http/http.dart';
 
 class RemoteAuthentication implements Authentication{
   final HttpClient httpClient;
