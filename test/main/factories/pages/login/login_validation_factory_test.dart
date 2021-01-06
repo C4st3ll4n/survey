@@ -10,8 +10,9 @@ void main(){
 	
 	test("Should return the correct validations",(){
 		final validations = makeLoginValidations();
-		expect(validations, [   EmailValidation("email"),
+		expect(validations, [
 			RequiredFieldValidation("email"),
+			EmailValidation("email"),
 			RequiredFieldValidation("password"),]);
 	});
 }
