@@ -13,6 +13,7 @@ dependencies:
   http:
   provider:
   equatable:
+  get:
 
 dev_dependencies:
   flutter_launcher_icons: "^0.8.0"
