@@ -2,5 +2,8 @@ import '../../../../presentation/presenters/presenters.dart';
 import '../../../../ui/pages/login/login_presenter.dart';
 import '../../factories.dart';
 
-LoginPresenter makeLoginPresenter() => StreamLoginPresenter(
+LoginPresenter makeStreamLoginPresenter() => StreamLoginPresenter(
       validation: makeLoginValidation(), authentication: makeRemoteAuthentication());
+
+LoginPresenter makeGetXLoginPresenter() => GetXLoginPresenter(
+		validation: makeLoginValidation(), authentication: makeRemoteAuthentication());
