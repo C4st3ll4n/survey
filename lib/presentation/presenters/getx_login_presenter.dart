@@ -60,6 +60,7 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
 
   }
 
+  /// Unnecesary: GetX automatcally disposes
   @override
   void dispose() {}
 
