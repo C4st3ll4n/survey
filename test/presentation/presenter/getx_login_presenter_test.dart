@@ -47,6 +47,9 @@ void main() {
 
   void mockAuthenticationError(DomainError error) =>
       mockAuthenticationCall().thenThrow(error);
+  
+  void mockSaveCurrentAccountError(DomainError error) =>
+      mockAuthenticationCall().thenThrow(error??DomainError.unexpected);
 
   setUp(
     () {
@@ -90,6 +93,32 @@ void main() {
           AccountEntity(token),
         ),
       ).called(1);
+    },
+  );
+
+
+  test(
+    "Should emit correct unexpected error if saveCurrentAccount fails",
+        () async {
+      mockSaveCurrentAccountError(DomainError.unexpected);
+    
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+    
+      expectLater(
+        sut.isLoadingStream,
+        emitsInOrder(
+          [!false, !true],
+        ),
+      );
+    
+      sut.mainErrorStream.listen(
+        expectAsync1(
+              (error) => expect(error, DomainError.unexpected.description),
+        ),
+      );
+    
+      await sut.auth();
     },
   );
 
