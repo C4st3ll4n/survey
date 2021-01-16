@@ -300,8 +300,8 @@ void main() {
 
       expectLater(
         sut.isLoadingStream,
-        emitsInOrder(
-          [!false, !true],
+        emits(
+          true,
         ),
       );
 

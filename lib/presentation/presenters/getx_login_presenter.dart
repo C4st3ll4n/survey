@@ -55,8 +55,8 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
       
     } on DomainError catch (error) {
       _mainError.value = error.description;
+      _isLoading.value = false;
     }
-    _isLoading.value = false;
 
   }
 
