@@ -9,25 +9,30 @@ import '../ui/components/components.dart';
 
 import 'factories/factories.dart';
 
-void main(){
-	Provider.debugCheckInvalidValueType = null;
-	runApp(App());
+void main() {
+  Provider.debugCheckInvalidValueType = null;
+  runApp(App());
 }
 
-
 class App extends StatelessWidget {
-	@override
-	Widget build(BuildContext context) {
-		SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-		
-		return GetMaterialApp(
-			debugShowCheckedModeBanner: false,
-			title: "Survey",
-			initialRoute: "/login",
-			theme: appTheme(),
-			getPages: [
-				GetPage(name: "/login", page:makeLoginPage),
-			],
-		);
-	}
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "Survey",
+      initialRoute: "/login",
+      theme: appTheme(),
+      getPages: [
+        GetPage(name: "/login", page: makeLoginPage),
+        GetPage(
+          name: "/surveys",
+          page: () => Scaffold(
+            body: Text("enquetes"),
+          ),
+        ),
+      ],
+    );
+  }
 }

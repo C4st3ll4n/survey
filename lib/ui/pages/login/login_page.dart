@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:survey/ui/pages/pages.dart';
 import '../../components/components.dart';
 import 'components/components.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
+  
   final LoginPresenter presenter;
 
-  const LoginPage({Key key, @required this.presenter}) : super(key: key);
-
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
+  const LoginPage({Key key, this.presenter}) : super(key: key);
   
-  @override
-  void dispose() {
-    widget.presenter.dispose();
-    super.dispose();
-  }
   
   @override
   Widget build(BuildContext context) {
+  
+    void _hideKeyboard() {
+      final _currentFocus = FocusScope.of(context);
+      if(_currentFocus.hasPrimaryFocus){
+        _currentFocus.unfocus();
+      }
+    }
+    
     return Scaffold(
       body: Builder(
         builder: (contexto) {
-          widget.presenter.isLoadingStream.listen(
+          presenter.isLoadingStream.listen(
             (isLoading) {
               if (isLoading) {
                 showSimpleLoading(contexto);
@@ -36,13 +35,22 @@ class _LoginPageState extends State<LoginPage> {
             },
           );
 
-          widget.presenter.mainErrorStream.listen(
+          presenter.mainErrorStream.listen(
             (error) {
               if (error != null && error.trim().isNotEmpty) {
                 showErrorMessage(contexto, error);
             }
             }
           );
+
+          presenter.navigateToStream.listen(
+                  (page) {
+                if (page != null && page.trim().isNotEmpty) {
+                  Get.offAllNamed(page);
+                }
+              }
+          );
+          
           return GestureDetector(
             onTap: _hideKeyboard,
             child: SingleChildScrollView(
@@ -56,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.all(32),
                     child: Provider(
-                      create: (BuildContext context) => widget.presenter,
+                      create: (BuildContext context) => presenter,
                       child: Form(
                         child: Column(
                           children: [
@@ -84,12 +92,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _hideKeyboard() {
-    final _currentFocus = FocusScope.of(context);
-    if(_currentFocus.hasPrimaryFocus){
-      _currentFocus.unfocus();
-    }
-  }
+  
 }
 
 

@@ -47,9 +47,9 @@ void main() {
 
   void mockAuthenticationError(DomainError error) =>
       mockAuthenticationCall().thenThrow(error);
-  
+
   void mockSaveCurrentAccountError(DomainError error) =>
-      mockAuthenticationCall().thenThrow(error??DomainError.unexpected);
+      mockAuthenticationCall().thenThrow(error ?? DomainError.unexpected);
 
   setUp(
     () {
@@ -96,28 +96,27 @@ void main() {
     },
   );
 
-
   test(
     "Should emit correct unexpected error if saveCurrentAccount fails",
-        () async {
+    () async {
       mockSaveCurrentAccountError(DomainError.unexpected);
-    
+
       sut.validateEmail(email);
       sut.validatePassword(password);
-    
+
       expectLater(
         sut.isLoadingStream,
         emitsInOrder(
           [!false, !true],
         ),
       );
-    
+
       sut.mainErrorStream.listen(
         expectAsync1(
-              (error) => expect(error, DomainError.unexpected.description),
+          (error) => expect(error, DomainError.unexpected.description),
         ),
       );
-    
+
       await sut.auth();
     },
   );
@@ -352,6 +351,22 @@ void main() {
       sut.mainErrorStream.listen(
         expectAsync1(
           (error) => expect(error, DomainError.unexpected.description),
+        ),
+      );
+
+      await sut.auth();
+    },
+  );
+
+  test(
+    "Should change page on success",
+    () async {
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      sut.navigateToStream.listen(
+        expectAsync1(
+          (page) => expect(page, "/surveys"),
         ),
       );
 
