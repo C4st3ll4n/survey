@@ -47,6 +47,11 @@ class StreamLoginPresenter implements LoginPresenter {
     _controller = null;
   }
 
+
+  @override
+  // TODO: implement navigateToStream
+  Stream<String> get navigateToStream => throw UnimplementedError();
+
   @override
   Stream<String> get emailErrorStream =>
       _controller?.stream?.map((state) => state.emailError)?.distinct();
@@ -83,6 +88,7 @@ class StreamLoginPresenter implements LoginPresenter {
   }
 
   void _update() => _controller?.add(_state);
+
 }
 
 class LoginState {

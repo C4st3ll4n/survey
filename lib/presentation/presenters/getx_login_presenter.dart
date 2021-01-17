@@ -21,9 +21,11 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   var _emailError = RxString();
   var _passwordError = RxString();
   var _mainError = RxString();
+  var _navigateTo = RxString();
 
   var _isFormValid = false.obs;
   var _isLoading = false.obs;
+
 
   GetXLoginPresenter(
       {@required this.validation, @required this.authentication, @required this.saveCurrentAccount});
@@ -44,6 +46,9 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   Stream<String> get passwordErrorStream => _passwordError.stream.distinct();
 
   @override
+  Stream<String> get navigateToStream => _navigateTo.stream.distinct();
+
+  @override
   Future<void> auth() async {
     _isLoading.value = true;
 
@@ -53,13 +58,16 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
       );
       await saveCurrentAccount.save(account);
       
+      _navigateTo.value = "/surveys";
+      
     } on DomainError catch (error) {
       _mainError.value = error.description;
+      _isLoading.value = false;
     }
-    _isLoading.value = false;
 
   }
 
+  /// Unnecesary: GetX automatcally disposes
   @override
   void dispose() {}
 
@@ -84,5 +92,7 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
               _passwordError.value == null &&
               _email != null &&
               _password != null;
+
+
 
 }
