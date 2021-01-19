@@ -88,6 +88,21 @@ void main() {
       );
     },
   );
+
+  /// TEST ON 404
+  test(
+    "Shoud throw an UnexpectedError if HttpClient returns 404",
+        () async {
+      _mockHttpError(HttpError.notFound);
+    
+      final future = sut.register(params);
+    
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );
+    },
+  );
 }
 
 class RemoteAddAccount implements AddAccount {
