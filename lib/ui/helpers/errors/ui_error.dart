@@ -1,3 +1,5 @@
+import '../helpers.dart';
+
 enum UIError{
 	unexpected, invalidCredentials,
 	requiredField, invalidField
@@ -8,10 +10,10 @@ extension UIErrorExtension on UIError{
 		switch(this){
 			
 		  case UIError.unexpected:
-		    return "Erro inesperado.";
+		    return R.strings.msgUnexpectedError;
 		    break;
 		  case UIError.invalidCredentials:
-		    return "Credenciais inválidas.";
+		    return R.strings.msgInvalidCredentials;
 		    break;
 			case UIError.invalidField:
 				return "Campo inválido.";
