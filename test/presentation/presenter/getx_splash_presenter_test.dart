@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/domain/entities/account_entity.dart';
 import 'package:survey/domain/usecases/usecases.dart';
+import 'package:survey/presentation/presenters/getx_splash_presenter.dart';
 import 'package:survey/ui/pages/splash/splash.dart';
 
 void main() {
@@ -74,26 +75,3 @@ void main() {
 
 
 class LoadCurrentAccountSpy extends Mock implements LoadCurrentAccount {}
-
-class GetXSplashPresenter implements SplashPresenter {
-  final LoadCurrentAccount localLoadCurrentAccount;
-
-  var _navigateTo = RxString();
-
-  GetXSplashPresenter(this.localLoadCurrentAccount);
-
-  @override
-  Future<void> checkAccount() async {
-  	try{
-		  final account = await localLoadCurrentAccount.load();
-		  if(account == null) _navigateTo.value = '/login';
-		  else _navigateTo.value = '/surveys';
-	  }catch(e){
-		  _navigateTo.value = '/login';
-	  }
-   
-  }
-
-  @override
-  Stream<String> get navigateToStream => _navigateTo.stream.distinct();
-}
