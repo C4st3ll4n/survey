@@ -1,6 +1,7 @@
 import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/data/http/http.dart';
+import 'package:survey/data/models/remote_account_model.dart';
 import 'package:survey/domain/entities/account_entity.dart';
 import 'package:survey/domain/helpers/helpers.dart';
 import 'package:test/test.dart';
@@ -132,6 +133,34 @@ void main() {
       );
     },
   );
+
+  /// TEST ON 200
+  test(
+    "Shoud return an Account if HttpClient returns 200",
+    () async {
+      final validData = _mockValidData();
+      _mockHttpData(validData);
+
+      final account = await sut.register(params);
+
+      expect(account.token, validData['accessToken']);
+    },
+  );
+
+  /// TEST ON 200
+  test(
+    "Shoud throw an UnexpectedError if HttpClient returns 200 with invalid data",
+    () async {
+      _mockHttpData({"random": faker.randomGenerator.string(50)});
+
+      final future = sut.register(params);
+
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );
+    },
+  );
 }
 
 class RemoteAddAccount implements AddAccount {
@@ -146,8 +175,8 @@ class RemoteAddAccount implements AddAccount {
     try {
       final response =
           await httpClient.request(url: url, method: "post", body: _body);
-      final token = response['accessToken'];
-      return AccountEntity(token);
+
+      return RemoteAccountModel.fromJson(response).toEntity();
     } on HttpError catch (error) {
       throw error == HttpError.forbidden
           ? DomainError.emailInUse
