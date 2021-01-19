@@ -4,14 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
+import 'package:survey/ui/pages/splash/splash.dart';
 
 class SplashPresenterSpy extends Mock implements SplashPresenter {}
 
-abstract class SplashPresenter {
-  Stream<String> get navigateToStream;
-
-  Future<void> loadCurrentAccount();
-}
 
 void main() {
   SplashPresenter presenter;
@@ -83,34 +79,3 @@ void main() {
   });
 }
 
-class SplashPage extends StatelessWidget {
-  const SplashPage({Key key, @required this.presenter}) : super(key: key);
-
-  final SplashPresenter presenter;
-
-  @override
-  Widget build(BuildContext context) {
-    presenter.loadCurrentAccount();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Surveys"),
-        centerTitle: true,
-      ),
-      body: Builder(
-        builder: (BuildContext context) {
-          presenter.navigateToStream.listen(
-            (page) {
-              if (page?.isNotEmpty == true) {
-                Get.offAllNamed(page);
-              }
-            },
-          );
-
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
-    );
-  }
-}
