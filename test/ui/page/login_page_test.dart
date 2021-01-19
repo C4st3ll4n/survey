@@ -304,6 +304,19 @@ void main() {
       expect(find.text('fake page'), findsOneWidget);
     },
   );
+
+  testWidgets("Shouldnt change page", (tester) async {
+    await loadPage(tester);
+  
+    navigateToController.add("");
+    await tester.pump();
+    expect(Get.currentRoute, "/login");
+  
+    navigateToController.add(null);
+    await tester.pump();
+    expect(Get.currentRoute, "/login");
+  
+  });
 /*
   testWidgets("Should close streams on dispose", (tester) async {
     await loadPage(tester);
