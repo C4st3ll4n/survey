@@ -76,13 +76,12 @@ void main() {
     test("Should throws an Exception", () async {
       Exception e = Exception(); //FIXME
       when(
-        secureStorage.write(
+        secureStorage.read(
           key: anyNamed("key"),
-          value: anyNamed("value"),
         ),
       ).thenThrow(e);
 
-      final future = sut.saveSecure(key: key, value: value);
+      final future = sut.fetchSecure(key);
 
       //verify(secureStorage.write(key: key, value: value));
       expect(future, throwsA(e));
