@@ -22,12 +22,13 @@ class App extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Survey",
-      initialRoute: "/login",
+      initialRoute: "/",
       theme: appTheme(),
       getPages: [
-        GetPage(name: "/login", page: makeLoginPage),
+        GetPage(name: "/", page: makeSplashPage, transition: Transition.fade),
+        GetPage(name: "/login", page: makeLoginPage, transition: Transition.fadeIn),
         GetPage(
-          name: "/surveys",
+          name: "/surveys", transition: Transition.fadeIn,
           page: () => Scaffold(
             body: Text("enquetes"),
           ),
