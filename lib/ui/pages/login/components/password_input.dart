@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:survey/ui/helpers/errors/errors.dart';
 import 'package:survey/ui/pages/login/login_presenter.dart';
 
 class PasswordInput extends StatelessWidget {
@@ -11,15 +12,13 @@ class PasswordInput extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		final presenter = Provider.of<LoginPresenter>(context);
-		return StreamBuilder<String>(
+		return StreamBuilder<UIError>(
 			stream: presenter.passwordErrorStream,
 			builder: (ctx, snap) => TextFormField(
 				onChanged: presenter.validatePassword,
 				decoration: InputDecoration(
 					labelText: "Senha",
-					errorText: snap.data?.isEmpty == true
-							? null
-							: snap.data,
+					errorText: snap.hasData? snap.data.description:null,
 					icon: Icon(
 						Icons.lock,
 						color: Theme.of(context).primaryColorLight,

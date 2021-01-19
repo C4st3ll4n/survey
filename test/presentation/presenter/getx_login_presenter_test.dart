@@ -9,6 +9,7 @@ import 'package:survey/domain/usecases/usecases.dart';
 
 import 'package:survey/presentation/presenters/presenters.dart';
 import 'package:survey/presentation/protocols/protocols.dart';
+import 'package:survey/ui/helpers/errors/errors.dart';
 import 'package:survey/ui/pages/login/login_presenter.dart';
 
 class ValidationSpy extends Mock implements Validation {}
@@ -33,7 +34,7 @@ void main() {
         ),
       );
 
-  void mockValidation({String field, String value}) =>
+  void mockValidation({String field, ValidationError value}) =>
       mockValidationCall(field).thenReturn(value);
 
   PostExpectation mockAuthenticationCall() => when(
@@ -113,7 +114,7 @@ void main() {
 
       sut.mainErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, DomainError.unexpected.description),
+          (error) => expect(error, UIError.unexpected),
         ),
       );
 
@@ -122,14 +123,37 @@ void main() {
   );
 
   test(
-    "Should emit email error if validation fails",
+    "Should emit invalidFieldError if email validation fails",
     () {
       //mockValidationCall().thenReturn("error");
-      mockValidation(value: "error");
+      mockValidation(value: ValidationError.invalidField);
 
       sut.emailErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, "error"),
+          (error) => expect(error, UIError.invalidField),
+        ),
+      );
+
+      sut.isFormValidStream.listen(
+        expectAsync1(
+          (isValid) => expect(isValid, false),
+        ),
+      );
+
+      sut.validateEmail(email);
+      sut.validateEmail(email);
+    },
+  );
+  
+  test(
+    "Should emit invalidFieldError if email is empty",
+    () {
+      //mockValidationCall().thenReturn("error");
+      mockValidation(value: ValidationError.requiredField);
+
+      sut.emailErrorStream.listen(
+        expectAsync1(
+          (error) => expect(error, UIError.requiredField),
         ),
       );
 
@@ -179,11 +203,11 @@ void main() {
     "Should emit password error if validation fails",
     () {
       //mockValidationCall().thenReturn("error");
-      mockValidation(value: "error");
+      mockValidation(value: ValidationError.requiredField);
 
       sut.passwordErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, "error"),
+          (error) => expect(error, UIError.requiredField),
         ),
       );
 
@@ -224,11 +248,11 @@ void main() {
     "Should emit email error if validation fails",
     () {
       //mockValidationCall().thenReturn("error");
-      mockValidation(value: "error", field: "email");
+      mockValidation(value: ValidationError.invalidField, field: "email");
 
       sut.emailErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, "error"),
+          (error) => expect(error, UIError.invalidField),
         ),
       );
 
@@ -325,7 +349,7 @@ void main() {
 
       sut.mainErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, DomainError.invalidCredentials.description),
+          (error) => expect(error, UIError.invalidCredentials),
         ),
       );
 
@@ -350,7 +374,7 @@ void main() {
 
       sut.mainErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, DomainError.unexpected.description),
+          (error) => expect(error, UIError.unexpected),
         ),
       );
 

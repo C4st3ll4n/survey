@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:survey/presentation/protocols/protocols.dart';
 import 'package:survey/validation/protocols/protocols.dart';
 import 'package:survey/validation/validators/validators.dart';
 
@@ -11,15 +12,15 @@ void main() {
   FieldValidation validation2;
   FieldValidation validation3;
 
-  void mockValidation1(String error) {
+  void mockValidation1(ValidationError error) {
     when(validation1.validate(any)).thenReturn(error);
   }
 
-  void mockValidation2(String error) {
+  void mockValidation2(ValidationError error) {
     when(validation2.validate(any)).thenReturn(error);
   }
 
-  void mockValidation3(String error) {
+  void mockValidation3(ValidationError error) {
     when(validation3.validate(any)).thenReturn(error);
   }
 
@@ -40,19 +41,19 @@ void main() {
   });
 
   test("Should return null if all validators return null or empty", () {
-    mockValidation2('');
+    mockValidation2(null);
 
     final error = sut.validate(field: 'any_field', value: 'any_value');
     expect(error, null);
   });
 
   test("Should return the first error of the correct field", () {
-    mockValidation1('error_1');
-    mockValidation2('error_2');
-    mockValidation3('error_3');
+    mockValidation1(ValidationError.requiredField);
+    mockValidation2(ValidationError.invalidField);
+    mockValidation3(ValidationError.invalidField);
 
     final error = sut.validate(field: 'any_field', value: 'any_value');
-    expect(error, 'error_2');
+    expect(error, ValidationError.invalidField);
   });
 }
 

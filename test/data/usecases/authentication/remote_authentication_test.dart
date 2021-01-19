@@ -109,7 +109,7 @@ void main() {
     },
   );
 
-  /// TEST ON 500
+  /// TEST ON 401
   test(
     "Shoud throw an InvalidCrendential if HttpClient returns 401",
     () async {
