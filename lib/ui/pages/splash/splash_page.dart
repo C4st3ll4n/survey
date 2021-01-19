@@ -11,7 +11,7 @@ class SplashPage extends StatelessWidget {
 	
 	@override
 	Widget build(BuildContext context) {
-		presenter.checkAccount();
+		presenter.checkAccount(durationInSeconds: 3);
 		return Scaffold(
 			appBar: AppBar(
 				title: Text("Surveys"),

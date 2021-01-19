@@ -11,7 +11,8 @@ class GetXSplashPresenter implements SplashPresenter {
 	GetXSplashPresenter(this.localLoadCurrentAccount);
 	
 	@override
-	Future<void> checkAccount() async {
+	Future<void> checkAccount({int durationInSeconds = 0}) async {
+		await Future.delayed(Duration(seconds: durationInSeconds));
 		try{
 			final account = await localLoadCurrentAccount.load();
 			if(account == null) _navigateTo.value = '/login';
