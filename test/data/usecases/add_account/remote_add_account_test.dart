@@ -72,6 +72,22 @@ void main() {
       );
     },
   );
+
+
+  /// TEST ON 400
+  test(
+    "Shoud throw an UnexpectedError if HttpClient returns 400",
+        () async {
+      _mockHttpError(HttpError.badRequest);
+    
+      final future = sut.register(params);
+    
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );
+    },
+  );
 }
 
 class RemoteAddAccount implements AddAccount {
@@ -83,9 +99,14 @@ class RemoteAddAccount implements AddAccount {
   @override
   Future<AccountEntity> register(RegisterParams params) async {
     final _body = RemoteRegisterParams.fromDomain(params).toJson();
-    final response = await httpClient.request(url: url, method: "post", body: _body);
-    final token = response['accessToken'];
-    return AccountEntity(token);
+    try{
+      final response = await httpClient.request(url: url, method: "post", body: _body);
+      final token = response['accessToken'];
+      return AccountEntity(token);
+    }on HttpError catch(error){
+      throw DomainError.unexpected;
+    }
+    
   }
 }
 
