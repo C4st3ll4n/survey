@@ -7,5 +7,8 @@ class AccountEntity extends Equatable{
 
   @override
   List<Object> get props => [token];
+  
+  @override
+  bool get stringify => true;
 
 }
