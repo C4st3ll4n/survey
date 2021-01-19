@@ -43,7 +43,16 @@ void main() {
     });
   });
   group("Fetch Secure", () {
-    test("Shloud call fetch secure with correct value", () async {
+    
+    setUp((){
+      when(
+        secureStorage.read(
+          key: anyNamed("key"),
+        ),
+      ).thenAnswer((e) async => value);
+    });
+    
+    test("Should call fetch secure with correct value", () async {
       await sut.fetchSecure(key);
 
       verify(
@@ -52,8 +61,19 @@ void main() {
         ),
       );
     });
+    test(
+      "Should return correct value on success",
+      () async {
+       
+        
+        final fetchedValue = await sut.fetchSecure(key);
 
-    test("Shloud throws an Exception", () async {
+        expect(fetchedValue, value );
+        
+      },
+    );
+
+    test("Should throws an Exception", () async {
       Exception e = Exception(); //FIXME
       when(
         secureStorage.write(
