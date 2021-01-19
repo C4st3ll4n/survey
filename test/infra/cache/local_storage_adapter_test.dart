@@ -20,24 +20,52 @@ void main() {
     value = faker.guid.guid();
   });
 
-  test("Shloud call save secure with correct values", () async {
-    await sut.saveSecure(key: key, value: value);
+  group("Save Secure", () {
+    test("Shloud call save secure with correct values", () async {
+      await sut.saveSecure(key: key, value: value);
 
-    verify(secureStorage.write(key: key, value: value));
+      verify(secureStorage.write(key: key, value: value));
+    });
+
+    test("Shloud call save secure with correct values", () async {
+      Exception e = Exception(); //FIXME
+      when(
+        secureStorage.write(
+          key: anyNamed("key"),
+          value: anyNamed("value"),
+        ),
+      ).thenThrow(e);
+
+      final future = sut.saveSecure(key: key, value: value);
+
+      //verify(secureStorage.write(key: key, value: value));
+      expect(future, throwsA(e));
+    });
   });
+  group("Fetch Secure", () {
+    test("Shloud call fetch secure with correct value", () async {
+      await sut.fetchSecure(key);
 
-  test("Shloud call save secure with correct values", () async {
-    Exception e = Exception(); //FIXME
-    when(
-      secureStorage.write(
-        key: anyNamed("key"),
-        value: anyNamed("value"),
-      ),
-    ).thenThrow(e);
+      verify(
+        secureStorage.read(
+          key: key,
+        ),
+      );
+    });
 
-    final future = sut.saveSecure(key: key, value: value);
+    test("Shloud throws an Exception", () async {
+      Exception e = Exception(); //FIXME
+      when(
+        secureStorage.write(
+          key: anyNamed("key"),
+          value: anyNamed("value"),
+        ),
+      ).thenThrow(e);
 
-    //verify(secureStorage.write(key: key, value: value));
-    expect(future, throwsA(e));
+      final future = sut.saveSecure(key: key, value: value);
+
+      //verify(secureStorage.write(key: key, value: value));
+      expect(future, throwsA(e));
+    });
   });
 }
