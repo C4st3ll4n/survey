@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
+import 'package:survey/ui/helpers/errors/errors.dart';
 import 'package:survey/ui/pages/pages.dart';
 
 void main() {
   LoginPresenter presenter;
-  StreamController<String> emailErrorController;
-  StreamController<String> passwordErrorController;
-  StreamController<String> mainErrorController;
+  StreamController<UIError> emailErrorController;
+  StreamController<UIError> passwordErrorController;
+  StreamController<UIError> mainErrorController;
   StreamController<String> navigateToController;
   StreamController<bool> isFormValidController;
   StreamController<bool> isLoadingController;
@@ -137,10 +138,10 @@ void main() {
     "Shoud present error if email is invalid",
     (tester) async {
       await loadPage(tester);
-      emailErrorController.add("invalid email");
+      emailErrorController.add(UIError.invalidField);
       await tester.pump();
 
-      expect(find.text("invalid email"), findsOneWidget);
+      expect(find.text(UIError.invalidField.description), findsOneWidget);
     },
   );
 
@@ -165,7 +166,7 @@ void main() {
     "Shoud present no error email is valid",
     (tester) async {
       await loadPage(tester);
-      emailErrorController.add('');
+      emailErrorController.add(null);
       await tester.pump();
 
       expect(
@@ -199,7 +200,7 @@ void main() {
     "Shoud present no error password is valid",
     (tester) async {
       await loadPage(tester);
-      passwordErrorController.add('');
+      passwordErrorController.add(null);
       await tester.pump();
 
       expect(
@@ -216,10 +217,10 @@ void main() {
     "Shoud present error if password is invalid",
     (tester) async {
       await loadPage(tester);
-      passwordErrorController.add("any error");
+      passwordErrorController.add(UIError.unexpected);
       await tester.pump();
 
-      expect(find.text("any error"), findsOneWidget);
+      expect(find.text(UIError.unexpected.description), findsOneWidget);
     },
   );
 
@@ -286,10 +287,10 @@ void main() {
     "Shoud present error message if authentication fails",
     (tester) async {
       await loadPage(tester);
-      mainErrorController.add("main error");
+      mainErrorController.add(UIError.unexpected);
       await tester.pump();
 
-      expect(find.text("main error"), findsOneWidget);
+      expect(find.text(UIError.unexpected.description), findsOneWidget);
     },
   );
 

@@ -1,9 +1,11 @@
-abstract class LoginPresenter {
-  Stream<String> get emailErrorStream;
+import 'package:survey/ui/helpers/errors/errors.dart';
 
-  Stream<String> get passwordErrorStream;
+abstract class LoginPresenter {
+  Stream<UIError> get emailErrorStream;
+
+  Stream<UIError> get passwordErrorStream;
   
-  Stream<String> get mainErrorStream;
+  Stream<UIError> get mainErrorStream;
   
   Stream<String> get navigateToStream;
 
