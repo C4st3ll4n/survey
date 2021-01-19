@@ -1,9 +1,10 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:survey/data/cache/fetch_secure_cache_storage.dart';
+import 'package:survey/data/usecases/load_current_account/load_current_account.dart';
 import 'package:survey/domain/entities/account_entity.dart';
 import 'package:survey/domain/helpers/domain_error.dart';
-import 'package:survey/domain/usecases/load_current_account.dart';
 
 void main() {
   LocalLoadCurrentAccount sut;
@@ -59,22 +60,4 @@ void main() {
 class FetchSecureCacheStorageSpy extends Mock
     implements FetchSecureCacheStorage {}
 
-abstract class FetchSecureCacheStorage {
-  Future<String> fetchSecure(String key);
-}
 
-class LocalLoadCurrentAccount implements LoadCurrentAccount {
-  final FetchSecureCacheStorage fetchSecureCacheStorage;
-
-  LocalLoadCurrentAccount(this.fetchSecureCacheStorage);
-
-  @override
-  Future<AccountEntity> load() async {
-    try{
-    final token = await fetchSecureCacheStorage.fetchSecure("token");
-    return AccountEntity(token);
-    } catch(ex, stck){
-      throw DomainError.unexpected;
-    }
-  }
-}
