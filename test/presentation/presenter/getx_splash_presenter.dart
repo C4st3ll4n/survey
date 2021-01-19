@@ -8,10 +8,8 @@ import 'package:survey/ui/pages/splash/splash.dart';
 void main() {
   SplashPresenter sut;
   LoadCurrentAccount loadCurrentAccountSpy;
-  setUp(() {
-    when(loadCurrentAccountSpy.load())
-        .thenAnswer((realInvocation) async => AccountEntity("token"));
 
+  setUp(() {
     loadCurrentAccountSpy = LoadCurrentAccountSpy();
     sut = GetXSplashPresenter(loadCurrentAccountSpy);
   });
@@ -21,9 +19,15 @@ void main() {
     verify(loadCurrentAccountSpy.load()).called(1);
   });
 
-  test("Should return AccountEntity", () async {
-    final account = await sut.checkAccount();
-    expect(account, AccountEntity("token"));
+  test("Should go to surveys page on success", () async {
+    sut.navigateToStream.listen(
+      expectAsync1(
+        (callback) {
+          expect(callback, "/surveys");
+        },
+      ),
+    );
+    await sut.checkAccount();
   });
 }
 
@@ -37,9 +41,9 @@ class GetXSplashPresenter implements SplashPresenter {
   GetXSplashPresenter(this.localLoadCurrentAccount);
 
   @override
-  Future<AccountEntity> checkAccount() async {
+  Future<void> checkAccount() async {
     final account = await localLoadCurrentAccount.load();
-    return account;
+    _navigateTo.value = '/surveys';
   }
 
   @override
