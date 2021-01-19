@@ -73,15 +73,14 @@ void main() {
     },
   );
 
-
   /// TEST ON 400
   test(
     "Shoud throw an UnexpectedError if HttpClient returns 400",
-        () async {
+    () async {
       _mockHttpError(HttpError.badRequest);
-    
+
       final future = sut.register(params);
-    
+
       expect(
         future,
         throwsA(DomainError.unexpected),
@@ -92,14 +91,44 @@ void main() {
   /// TEST ON 404
   test(
     "Shoud throw an UnexpectedError if HttpClient returns 404",
-        () async {
+    () async {
       _mockHttpError(HttpError.notFound);
-    
+
       final future = sut.register(params);
-    
+
       expect(
         future,
         throwsA(DomainError.unexpected),
+      );
+    },
+  );
+
+  /// TEST ON 500
+  test(
+    "Shoud throw an UnexpectedError if HttpClient returns 500",
+    () async {
+      _mockHttpError(HttpError.serverError);
+
+      final future = sut.register(params);
+
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );
+    },
+  );
+
+  /// TEST ON 401
+  test(
+    "Shoud throw an InvalidCrendential if HttpClient returns 403",
+    () async {
+      _mockHttpError(HttpError.forbidden);
+
+      final future = sut.register(params);
+
+      expect(
+        future,
+        throwsA(DomainError.emailInUse),
       );
     },
   );
@@ -114,14 +143,16 @@ class RemoteAddAccount implements AddAccount {
   @override
   Future<AccountEntity> register(RegisterParams params) async {
     final _body = RemoteRegisterParams.fromDomain(params).toJson();
-    try{
-      final response = await httpClient.request(url: url, method: "post", body: _body);
+    try {
+      final response =
+          await httpClient.request(url: url, method: "post", body: _body);
       final token = response['accessToken'];
       return AccountEntity(token);
-    }on HttpError catch(error){
-      throw DomainError.unexpected;
+    } on HttpError catch (error) {
+      throw error == HttpError.forbidden
+          ? DomainError.emailInUse
+          : DomainError.unexpected;
     }
-    
   }
 }
 
@@ -145,6 +176,10 @@ class RemoteRegisterParams {
         passwordConfirmation: entity.passwordConfirmation,
       );
 
-  Map toJson() => {'email': email, 'password': password, 'name':name,
-  "confirmPassword":passwordConfirmation};
+  Map toJson() => {
+        'email': email,
+        'password': password,
+        'name': name,
+        "confirmPassword": passwordConfirmation
+      };
 }
