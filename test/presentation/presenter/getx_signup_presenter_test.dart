@@ -57,6 +57,7 @@ void main() {
   setUp(
     () {
       token = faker.guid.guid();
+      name = faker.person.name();
       saveCurrentAccount = SaveCurrentAccountSpy();
       validation = ValidationSpy();
       addAccount = AddAccountSpy();
@@ -74,23 +75,15 @@ void main() {
     },
   );
 
-  test(
-    "Should call validation with correct e-mail",
-    () {
-      sut.validateEmail(email);
-
-      verify(validation.validate(field: "email", value: email)).called(1);
-    },
-  );
 
   test(
     "Should call saveCurrentAccount with correct value",
-    () async {
+        () async {
       sut.validateEmail(email);
       sut.validatePassword(password);
-
+    
       await sut.signup();
-
+    
       verify(
         saveCurrentAccount.save(
           AccountEntity(token),
@@ -101,28 +94,38 @@ void main() {
 
   test(
     "Should emit correct unexpected error if saveCurrentAccount fails",
-    () async {
+        () async {
       mockSaveCurrentAccountError(DomainError.unexpected);
-
+    
       sut.validateEmail(email);
       sut.validatePassword(password);
-
+    
       expectLater(
         sut.isLoadingStream,
         emitsInOrder(
           [!false, !true],
         ),
       );
-
+    
       sut.mainErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, UIError.unexpected),
+              (error) => expect(error, UIError.unexpected),
         ),
       );
-
+    
       await sut.signup();
     },
   );
+
+  test(
+    "Should call validation with correct e-mail",
+    () {
+      sut.validateEmail(email);
+
+      verify(validation.validate(field: "email", value: email)).called(1);
+    },
+  );
+
 
   test(
     "Should emit invalidFieldError if email validation fails",
@@ -244,159 +247,84 @@ void main() {
     },
   );
 
-  /* FORM TESTS */
+  /* NAME TESTS */
+
 
   test(
-    "Should emit email error if validation fails",
-    () {
+    "Should call validation with correct name",
+        () {
+      sut.validateName(name);
+    
+      verify(validation.validate(field: "name", value: name)).called(1);
+    },
+  );
+
+
+  test(
+    "Should emit invalidFieldError if name validation fails",
+        () {
       //mockValidationCall().thenReturn("error");
-      mockValidation(value: ValidationError.invalidField, field: "email");
-
-      sut.emailErrorStream.listen(
+      mockValidation(value: ValidationError.invalidField);
+    
+      sut.nameErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, UIError.invalidField),
+              (error) => expect(error, UIError.invalidField),
         ),
       );
-
-      sut.passwordErrorStream.listen(
-        expectAsync1(
-          (error) => expect(error, null),
-        ),
-      );
-
+    
       sut.isFormValidStream.listen(
         expectAsync1(
-          (isValid) => expect(isValid, false),
+              (isValid) => expect(isValid, false),
         ),
       );
-
-      sut.validateEmail(email);
-      sut.validatePassword(password);
+    
+      sut.validateName(name);
+      sut.validateName(name);
     },
   );
 
   test(
-    "Should emit success if validation is okay",
-    () async {
-      sut.emailErrorStream.listen(
+    "Should emit invalidFieldError if name is empty",
+        () {
+      //mockValidationCall().thenReturn("error");
+      mockValidation(value: ValidationError.requiredField);
+    
+      sut.nameErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, null),
+              (error) => expect(error, UIError.requiredField),
         ),
       );
-
-      sut.passwordErrorStream.listen(
+    
+      sut.isFormValidStream.listen(
         expectAsync1(
-          (error) => expect(error, null),
+              (isValid) => expect(isValid, false),
         ),
       );
-      expectLater(
-        sut.isFormValidStream,
-        emitsInOrder(
-          [false, true],
-        ),
-      );
-
-      sut.validateEmail(email);
-      await Future.delayed(Duration.zero);
-      sut.validatePassword(password);
+    
+      sut.validateName(name);
+      sut.validateName(name);
     },
   );
 
   test(
-    "Should call authentication with correct values",
-    () async {
-      sut.validateEmail(email);
-      sut.validatePassword(password);
-
-      await sut.signup();
-
-      verify(
-        addAccount.register(
-          RegisterParams(email: email, password: password),
-        ),
-      ).called(1);
-    },
-  );
-  test(
-    "Should emit correct event on Authentication success",
-    () async {
-      sut.validateEmail(email);
-      sut.validatePassword(password);
-
-      expectLater(
-        sut.isLoadingStream,
-        emits(
-          true,
-        ),
-      );
-
-      await sut.signup();
-    },
-  );
-
-  test(
-    "Should emit correct event on Authentication invalid credentials error",
-    () async {
-      mockAuthenticationError(DomainError.invalidCredentials);
-
-      sut.validateEmail(email);
-      sut.validatePassword(password);
-
-      expectLater(
-        sut.isLoadingStream,
-        emitsInOrder(
-          [!false, !true],
-        ),
-      );
-
-      sut.mainErrorStream.listen(
+    "Should emit null if name validation succeeds",
+        () {
+      sut.nameErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, UIError.invalidCredentials),
+              (error) => expect(error, null),
         ),
       );
-
-      await sut.signup();
-    },
-  );
-
-  test(
-    "Should emit correct event on Authentication unexpected error",
-    () async {
-      mockAuthenticationError(DomainError.unexpected);
-
-      sut.validateEmail(email);
-      sut.validatePassword(password);
-
-      expectLater(
-        sut.isLoadingStream,
-        emitsInOrder(
-          [!false, !true],
-        ),
-      );
-
-      sut.mainErrorStream.listen(
+    
+      sut.isFormValidStream.listen(
         expectAsync1(
-          (error) => expect(error, UIError.unexpected),
+              (isValid) => expect(isValid, false),
         ),
       );
-
-      await sut.signup();
+    
+      sut.validateName(name);
+      sut.validateName(name);
     },
   );
+  
 
-  test(
-    "Should change page on success",
-    () async {
-      sut.validateEmail(email);
-      sut.validatePassword(password);
-
-      sut.navigateToStream.listen(
-        expectAsync1(
-          (page) => expect(page, "/surveys"),
-        ),
-      );
-
-      await sut.signup();
-    },
-  );
 }
