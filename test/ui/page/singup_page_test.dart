@@ -188,6 +188,42 @@ void main() {
       );
     },
   );
+  
+  testWidgets(
+    "Shoud present no error if password is valid",
+        (tester) async {
+      await loadPage(tester);
+      passwordErrorController.add(null);
+      await tester.pump();
+    
+      expect(
+        find.descendant(
+          of: find.bySemanticsLabel("Senha"),
+          matching: find.byType(Text),
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    "Shoud present no error if passwordConfirmation is valid",
+        (tester) async {
+      await loadPage(tester);
+      passwordConfirmationErrorController.add(null);
+      await tester.pump();
+    
+      expect(
+        find.descendant(
+          of: find.bySemanticsLabel("Confirmar senha"),
+          matching: find.byType(Text),
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+  
+  
 }
 
 class SignupPresenterSpy extends Mock implements SignUpPresenter {}
