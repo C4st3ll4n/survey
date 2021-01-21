@@ -311,6 +311,43 @@ void main() {
       expect(find.text(UIError.requiredField.description), findsOneWidget);
     },
   );
+
+
+  testWidgets("Shoud enable buttom if form is valid", (tester) async {
+    await loadPage(tester);
+    isFormValidController.add(true);
+  
+    await tester.pump();
+  
+    final raisedButton = tester.widget<RaisedButton>(find.byType(RaisedButton));
+    expect(raisedButton.onPressed, isNotNull);
+  });
+
+
+  testWidgets("Shoud disable buttom if form is invalid", (tester) async {
+    await loadPage(tester);
+    isFormValidController.add(false);
+  
+    await tester.pump();
+  
+    final raisedButton = tester.widget<RaisedButton>(find.byType(RaisedButton));
+    expect(raisedButton.onPressed, isNull);
+  });
+/*
+  testWidgets(
+    "Shoud call authentication on form submit",
+        (tester) async {
+      await loadPage(tester);
+      isFormValidController.add(true);
+      await tester.pump();
+    
+      await tester.tap(find.byType(RaisedButton));
+      await tester.pump();
+    
+      verify(presenter.signup()).called(1);
+    },
+  );*/
+  
   
   
 }
