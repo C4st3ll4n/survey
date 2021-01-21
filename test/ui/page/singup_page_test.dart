@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
-import 'package:survey/ui/helpers/errors/errors.dart';
+import 'package:survey/ui/helpers/helpers.dart';
 import 'package:survey/ui/pages/pages.dart';
 
 void main() {
-  LoginPresenter presenter;
+  SignupPresenterSpy presenter;
+  StreamController<UIError> nameErrorController;
+  StreamController<UIError> passwordConfirmationErrorController;
   StreamController<UIError> emailErrorController;
   StreamController<UIError> passwordErrorController;
   StreamController<UIError> mainErrorController;
@@ -18,6 +20,8 @@ void main() {
   StreamController<bool> isLoadingController;
 
   void _initStreams() {
+    nameErrorController = StreamController();
+    passwordConfirmationErrorController = StreamController();
     emailErrorController = StreamController();
     passwordErrorController = StreamController();
     isFormValidController = StreamController();
@@ -27,6 +31,8 @@ void main() {
   }
 
   void _closeStreams() {
+    passwordConfirmationErrorController.close();
+    nameErrorController.close();
     emailErrorController.close();
     passwordErrorController.close();
     isFormValidController.close();
@@ -36,6 +42,12 @@ void main() {
   }
 
   void _mockStreams() {
+    when(presenter.passwordConfirmationErrorStream)
+        .thenAnswer((_) => passwordConfirmationErrorController.stream);
+
+    when(presenter.nameErrorStream)
+        .thenAnswer((_) => nameErrorController.stream);
+
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
 
@@ -64,16 +76,15 @@ void main() {
   );
 
   Future<void> loadPage(WidgetTester tester) async {
-    presenter = LoginPresenterSpy();
+    presenter = SignupPresenterSpy();
     _initStreams();
     _mockStreams();
-    final loginPage = GetMaterialApp(
-    
-      initialRoute: "/login",
+    final singupPage = GetMaterialApp(
+      initialRoute: "/signup",
       getPages: [
         GetPage(
-          name: "/login",
-          page: () => LoginPage(
+          name: "/signup",
+          page: () => SignUpPage(
             presenter: presenter,
           ),
         ),
@@ -85,7 +96,7 @@ void main() {
         ),
       ],
     );
-    await tester.pumpWidget(loginPage);
+    await tester.pumpWidget(singupPage);
   }
 
   testWidgets(
@@ -107,7 +118,7 @@ void main() {
         of: find.bySemanticsLabel("Senha"),
         matching: find.byType(Text),
       );
-      
+
       expect(passwordTextChildren, findsOneWidget,
           reason: "When a TextFormField has only one text"
               " child, means it has no errors, since one of the child is"
@@ -122,7 +133,7 @@ void main() {
           reason: "When a TextFormField has only one text"
               " child, means it has no errors, since one of the child is"
               " always the label text");
-      
+
       final confirmPasswordTextChildren = find.descendant(
         of: find.bySemanticsLabel("Confirmar senha"),
         matching: find.byType(Text),
@@ -141,6 +152,42 @@ void main() {
     },
   );
 
+  testWidgets("Shoud call validate with correct values", (tester) async {
+    await loadPage(tester);
+
+    final name = faker.person.name();
+    await tester.enterText(find.bySemanticsLabel("Nome"), name);
+    verify(presenter.validateName(name));
+    
+    final email = faker.internet.email();
+    await tester.enterText(find.bySemanticsLabel("Email"), email);
+    verify(presenter.validateEmail(email));
+
+    final password = faker.internet.password();
+    await tester.enterText(find.bySemanticsLabel("Senha"), password);
+    verify(presenter.validatePassword(password));
+
+    await tester.enterText(find.bySemanticsLabel("Confirmar senha"), password);
+    verify(presenter.validatePasswordConfirmation(password));
+  });
+
+
+  testWidgets(
+    "Shoud present no error email is valid",
+        (tester) async {
+      await loadPage(tester);
+      emailErrorController.add(null);
+      await tester.pump();
+    
+      expect(
+        find.descendant(
+          of: find.bySemanticsLabel("Email"),
+          matching: find.byType(Text),
+        ),
+        findsOneWidget,
+      );
+    },
+  );
 }
 
-class LoginPresenterSpy extends Mock implements LoginPresenter {}
+class SignupPresenterSpy extends Mock implements SignUpPresenter {}
