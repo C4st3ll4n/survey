@@ -240,15 +240,75 @@ void main() {
     },
   );
 
-
   testWidgets(
-    "Shoud present error if password is invalid",
+    "Shoud present password error",
         (tester) async {
       await loadPage(tester);
+      passwordErrorController.add(UIError.invalidField);
+      await tester.pump();
+      expect(find.text(UIError.invalidField.description), findsOneWidget);
+
       passwordErrorController.add(UIError.unexpected);
       await tester.pump();
-    
       expect(find.text(UIError.unexpected.description), findsOneWidget);
+
+      passwordErrorController.add(UIError.requiredField);
+      await tester.pump();
+      expect(find.text(UIError.requiredField.description), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Shoud present email error",
+        (tester) async {
+      await loadPage(tester);
+      emailErrorController.add(UIError.invalidField);
+      await tester.pump();
+      expect(find.text(UIError.invalidField.description), findsOneWidget);
+
+      emailErrorController.add(UIError.unexpected);
+      await tester.pump();
+      expect(find.text(UIError.unexpected.description), findsOneWidget);
+
+      emailErrorController.add(UIError.requiredField);
+      await tester.pump();
+      expect(find.text(UIError.requiredField.description), findsOneWidget);
+    },
+  );
+  
+  testWidgets(
+    "Shoud present name error",
+        (tester) async {
+      await loadPage(tester);
+      nameErrorController.add(UIError.invalidField);
+      await tester.pump();
+      expect(find.text(UIError.invalidField.description), findsOneWidget);
+
+      nameErrorController.add(UIError.unexpected);
+      await tester.pump();
+      expect(find.text(UIError.unexpected.description), findsOneWidget);
+
+      nameErrorController.add(UIError.requiredField);
+      await tester.pump();
+      expect(find.text(UIError.requiredField.description), findsOneWidget);
+    },
+  );
+  
+  testWidgets(
+    "Shoud present passwordConfirmation error",
+        (tester) async {
+      await loadPage(tester);
+      passwordConfirmationErrorController.add(UIError.invalidField);
+      await tester.pump();
+      expect(find.text(UIError.invalidField.description), findsOneWidget);
+
+      passwordConfirmationErrorController.add(UIError.unexpected);
+      await tester.pump();
+      expect(find.text(UIError.unexpected.description), findsOneWidget);
+
+      passwordConfirmationErrorController.add(UIError.requiredField);
+      await tester.pump();
+      expect(find.text(UIError.requiredField.description), findsOneWidget);
     },
   );
   
