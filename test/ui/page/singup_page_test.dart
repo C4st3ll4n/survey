@@ -381,10 +381,10 @@ void main() {
     "Shoud present error message if signup fails",
         (tester) async {
       await loadPage(tester);
-      mainErrorController.add(UIError.unexpected);
+      mainErrorController.add(UIError.emailInUse);
       await tester.pump();
     
-      expect(find.text(UIError.unexpected.description), findsOneWidget);
+      expect(find.text(UIError.emailInUse.description), findsOneWidget);
     },
   );
 
