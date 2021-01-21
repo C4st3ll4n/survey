@@ -349,6 +349,69 @@ void main() {
       verify(presenter.signup()).called(1);
     },
   );
+
+
+  testWidgets(
+    "Shoud call loading on form submit",
+        (tester) async {
+      await loadPage(tester);
+      isLoadingController.add(true);
+      await tester.pump();
+    
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Shoud hide loading",
+        (tester) async
+        {
+      await loadPage(tester);
+      isLoadingController.add(true);
+      await tester.pump();
+    
+      isLoadingController.add(false);
+      await tester.pump();
+    
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    },
+  );
+
+  testWidgets(
+    "Shoud present error message if signup fails",
+        (tester) async {
+      await loadPage(tester);
+      mainErrorController.add(UIError.unexpected);
+      await tester.pump();
+    
+      expect(find.text(UIError.unexpected.description), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Shoud change page",
+        (tester) async {
+      await loadPage(tester);
+      navigateToController.add("/fake_page");
+      await tester.pumpAndSettle();
+    
+      expect(Get.currentRoute, "/fake_page");
+      expect(find.text('fake page'), findsOneWidget);
+    },
+  );
+
+  testWidgets("Shouldnt change page", (tester) async {
+    await loadPage(tester);
+  
+    navigateToController.add("");
+    await tester.pump();
+    expect(Get.currentRoute, "/signup");
+  
+    navigateToController.add(null);
+    await tester.pump();
+    expect(Get.currentRoute, "/signup");
+  
+  });
   
   
   
