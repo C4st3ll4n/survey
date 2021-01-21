@@ -24,6 +24,7 @@ void main() {
   String email;
   String token;
   String password;
+  String passwordConfirmation;
   Validation validation;
   AddAccount addAccount;
   GetXSignUpPresenter sut;
@@ -69,7 +70,8 @@ void main() {
 
       email = faker.internet.email();
       password = faker.internet.password();
-
+      passwordConfirmation = password;
+      
       mockValidation();
       mockAuthentication();
     },
@@ -325,6 +327,59 @@ void main() {
       sut.validateName(name);
     },
   );
+
+// PASSWORD CONFIRMATION TEST
   
+  test(
+    "Should call validation with correct password confirmation",
+        () {
+      sut.validatePasswordConfirmation(password);
+    
+      verify(validation.validate(field: "passwordConfirmation", value: passwordConfirmation)).called(1);
+    },
+  );
+
+  test(
+    "Should emit password confirmation error if validation fails",
+        () {
+      //mockValidationCall().thenReturn("error");
+      mockValidation(value: ValidationError.requiredField);
+    
+      sut.passwordConfirmationErrorStream.listen(
+        expectAsync1(
+              (error) => expect(error, UIError.requiredField),
+        ),
+      );
+    
+      sut.isFormValidStream.listen(
+        expectAsync1(
+              (isValid) => expect(isValid, false),
+        ),
+      );
+    
+      sut.validatePasswordConfirmation(passwordConfirmation);
+      sut.validatePasswordConfirmation(passwordConfirmation);
+    },
+  );
+
+  test(
+    "Should emit null if password confirmation validation succeeds",
+        () {
+      sut.passwordConfirmationErrorStream.listen(
+        expectAsync1(
+              (error) => expect(error, null),
+        ),
+      );
+    
+      sut.isFormValidStream.listen(
+        expectAsync1(
+              (isValid) => expect(isValid, false),
+        ),
+      );
+    
+      sut.validatePasswordConfirmation(passwordConfirmation);
+      sut.validatePasswordConfirmation(passwordConfirmation);
+    },
+  );
 
 }
