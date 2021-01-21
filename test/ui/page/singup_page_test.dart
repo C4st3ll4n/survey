@@ -222,6 +222,35 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    "Shoud present no error if name is valid",
+        (tester) async {
+      await loadPage(tester);
+      nameErrorController.add(null);
+      await tester.pump();
+    
+      expect(
+        find.descendant(
+          of: find.bySemanticsLabel("Nome"),
+          matching: find.byType(Text),
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
+
+  testWidgets(
+    "Shoud present error if password is invalid",
+        (tester) async {
+      await loadPage(tester);
+      passwordErrorController.add(UIError.unexpected);
+      await tester.pump();
+    
+      expect(find.text(UIError.unexpected.description), findsOneWidget);
+    },
+  );
   
   
 }
