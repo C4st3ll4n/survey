@@ -15,7 +15,7 @@ class SignUpButton extends StatelessWidget {
 				return RaisedButton(
 					child: Text(R.strings.addAccount),
 					onPressed: snapshot.data == true
-							? presenter.auth
+							? presenter.signup
 							: null,
 				);
 			},);

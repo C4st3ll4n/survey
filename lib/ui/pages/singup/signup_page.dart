@@ -83,10 +83,10 @@ class SignUpPage extends StatelessWidget {
                               child: PasswordConfirmationInput(),
                             ),
                             SignUpButton(),
-                          /*  FlatButton.icon(
+                           FlatButton.icon(
                                 onPressed: () {},
-                                icon: Icon(Icons.person_add),
-                                label: Text(R.strings.addAccount)),*/
+                                icon: Icon(Icons.exit_to_app),
+                                label: Text(R.strings.login)),
                           ],
                         ),
                       ),
