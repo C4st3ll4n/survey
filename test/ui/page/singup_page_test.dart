@@ -333,20 +333,22 @@ void main() {
     final raisedButton = tester.widget<RaisedButton>(find.byType(RaisedButton));
     expect(raisedButton.onPressed, isNull);
   });
-/*
+
   testWidgets(
-    "Shoud call authentication on form submit",
+    "Shoud call signup on form submit",
         (tester) async {
       await loadPage(tester);
       isFormValidController.add(true);
       await tester.pump();
-    
-      await tester.tap(find.byType(RaisedButton));
+      
+      final button = find.byType(RaisedButton);
+      await tester.ensureVisible(button);
+      await tester.tap(button);
       await tester.pump();
     
       verify(presenter.signup()).called(1);
     },
-  );*/
+  );
   
   
   
