@@ -1,41 +1,56 @@
 import 'package:meta/meta.dart';
-import 'package:survey/data/models/remote_account_model.dart';
-
+import '../../models/remote_account_model.dart';
+import '../../http/http.dart';
+import '../../../domain/entities/entities.dart';
 import '../../../domain/helpers/helpers.dart';
 import '../../../domain/usecases/usecases.dart';
-import '../../../domain/entities/entities.dart';
 
-import '../../http/http.dart';
-
-class RemoteAuthentication implements Authentication{
+class RemoteAddAccount implements AddAccount {
   final HttpClient httpClient;
   final String url;
 
-  RemoteAuthentication({@required this.httpClient, @required this.url});
+  RemoteAddAccount({this.httpClient, this.url});
 
-  Future<AccountEntity> auth(AuthenticationParams authenticationParams) async {
-    //final Map body = {'email':authenticationParams.email, 'password':authenticationParams.secret};
+  @override
+  Future<AccountEntity> register(RegisterParams params) async {
+    final _body = RemoteRegisterParams.fromDomain(params).toJson();
     try {
-      final body =
-          RemoteAuthenticationParams.fromDomain(authenticationParams).toJson();
-      final response = await httpClient.request(url: url, method: 'post', body: body);
+      final response =
+          await httpClient.request(url: url, method: "post", body: _body);
+
       return RemoteAccountModel.fromJson(response).toEntity();
     } on HttpError catch (error) {
-      throw error == HttpError.unauthorized
-          ? DomainError.invalidCredentials
+      throw error == HttpError.forbidden
+          ? DomainError.emailInUse
           : DomainError.unexpected;
     }
   }
 }
 
-class RemoteAuthenticationParams {
+class RemoteRegisterParams {
   final String email;
+  final String name;
   final String password;
+  final String passwordConfirmation;
 
-  RemoteAuthenticationParams({@required this.email, @required this.password});
+  RemoteRegisterParams(
+      {@required this.email,
+      @required this.name,
+      @required this.passwordConfirmation,
+      @required this.password});
 
-  factory RemoteAuthenticationParams.fromDomain(AuthenticationParams entity) =>
-      RemoteAuthenticationParams(email: entity.email, password: entity.secret);
+  factory RemoteRegisterParams.fromDomain(RegisterParams entity) =>
+      RemoteRegisterParams(
+        email: entity.email,
+        password: entity.password,
+        name: entity.name,
+        passwordConfirmation: entity.passwordConfirmation,
+      );
 
-  Map toJson() => {'email': email, 'password': password};
+  Map toJson() => {
+        'email': email,
+        'password': password,
+        'name': name,
+        "confirmPassword": passwordConfirmation
+      };
 }
