@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:survey/ui/helpers/helpers.dart';
+import '../../helpers/helpers.dart';
 
 import '../../helpers/errors/errors.dart';
 import '../../components/components.dart';
@@ -9,22 +9,19 @@ import '../pages.dart';
 import 'components/components.dart';
 
 class SignUpPage extends StatelessWidget {
-  
   final SignUpPresenter presenter;
 
   const SignUpPage({Key key, this.presenter}) : super(key: key);
-  
-  
+
   @override
   Widget build(BuildContext context) {
-  
     void _hideKeyboard() {
       final _currentFocus = FocusScope.of(context);
-      if(_currentFocus.hasPrimaryFocus){
+      if (_currentFocus.hasPrimaryFocus) {
         _currentFocus.unfocus();
       }
     }
-    
+
     return Scaffold(
       body: Builder(
         builder: (contexto) {
@@ -38,22 +35,18 @@ class SignUpPage extends StatelessWidget {
             },
           );
 
-          presenter.mainErrorStream.listen(
-            (UIError error) {
-              if (error != null) {
-                showErrorMessage(contexto, error.description);
+          presenter.mainErrorStream.listen((UIError error) {
+            if (error != null) {
+              showErrorMessage(contexto, error.description);
             }
-            }
-          );
+          });
 
-          presenter.navigateToStream.listen(
-                  (page) {
-                if (page != null && page.trim().isNotEmpty) {
-                  Get.offAllNamed(page);
-                }
-              }
-          );
-          
+          presenter.navigateToStream.listen((page) {
+            if (page != null && page.trim().isNotEmpty) {
+              Get.offAllNamed(page);
+            }
+          });
+
           return GestureDetector(
             onTap: _hideKeyboard,
             child: SingleChildScrollView(
@@ -72,7 +65,6 @@ class SignUpPage extends StatelessWidget {
                         child: Column(
                           children: [
                             NameInput(),
-                            
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: EmailInput(),
@@ -83,7 +75,7 @@ class SignUpPage extends StatelessWidget {
                               child: PasswordConfirmationInput(),
                             ),
                             SignUpButton(),
-                           FlatButton.icon(
+                            FlatButton.icon(
                                 onPressed: presenter.goToLogin,
                                 icon: Icon(Icons.exit_to_app),
                                 label: Text(R.strings.login)),
@@ -100,9 +92,4 @@ class SignUpPage extends StatelessWidget {
       ),
     );
   }
-
-  
 }
-
-
-
