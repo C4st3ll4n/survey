@@ -13,11 +13,8 @@ void main(){
 		expect(sut.validate('wrong_value'), ValidationError.invalidField);
 	});
 	
-	test("Should return error if value is empty",(){
-		expect(sut.validate(''), ValidationError.requiredField);
-	});
 	
-	test("Should return error if value is null",(){
-		expect(sut.validate(null),ValidationError.requiredField);
+	test("Should return error if values are the same",(){
+		expect(sut.validate("any_value"),null);
 	});
 }
