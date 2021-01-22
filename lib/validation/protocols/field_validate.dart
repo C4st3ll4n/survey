@@ -1,4 +1,4 @@
-import 'package:survey/presentation/protocols/protocols.dart';
+import '../../presentation/protocols/protocols.dart';
 
 abstract class FieldValidation {
 	String get field;
