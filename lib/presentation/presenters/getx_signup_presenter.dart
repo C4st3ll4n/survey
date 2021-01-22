@@ -157,4 +157,9 @@ class GetXSignUpPresenter extends GetxController implements SignUpPresenter {
     );
     validateForm();
   }
+
+  @override
+  void goToLogin() {
+    _navigateTo.value = "/login";
+  }
 }

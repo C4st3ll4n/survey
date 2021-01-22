@@ -21,5 +21,5 @@ abstract class LoginPresenter {
 
   void dispose();
 
-  goToSignup() {}
+  void goToSignup() {}
 }
