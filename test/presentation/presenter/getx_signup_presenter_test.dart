@@ -393,7 +393,105 @@ void main() {
     sut.validateName(name);
     await Future.delayed(Duration.zero);
     sut.validatePasswordConfirmation(passwordConfirmation);
-    
   }
   );
+  
+  
+  test(
+    "Should call addAccount with correct values",
+        () async {
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+      sut.validateName(name);
+      sut.validatePasswordConfirmation(passwordConfirmation);
+      
+      await sut.signup();
+      
+      verify(
+        addAccount.register(
+          RegisterParams(email: email, password: password,
+          name: name, passwordConfirmation: passwordConfirmation),
+        ),
+      ).called(1);
+    },
+  );
+  
+  
+  test(
+    "Should emit correct event on AddAccount email in use error",
+        () async {
+      mockAuthenticationError(DomainError.emailInUse);
+    
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+      sut.validateName(name);
+      sut.validatePasswordConfirmation(passwordConfirmation);
+      
+      expectLater(
+        sut.isLoadingStream,
+        emitsInOrder(
+          [!false, !true],
+        ),
+      );
+      
+      sut.mainErrorStream.listen(
+        expectAsync1(
+              (error) => expect(error, UIError.emailInUse),
+        ),
+      );
+      
+      await sut.signup();
+    },
+  );
+  
+  
+  test(
+    "Should emit correct event on AddAccount unexpected error",
+        () async {
+      mockAuthenticationError(DomainError.unexpected);
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+      sut.validateName(name);
+      sut.validatePasswordConfirmation(passwordConfirmation);
+      
+      expectLater(
+        sut.isLoadingStream,
+        emitsInOrder(
+          [!false, !true],
+        ),
+      );
+      
+      sut.mainErrorStream.listen(
+        expectAsync1(
+              (error) => expect(error, UIError.unexpected),
+        ),
+      );
+      
+      await sut.signup();
+    },
+  );
+  
+  
+  test(
+    "Should change page on success",
+        () async {
+  
+          sut.validateEmail(email);
+          sut.validatePassword(password);
+          sut.validateName(name);
+          sut.validatePasswordConfirmation(passwordConfirmation);
+      
+      sut.navigateToStream.listen(
+        expectAsync1(
+              (page) => expect(page, "/surveys"),
+        ),
+      );
+      
+      await sut.signup();
+    },
+  );
+  
+  
+  
 }
