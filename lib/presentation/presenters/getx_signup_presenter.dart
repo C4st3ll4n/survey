@@ -129,7 +129,14 @@ class GetXSignUpPresenter extends GetxController implements SignUpPresenter {
     validateForm();
   }
 
-  void validateForm() => _isFormValid.value = false;
+  void validateForm() => _isFormValid.value = _emailError.value == null &&
+      _nameError.value == null &&
+      _passwordConfirmationError.value == null &&
+      _passwordError.value == null &&
+      _email != null &&
+      _name != null &&
+      _passwordConfirmation != null &&
+      _password != null;
 
   @override
   void validateName(String name) {
