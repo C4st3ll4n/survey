@@ -124,6 +124,11 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
               _email != null &&
               _password != null;
 
+  @override
+  goToSignup() {
+    _navigateTo.value = "/signUp";
+  }
+
 
 
 }
