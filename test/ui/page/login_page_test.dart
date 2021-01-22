@@ -318,6 +318,20 @@ void main() {
     expect(Get.currentRoute, "/login");
   
   });
+
+
+  testWidgets(
+    "Shoud go to signup page on click",
+        (tester) async {
+      await loadPage(tester);
+      final button = find.text("Criar conta");
+      await tester.ensureVisible(button);
+      await tester.tap(button);
+      await tester.pump();
+    
+      verify(presenter.goToSignup()).called(1);
+    },
+  );
 /*
   testWidgets("Should close streams on dispose", (tester) async {
     await loadPage(tester);
