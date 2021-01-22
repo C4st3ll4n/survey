@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:survey/ui/helpers/errors/errors.dart';
-import 'package:survey/ui/helpers/i18n/i18n.dart';
-import 'package:survey/ui/pages/pages.dart';
+import '../../helpers/errors/errors.dart';
+import '../../helpers/i18n/i18n.dart';
+import '../pages.dart';
 import '../../components/components.dart';
 import 'components/components.dart';
 

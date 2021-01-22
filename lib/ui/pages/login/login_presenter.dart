@@ -1,4 +1,4 @@
-import 'package:survey/ui/helpers/errors/errors.dart';
+import '../../helpers/errors/errors.dart';
 
 abstract class LoginPresenter {
   Stream<UIError> get emailErrorStream;
