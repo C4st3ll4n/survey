@@ -321,7 +321,7 @@ void main() {
 
 
   testWidgets(
-    "Shoud go to signup page on click",
+    "Should go to signup page on click",
         (tester) async {
       await loadPage(tester);
       final button = find.text("Criar conta");

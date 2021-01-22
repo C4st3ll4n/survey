@@ -530,4 +530,9 @@ void main() {
       await sut.signup();
     },
   );
+  
+  test("Should go to Login page on click", () async{
+    sut.navigateToStream.listen((page) => expect(page, "/login"));
+    sut.goToLogin();
+  });
 }
