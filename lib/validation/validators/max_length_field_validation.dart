@@ -15,7 +15,7 @@ class MaxLengthFieldValidation extends Equatable implements FieldValidation {
 	
 	@override
 	ValidationError validate(String value) {
-		if (value != null && value.trim().isNotEmpty && value.length >= maxLength) return null;
+		if (value != null && value.trim().isNotEmpty && value.length <= maxLength) return null;
 		return ValidationError.invalidField;
 	}
 }
