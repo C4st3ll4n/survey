@@ -1,5 +1,5 @@
-import '../../validation/protocols/field_validate.dart';
-import '../../validation/validators/validators.dart';
+
+import 'package:survey/validation/validation.dart';
 
 class ValidationBuilder {
   static ValidationBuilder _instace;
@@ -21,6 +21,16 @@ class ValidationBuilder {
 
   ValidationBuilder email() {
     validations.add(EmailValidation(_instace.fieldName));
+    return this;
+  }
+  
+  ValidationBuilder min(int size) {
+    validations.add(MinLengthFieldValidation(field:_instace.fieldName, minLength: size));
+    return this;
+  }
+
+  ValidationBuilder max(int size) {
+    validations.add(MaxLengthFieldValidation(field:_instace.fieldName, maxLength: size));
     return this;
   }
 
