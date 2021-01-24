@@ -9,5 +9,5 @@ LoginPresenter makeStreamLoginPresenter() => StreamLoginPresenter(
 */
 
 SignUpPresenter makeGetXSignupPresenter() => GetXSignUpPresenter(
-		validation: makeLoginValidation(),
+		validation: makeSignupValidation(),
 		saveCurrentAccount: makeLocalSaveCurrentAccount(), addAccount: makeAddAccount());
