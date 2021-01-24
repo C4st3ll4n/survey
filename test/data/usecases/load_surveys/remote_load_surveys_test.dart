@@ -4,6 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:survey/data/http/http.dart';
 import 'package:survey/data/usecases/load_surveys/load_surveys.dart';
 import 'package:survey/domain/entities/entities.dart';
+import 'package:survey/domain/helpers/helpers.dart';
 
 void main() {
   RemoteLoadSurveys sut;
@@ -18,13 +19,13 @@ void main() {
         {
           "id": faker.guid.guid(),
           "question": faker.randomGenerator.string(50),
-          "answer": faker.randomGenerator.boolean(),
+          "didAnswer": faker.randomGenerator.boolean(),
           "dateTime": faker.date.dateTime().toIso8601String()
         },
         {
           "id": faker.guid.guid(),
           "question": faker.randomGenerator.string(50),
-          "answer": faker.randomGenerator.boolean(),
+          "didAnswer": faker.randomGenerator.boolean(),
           "dateTime": faker.date.dateTime().toIso8601String()
         },
       ];
@@ -73,6 +74,22 @@ void main() {
       ],
     );
   });
+
+  test(
+    "Shoud throw an UnexpectedError if HttpClient returns 200 with invalid data",
+        () async {
+          mockSuccessCall([
+        {"random": faker.randomGenerator.string(50)}
+      ]);
+    
+      final future = sut.load();
+    
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );
+    },
+  );
 }
 
 class HttpClientSpy extends Mock implements HttpClient<List<Map>> {}
