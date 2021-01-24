@@ -5,13 +5,13 @@ import '../../presentation/protocols/protocols.dart';
 
 class CompareFieldValidation extends Equatable implements FieldValidation {
   final String field;
-  final String valueToCompare;
+  final String fieldToCompare;
 
-  CompareFieldValidation({@required this.field, @required this.valueToCompare});
+  CompareFieldValidation({@required this.field, @required this.fieldToCompare});
 
   @override
-  ValidationError validate(String value) {
-    return value != null && value == valueToCompare?null:ValidationError.invalidField;
+  ValidationError validate(Map input) {
+    return input['field'] != null && input['field'] == input[fieldToCompare]?null:ValidationError.invalidField;
   }
 
   @override

@@ -95,8 +95,15 @@ class GetXSignUpPresenter extends GetxController implements SignUpPresenter {
   @override
   void dispose() {}
 
-  UIError _validateField({@required String field, @required String value}) {
-    final error = validation.validate(field: field, value: value);
+  UIError _validateField(String field) {
+    final formData = {
+      'email': _email,
+      'password': _password,
+      'name': _name,
+      'passwordConfirmation': _passwordConfirmation
+    };
+
+    final error = validation.validate(field: field, input: formData);
     switch (error) {
       case ValidationError.requiredField:
         return UIError.requiredField;
@@ -118,14 +125,14 @@ class GetXSignUpPresenter extends GetxController implements SignUpPresenter {
   @override
   void validateEmail(String email) {
     _email = email;
-    _emailError.value = _validateField(field: "email", value: email);
+    _emailError.value = _validateField("email");
     validateForm();
   }
 
   @override
   void validatePassword(String password) {
     _password = password;
-    _passwordError.value = _validateField(field: "password", value: password);
+    _passwordError.value = _validateField("password");
     validateForm();
   }
 
@@ -141,10 +148,7 @@ class GetXSignUpPresenter extends GetxController implements SignUpPresenter {
   @override
   void validateName(String name) {
     _name = name;
-    _nameError.value = _validateField(
-      field: "name",
-      value: name,
-    );
+    _nameError.value = _validateField("name");
     validateForm();
   }
 
@@ -152,8 +156,7 @@ class GetXSignUpPresenter extends GetxController implements SignUpPresenter {
   void validatePasswordConfirmation(String password) {
     _passwordConfirmation = password;
     _passwordConfirmationError.value = _validateField(
-      field: "passwordConfirmation",
-      value: password,
+      "passwordConfirmation",
     );
     validateForm();
   }

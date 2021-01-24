@@ -13,8 +13,8 @@ class MaxLengthFieldValidation extends Equatable implements FieldValidation {
 	List<Object> get props => [field];
 	
 	@override
-	ValidationError validate(String value) {
-		if (value != null && value.trim().isNotEmpty && value.length <= maxLength) return null;
+	ValidationError validate(Map input) {
+		if (input[field] != null && input[field].trim().isNotEmpty && input[field].length <= maxLength) return null;
 		return ValidationError.invalidField;
 	}
 }

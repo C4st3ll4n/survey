@@ -6,15 +6,16 @@ void main(){
 	CompareFieldValidation sut;
 	
 	setUp((){
-		sut = CompareFieldValidation(field:'any_field', valueToCompare:"any_value");
+		sut = CompareFieldValidation(field:'any_field', fieldToCompare:"other_field");
 	});
 	
 	test("Should return error if value is not equal",(){
-		expect(sut.validate('wrong_value'), ValidationError.invalidField);
+		final input = {'field':'any_value', 'other_field':"wrong_value"};
+		expect(sut.validate(input), ValidationError.invalidField);
 	});
 	
-	
-	test("Should return error if values are the same",(){
-		expect(sut.validate("any_value"),null);
+	test("Should return error if fields are the same",(){
+		final input = {'field':'any_value', 'other_field':"any_value"};
+		expect(sut.validate(input),null);
 	});
 }
