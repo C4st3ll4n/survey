@@ -18,4 +18,11 @@ void main(){
 		final input = {'field':'any_value', 'other_field':"any_value"};
 		expect(sut.validate(input),null);
 	});
+	
+	test("Should return null if field name are diferent",(){
+		//final input = {'field':'any_value', 'other_field':"any_value"};
+		expect(sut.validate({'field':'any_value',}),null);
+		expect(sut.validate({ 'other_field':"any_value"}),null);
+		expect(sut.validate({}),null);
+	});
 }
