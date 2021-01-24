@@ -121,10 +121,15 @@ void main() {
   test(
     "Should call validation with correct e-mail",
     () {
-      final _formData =  {"email":email, "password":null, "passwordConfirmation":null, "name":null};
+      final _formData = {
+        "email": email,
+        "password": null,
+        "passwordConfirmation": null,
+        "name": null
+      };
       sut.validateEmail(email);
 
-      verify(validation.validate(field: "email", input:_formData)).called(1);
+      verify(validation.validate(field: "email", input: _formData)).called(1);
     },
   );
 
@@ -199,12 +204,17 @@ void main() {
   test(
     "Should call validation with correct password",
     () {
-  
-      final _formData =  {"email":null, "password":password, "passwordConfirmation":null, "name":null};
-  
+      final _formData = {
+        "email": null,
+        "password": password,
+        "passwordConfirmation": null,
+        "name": null
+      };
+
       sut.validatePassword(password);
 
-      verify(validation.validate(field: "password", input: _formData)).called(1);
+      verify(validation.validate(field: "password", input: _formData))
+          .called(1);
     },
   );
 
@@ -256,9 +266,21 @@ void main() {
   test(
     "Should call validation with correct name",
     () {
+      final _formData = {
+        "email": null,
+        "password": null,
+        "passwordConfirmation": null,
+        "name": name,
+      };
+
       sut.validateName(name);
 
-      verify(validation.validate(field: "name", input: {"name":name})).called(1);
+      verify(
+        validation.validate(
+          field: "name",
+          input: _formData,
+        ),
+      ).called(1);
     },
   );
 
@@ -333,8 +355,13 @@ void main() {
   test(
     "Should call validation with correct password confirmation",
     () {
-      final _formData =  {"email":null, "password":null, "passwordConfirmation":passwordConfirmation, "name":null};
-  
+      final _formData = {
+        "email": null,
+        "password": null,
+        "passwordConfirmation": passwordConfirmation,
+        "name": null
+      };
+
       sut.validatePasswordConfirmation(password);
 
       verify(validation.validate(
@@ -536,8 +563,8 @@ void main() {
       await sut.signup();
     },
   );
-  
-  test("Should go to Login page on click", () async{
+
+  test("Should go to Login page on click", () async {
     sut.navigateToStream.listen((page) => expect(page, "/login"));
     sut.goToLogin();
   });
