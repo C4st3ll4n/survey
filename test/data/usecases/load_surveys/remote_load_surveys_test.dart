@@ -15,6 +15,9 @@ void main() {
   PostExpectation _mockRequest() => when(
       httpClient.request(url: anyNamed("url"), method: anyNamed("method"),),);
 
+  void _mockHttpError(HttpError httpError)=> _mockRequest().thenThrow(httpError);
+
+
   List<Map> mockValidData() => [
         {
           "id": faker.guid.guid(),
@@ -90,6 +93,53 @@ void main() {
       );
     },
   );
+
+  /// TEST ON 404
+  test(
+    "Shoud throw an UnexpectedError if HttpClient returns 404",
+        () async {
+      _mockHttpError(HttpError.notFound);
+    
+      final future = sut.load();
+    
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );
+    },
+  );
+
+  /// TEST ON 500
+  test(
+    "Shoud throw an UnexpectedError if HttpClient returns 500",
+        () async {
+      _mockHttpError(HttpError.serverError);
+    
+      final future = sut.load();
+    
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );
+    },
+  );
+
+  /// TEST ON 401
+  test(
+    "Shoud throw an InvalidCrendential if HttpClient returns 403",
+        () async {
+      _mockHttpError(HttpError.forbidden);
+    
+      final future = sut.load();
+    
+      expect(
+        future,
+        throwsA(DomainError.accessDenied),
+      );
+    },
+  );
+  
+  
 }
 
 class HttpClientSpy extends Mock implements HttpClient<List<Map>> {}
