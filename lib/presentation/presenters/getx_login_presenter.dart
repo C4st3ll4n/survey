@@ -52,7 +52,7 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
   @override
   Future<void> auth() async {
     _isLoading.value = true;
-
+    _mainError.value = null;
       try {
       final AccountEntity account = await authentication.auth(
         AuthenticationParams(email: _email, secret: _password),

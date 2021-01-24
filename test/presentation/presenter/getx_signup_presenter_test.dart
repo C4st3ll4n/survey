@@ -107,12 +107,13 @@ void main() {
           [!false, !true],
         ),
       );
-
-      sut.mainErrorStream.listen(
-        expectAsync1(
-          (error) => expect(error, UIError.unexpected),
+      expectLater(
+        sut.mainErrorStream,
+        emitsInOrder(
+          [null, UIError.unexpected],
         ),
       );
+
 
       await sut.signup();
     },
@@ -463,10 +464,10 @@ void main() {
           [!false, !true],
         ),
       );
-
-      sut.mainErrorStream.listen(
-        expectAsync1(
-          (error) => expect(error, UIError.emailInUse),
+      expectLater(
+        sut.mainErrorStream,
+        emitsInOrder(
+          [null, UIError.emailInUse],
         ),
       );
 
@@ -490,12 +491,13 @@ void main() {
           [!false, !true],
         ),
       );
-
-      sut.mainErrorStream.listen(
-        expectAsync1(
-          (error) => expect(error, UIError.unexpected),
+      expectLater(
+        sut.mainErrorStream,
+        emitsInOrder(
+          [null, UIError.unexpected],
         ),
       );
+
 
       await sut.signup();
     },
@@ -553,16 +555,31 @@ void main() {
           [!false, !true],
         ),
       );
-
-      sut.mainErrorStream.listen(
-        expectAsync1(
-          (error) => expect(error, UIError.unexpected),
+      
+      expectLater(
+        sut.mainErrorStream,
+        emitsInOrder(
+          [null, UIError.unexpected],
         ),
       );
+
 
       await sut.signup();
     },
   );
+  
+  test("Should emit correct events on AddAccount success", () async {
+    sut.validateName(name);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+    
+    expectLater(sut.mainErrorStream, emits(null));
+    expectLater(sut.isLoadingStream, emits(true));
+    
+    await sut.signup();
+  });
+  
 
   test("Should go to Login page on click", () async {
     sut.navigateToStream.listen((page) => expect(page, "/login"));

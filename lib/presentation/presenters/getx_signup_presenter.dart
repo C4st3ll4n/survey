@@ -62,6 +62,7 @@ class GetXSignUpPresenter extends GetxController implements SignUpPresenter {
 
   @override
   Future<void> signup() async {
+    _mainError.value = null;
     _isLoading.value = true;
 
     try {
