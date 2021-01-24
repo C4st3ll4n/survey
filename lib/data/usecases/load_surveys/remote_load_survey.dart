@@ -20,8 +20,9 @@ class RemoteLoadSurveys implements LoadSurveys {
         .map((json) => RemoteSurveyModel.fromJson(json).toEntity())
         .toList();
     }
-    on HttpError{
-      throw DomainError.unexpected;
+    on HttpError catch(e){
+      throw e == HttpError.forbidden? DomainError.accessDenied:
+      DomainError.unexpected;
     }
   }
 }
