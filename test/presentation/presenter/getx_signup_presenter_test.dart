@@ -33,7 +33,7 @@ void main() {
   PostExpectation mockValidationCall(String field) => when(
         validation.validate(
           field: field != null ? field : anyNamed("field"),
-          value: anyNamed("value"),
+          input: anyNamed("input"),
         ),
       );
 
@@ -121,9 +121,10 @@ void main() {
   test(
     "Should call validation with correct e-mail",
     () {
+      final _formData =  {"email":email, "password":null, "passwordConfirmation":null, "name":null};
       sut.validateEmail(email);
 
-      verify(validation.validate(field: "email", value: email)).called(1);
+      verify(validation.validate(field: "email", input:_formData)).called(1);
     },
   );
 
@@ -198,9 +199,12 @@ void main() {
   test(
     "Should call validation with correct password",
     () {
+  
+      final _formData =  {"email":null, "password":password, "passwordConfirmation":null, "name":null};
+  
       sut.validatePassword(password);
 
-      verify(validation.validate(field: "password", value: password)).called(1);
+      verify(validation.validate(field: "password", input: _formData)).called(1);
     },
   );
 
@@ -254,7 +258,7 @@ void main() {
     () {
       sut.validateName(name);
 
-      verify(validation.validate(field: "name", value: name)).called(1);
+      verify(validation.validate(field: "name", input: {"name":name})).called(1);
     },
   );
 
@@ -329,10 +333,12 @@ void main() {
   test(
     "Should call validation with correct password confirmation",
     () {
+      final _formData =  {"email":null, "password":null, "passwordConfirmation":passwordConfirmation, "name":null};
+  
       sut.validatePasswordConfirmation(password);
 
       verify(validation.validate(
-              field: "passwordConfirmation", value: passwordConfirmation))
+              field: "passwordConfirmation", input: _formData))
           .called(1);
     },
   );

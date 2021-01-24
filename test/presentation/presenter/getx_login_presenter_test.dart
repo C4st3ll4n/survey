@@ -30,7 +30,7 @@ void main() {
   PostExpectation mockValidationCall(String field) => when(
         validation.validate(
           field: field != null ? field : anyNamed("field"),
-          value: anyNamed("value"),
+          input: anyNamed("input"),
         ),
       );
 
@@ -75,9 +75,11 @@ void main() {
   test(
     "Should call validation with correct e-mail",
     () {
+      final _formData = {"password":null, "email":email};
+  
       sut.validateEmail(email);
 
-      verify(validation.validate(field: "email", value: email)).called(1);
+      verify(validation.validate(field: "email", input: _formData)).called(1);
     },
   );
 
@@ -193,9 +195,9 @@ void main() {
   test(
     "Should call validation with correct password",
     () {
+      final _formData = {"password":password, "email":null};
       sut.validatePassword(password);
-
-      verify(validation.validate(field: "password", value: password)).called(1);
+      verify(validation.validate(field:"password", input: _formData)).called(1);
     },
   );
 

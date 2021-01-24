@@ -7,11 +7,11 @@ class ValidationComposite implements Validation {
 	final List<FieldValidation> validations;
 	
 	@override
-	ValidationError validate({String field, String value}) {
+	ValidationError validate({String field, Map input}) {
 		ValidationError error;
 		for (final validation
 		in validations.where((element) => element.field == field)) {
-			error = validation.validate(value);
+			error = validation.validate(input);
 			if (error!=null) {
 				return error;
 			}
