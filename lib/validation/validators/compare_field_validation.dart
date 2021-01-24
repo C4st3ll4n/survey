@@ -10,9 +10,7 @@ class CompareFieldValidation extends Equatable implements FieldValidation {
   CompareFieldValidation({@required this.field, @required this.fieldToCompare});
 
   @override
-  ValidationError validate(Map input) {
-    return input['field'] != null && input['field'] == input[fieldToCompare]?null:ValidationError.invalidField;
-  }
+  ValidationError validate(Map input) => input['field'] != null && input[fieldToCompare] != null && input['field'] != input[fieldToCompare] ?ValidationError.invalidField:null;
 
   @override
   List<Object> get props => [field];
