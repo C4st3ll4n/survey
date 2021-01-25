@@ -436,22 +436,28 @@ void main() {
       },
     );
 
-
     test(
       'Should return ServerError if get return 500',
-          () async {
+      () async {
         mockResponse(500, body: '');
-    
+
         final response = sut.request(
           url: url,
           method: "get",
         );
-    
+
         expect(
           response,
           throwsA(HttpError.serverError),
         );
       },
     );
+    
+    test("Should return ServerError if GET throws", () async{
+      mockError();
+      
+      final future = sut.request(url: url, method: "get");
+      expect(future, throwsA(HttpError.serverError));
+    });
   });
 }
