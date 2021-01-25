@@ -411,7 +411,21 @@ void main() {
         throwsA(HttpError.unauthorized),
       );
     });
+
+
+    test('Should return ForbiddenError if get return 403', () async {
+      mockResponse(403, body: '');
   
+      final response = sut.request(
+        url: url,
+        method: "get",
+      );
+  
+      expect(
+        response,
+        throwsA(HttpError.forbidden),
+      );
+    });
   
   });
 }
