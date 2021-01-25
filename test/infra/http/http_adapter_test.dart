@@ -263,4 +263,51 @@ void main() {
 
     },
   );
+  
+  group("GET", (){
+  
+    PostExpectation mockRequest() => when(
+      client.get(
+        any,
+        headers: anyNamed("headers"),
+      ),
+    );
+  
+    void mockResponse(int statusCode,
+        {String body = '{"any_key":"any_value"}'}) =>
+        mockRequest().thenAnswer(
+              (_) async {
+            return Response(body, statusCode);
+          },
+        );
+  
+    void mockError() =>
+        mockRequest().thenThrow(Exception(""));
+  
+  
+    setUp(
+          () {
+        mockResponse(200);
+      },
+    );
+  
+    test(
+      'Should call post with correct values',
+          () async {
+        await sut.request(
+          url: url,
+          method: "get",
+        );
+      
+        verify(
+          client.get(url,
+              headers: {
+                'content-type': 'application/json',
+                'accept': 'application/json',
+              },
+          ),
+        );
+      },
+    );
+  });
 }
