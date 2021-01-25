@@ -64,7 +64,7 @@ void main() {
             'email': params.email,
             'password': params.password,
             "name": params.name,
-            "confirmPassword": params.password
+            "passwordConfirmation": params.password
           },
         ),
       );
