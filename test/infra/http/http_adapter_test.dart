@@ -292,7 +292,7 @@ void main() {
     );
   
     test(
-      'Should call post with correct values',
+      'Should call get with correct values',
           () async {
         await sut.request(
           url: url,
@@ -312,7 +312,7 @@ void main() {
 
 
     test(
-      'Should return data if post return 200',
+      'Should return data if get return 200',
           () async {
         final response = await sut
             .request(url: url, method: "get",);
@@ -321,9 +321,38 @@ void main() {
     );
 
     test(
-      'Should return null if post return 200 wihtout data',
+      'Should return null if get return 200 wihtout data',
           () async {
         mockResponse(200, body: '');
+    
+        final response = await sut.request(
+          url: url,
+          method: "get",
+        );
+    
+        expect(response, null);
+      },
+    );
+
+
+    test(
+      'Should return null if get return 204',
+          () async {
+        mockResponse(204, body: '');
+    
+        final response = await sut.request(
+          url: url,
+          method: "get",
+        );
+    
+        expect(response, null);
+      },
+    );
+
+    test(
+      'Should return null if get return 204 with data',
+          () async {
+        mockResponse(204);
     
         final response = await sut.request(
           url: url,
