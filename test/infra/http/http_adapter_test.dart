@@ -396,6 +396,22 @@ void main() {
         );
       },
     );
-    
+
+
+    test('Should return UnauthorizedError if get return 401', () async {
+      mockResponse(401, body: '');
+  
+      final response = sut.request(
+        url: url,
+        method: "get",
+      );
+  
+      expect(
+        response,
+        throwsA(HttpError.unauthorized),
+      );
+    });
+  
+  
   });
 }
