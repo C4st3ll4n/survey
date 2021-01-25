@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
@@ -25,7 +26,9 @@ class HttpAdapter implements HttpClient {
       }else if (method == "get"){
         response = await client.get(url, headers: headers,);
       }
-    } catch (e) {
+      log("\n###\n${response.body}\n${response.statusCode} \n###\n");
+    } catch (e, stck) {
+      log("\n###\n${e.toString()}\n${stck.toString()} \n###\n");
       throw HttpError.serverError;
   
     }

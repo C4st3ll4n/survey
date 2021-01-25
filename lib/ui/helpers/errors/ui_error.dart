@@ -5,7 +5,10 @@ enum UIError {
 	invalidCredentials,
 	requiredField,
 	invalidField,
-	emailInUse
+	emailInUse,
+	shortField,
+	longField,
+	unmatchField
 }
 
 extension UIErrorExtension on UIError{
@@ -21,11 +24,20 @@ extension UIErrorExtension on UIError{
 				return R.strings.msgInvalidCredentials;
 				break;
 			case UIError.invalidField:
-				return "Campo inválido.";
+				return R.strings.msgInvalidField;
 				break;
 			case UIError.requiredField:
-				return "Campo obrigatório.";
+				return R.strings.msgRequiredField;
 				break;
+		  case UIError.shortField:
+		    return "Campo muito curto.";
+		    break;
+		  case UIError.longField:
+			  return "Campo muito longo.";
+		    break;
+		  case UIError.unmatchField:
+		    return R.strings.msgUnmatchField;
+		    break;
 			default:
 				return "Algo errado aconteceu. Tente novamente.";
 		}

@@ -7,6 +7,7 @@ class PtBR implements Translations{
   String get msgInvalidField => 'Campo inválido';
   String get msgRequiredField => 'Campo obrigatório';
   String get msgUnexpectedError => 'Algo errado aconteceu. Tente novamente em breve.';
+  String get msgUnmatchField => 'Campos não conferem.';
   
   String get addAccount => 'Criar conta';
   String get confirmPassword => 'Confirmar senha';
