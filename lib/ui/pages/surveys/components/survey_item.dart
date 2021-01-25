@@ -9,23 +9,40 @@ class SurveyItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle _textStyle = const TextStyle(color: Colors.white);
-    return Container(
-      decoration: BoxDecoration(color: Theme.of(context).secondaryHeaderColor),
-      child: Column(
-        children: [
-          Text(
-            "${survey.dateTime}",
-            style:
-                _textStyle.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5, ),
+      child: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Theme.of(context).secondaryHeaderColor,
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
           ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            "${survey.question}",
-            style: _textStyle.copyWith(fontSize: 24),
-          )
-        ],
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0,1),
+              spreadRadius: 0,
+              blurRadius: 2,
+              color: Colors.black
+            )
+          ]
+        ),
+        child: Column(
+          children: [
+            Text(
+              "${survey.dateTime}",
+              style:
+                  _textStyle.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "${survey.question}",
+              style: _textStyle.copyWith(fontSize: 24),
+            )
+          ],
+        ),
       ),
     );
   }
