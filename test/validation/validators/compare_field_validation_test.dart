@@ -11,7 +11,7 @@ void main(){
 	
 	test("Should return error if value is not equal",(){
 		final input = {'field':'any_value', 'other_field':"wrong_value"};
-		expect(sut.validate(input), ValidationError.invalidField);
+		expect(sut.validate(input), ValidationError.unmatchField);
 	});
 	
 	test("Should return error if fields are the same",(){
