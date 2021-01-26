@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:survey/domain/entities/entities.dart';
+import 'package:survey/ui/pages/pages.dart';
 
 class SurveyItem extends StatelessWidget {
-  final SurveyEntity survey;
+  final SurveyViewModel survey;
 
   const SurveyItem({Key key, this.survey}) : super(key: key);
 
@@ -30,7 +30,7 @@ class SurveyItem extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              "${survey.dateTime}",
+              "${survey.formatedDate}",
               style:
                   _textStyle.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
             ),
