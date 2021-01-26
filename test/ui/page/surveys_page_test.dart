@@ -4,20 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
+import 'package:survey/ui/helpers/helpers.dart';
 import 'package:survey/ui/pages/pages.dart';
 
 void main() {
   SurveysPresenter presenter;
-  StreamController<bool> isLoadingController;
   
+  StreamController<bool> isLoadingController;
+  StreamController<List<SurveyViewModel>> loadSurveysController;
   
   void _initStream(){
     isLoadingController = StreamController();
+    loadSurveysController = StreamController();
   }
   void _mockStream(){
-    when(presenter.isLoadingStream).thenAnswer((realInvocation) => isLoadingController.stream);
+    when(presenter.isLoadingStream).thenAnswer(
+            (_) => isLoadingController.stream);
+    
+    when(presenter.loadSurveysStream).thenAnswer(
+            (_) => loadSurveysController.stream);
   }
   void _closeStream(){
+    loadSurveysController.close();
     isLoadingController.close();
   }
   
@@ -69,6 +77,19 @@ void main() {
     await tester.pump();
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
+
+
+  testWidgets(
+    "Shoud present error message if load surveys fails",
+        (tester) async {
+      await loadPage(tester);
+      loadSurveysController.addError(UIError.unexpected.description);
+      await tester.pump();
+    
+      expect(find.text(UIError.unexpected.description), findsOneWidget);
+      expect(find.text("Recarregar"), findsOneWidget);
+    },
+  );
 }
 
 class SurveysPresenterSpy extends Mock implements SurveysPresenter {}
