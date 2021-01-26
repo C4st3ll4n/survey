@@ -57,23 +57,28 @@ class SurveysPage extends StatelessWidget {
                     ],
                   );
                 }
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: CarouselSlider(
-                    items: [
-                      SurveyItem(
-                        survey: RemoteSurveyModel.fromJson({
-                          "id": faker.guid.guid(),
-                          "question": faker.randomGenerator.string(50),
-                          "didAnswer": faker.randomGenerator.boolean(),
-                          "dateTime": faker.date.dateTime().toIso8601String()
-                        }).toEntity(),
-                      )
-                    ],
-                    options: CarouselOptions(
-                        enlargeCenterPage: true, aspectRatio: 1),
-                  ),
-                );
+                if (snapshot.hasData) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: CarouselSlider(
+                      items: snapshot.data
+                          .map((e) => SurveyItem(
+                                survey: e,
+                              ))
+                          .toList(),
+                      options: CarouselOptions(
+                        enlargeCenterPage: true,
+                        aspectRatio: 1,
+                        enableInfiniteScroll: true
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    width: 0,
+                    height: 0,
+                  );
+                }
               });
         },
       ),
