@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:meta/meta.dart';
 import '../../domain/entities/entities.dart';
@@ -10,14 +11,14 @@ class GetXSurveysPresenter extends GetxController implements SurveysPresenter {
 	
 	final LoadSurveys loadSurveys;
 	
-	var _isLoading = false.obs;
+	var _isLoading = true.obs;
 	var _dataStream = RxList<SurveyViewModel>();
 	
 	@override
 	Stream<bool> get isLoadingStream => _isLoading.stream.distinct();
 	
 	@override
-	Stream<List<SurveyViewModel>> get loadSurveysStream =>
+	Stream<List<SurveyViewModel>> get surveysStream =>
 			_dataStream.stream.distinct();
 	
 	@override
@@ -30,7 +31,7 @@ class GetXSurveysPresenter extends GetxController implements SurveysPresenter {
 						(SurveyEntity e) => SurveyViewModel(
 						id: e.id,
 						question: e.question,
-						formatedDate: e.dateTime.toString(), //FIXME
+						formatedDate: DateFormat('dd MMM yyyy').format(e.dateTime),
 						didAnswer: e.didAnswer),
 			)
 					.toList());
