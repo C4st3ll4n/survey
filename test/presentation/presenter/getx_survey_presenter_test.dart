@@ -6,6 +6,7 @@ import 'package:survey/domain/entities/entities.dart';
 import 'package:survey/domain/helpers/domain_error.dart';
 import 'package:survey/domain/usecases/usecases.dart';
 import 'package:survey/presentation/presenters/presenters.dart';
+import 'package:survey/ui/helpers/errors/errors.dart';
 import 'package:survey/ui/pages/pages.dart';
 
 class LoadSurveysSpy extends Mock implements LoadSurveys {}
@@ -38,7 +39,7 @@ void main() {
   }
 
   void mockErrorLoadSurveys(DomainError error) =>
-      _mockLoadSurveysCall().thenAnswer((_) async => "");
+      _mockLoadSurveysCall().thenThrow(error);
 
   setUp(() {
     loadSurveys = LoadSurveysSpy();
@@ -57,16 +58,37 @@ void main() {
     sut.surveysStream.listen(
       expectAsync1(
         (surveysList) {
-          expect(surveysList, [
-            SurveyViewModel(id: surveys[0].id,
-                question: surveys[0].question,
-                formatedDate: "20 Feb 2020",
-                didAnswer: surveys[0].didAnswer),
-            SurveyViewModel(id: surveys[1].id,
-                question: surveys[1].question,
-                formatedDate: "20 Dec 2019",
-                didAnswer: surveys[1].didAnswer),
-          ],);
+          expect(
+            surveysList,
+            [
+              SurveyViewModel(
+                  id: surveys[0].id,
+                  question: surveys[0].question,
+                  formatedDate: "20 Feb 2020",
+                  didAnswer: surveys[0].didAnswer),
+              SurveyViewModel(
+                  id: surveys[1].id,
+                  question: surveys[1].question,
+                  formatedDate: "20 Dec 2019",
+                  didAnswer: surveys[1].didAnswer),
+            ],
+          );
+        },
+      ),
+    );
+
+    await sut.loadData();
+  });
+
+  test("Should emits correct evens on failure", () async {
+    mockErrorLoadSurveys(DomainError.unexpected);
+    
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    sut.surveysStream.listen(
+      null,
+      onError: expectAsync1(
+        (error) {
+          expect(error, UIError.unexpected.description);
         },
       ),
     );
