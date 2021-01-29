@@ -72,6 +72,9 @@ class GetXLoginPresenter extends GetxController implements LoginPresenter {
           case DomainError.emailInUse:
             _mainError.value = UIError.emailInUse;
             break;
+          case DomainError.accessDenied:
+            _mainError.value = UIError.unexpected;
+            break;
         }
       _isLoading.value = false;
     }
