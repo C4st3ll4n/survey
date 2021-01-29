@@ -1,5 +1,5 @@
+import 'package:survey/ui/pages/pages.dart';
 import '../../../../presentation/presenters/presenters.dart';
-import '../../../../ui/pages/login/login_presenter.dart';
-import '../../factories.dart';
+import 'load_surveys_factory.dart';
 
-LoginPresenter makeGetXSurveyPresenter() => null; //TODO Create survey presenter
+SurveysPresenter makeGetXSurveyPresenter() => GetXSurveysPresenter(loadSurveys: makeLoadsurveys());
