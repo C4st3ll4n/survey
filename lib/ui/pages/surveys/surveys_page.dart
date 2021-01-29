@@ -22,13 +22,13 @@ class SurveysPage extends StatelessWidget {
         title: Text(R.strings.surveys),
       ),
       body: Builder(
-        builder: (contexto) {
+        builder: (_) {
           presenter.isLoadingStream.listen(
             (isLoading) {
               if (isLoading == true) {
-                showSimpleLoading(contexto);
+                showSimpleLoading(context);
               } else {
-                hideLoading(contexto);
+                hideLoading(context);
               }
             },
           );
