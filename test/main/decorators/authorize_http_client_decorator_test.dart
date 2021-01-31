@@ -14,17 +14,31 @@ void main() {
 
   String url, method;
   Map body;
-  
+
   String token;
-  
-  void mockToken(){
+
+  String httpResponse;
+
+  void mockToken() {
     token = faker.guid.guid();
-  
-    when(
-      fetchSecureCacheStorageSpy.fetchSecure(any)
-    ).thenAnswer((_) async => token);
+
+    when(fetchSecureCacheStorageSpy.fetchSecure(any))
+        .thenAnswer((_) async => token);
   }
-  
+
+  void mockHttpResponse() {
+    httpResponse = faker.randomGenerator.string(50);
+
+    when(
+      httpAdapterSpy.request(
+        url: anyNamed("url"),
+        method: anyNamed("method"),
+        body: anyNamed("body"),
+        headers: anyNamed("headers"),
+      ),
+    ).thenAnswer((_) async => httpResponse);
+  }
+
   setUp(() {
     fetchSecureCacheStorageSpy = FetchSecureCacheStorageSpy();
     httpAdapterSpy = HttpAdapterSpy();
@@ -37,6 +51,7 @@ void main() {
     body = {'any_key': "any_value"};
 
     mockToken();
+    mockHttpResponse();
   });
 
   test("Should call fetchSecureCacheStorage with correct key", () async {
@@ -45,15 +60,19 @@ void main() {
   });
 
   test("Should call decoratee with accessToken on header", () async {
-  
-
     await sut.request(url: url, method: method, body: body);
-    
+
     verify(httpAdapterSpy.request(
         url: url,
         method: method,
         body: body,
         headers: {'x-access-token': token})).called(1);
+  });
+
+  test("Should return same result as decoratee", () async {
+    final response = await sut.request(url: url, method: method, body: body);
+
+    expect(response, httpResponse);
   });
 }
 

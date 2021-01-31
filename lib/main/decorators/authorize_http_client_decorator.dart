@@ -10,13 +10,13 @@ class AuthorizeHttpClientDecorator implements HttpClient {
 			{@required this.fetchSecureCacheStorage, @required this.decoratee});
 	
 	@override
-	Future request(
+	Future<dynamic> request(
 			{String url,
 				String method,
 				Map<dynamic, dynamic> body,
 				Map<dynamic, dynamic> headers}) async {
 		String token = await fetchSecureCacheStorage.fetchSecure("token");
 		final authorizedHeaders = headers ?? {} ..addAll({'x-access-token': token});
-		await decoratee.request(url: url, method: method, body: body, headers: authorizedHeaders);
+		return await decoratee.request(url: url, method: method, body: body, headers: authorizedHeaders);
 	}
 }
