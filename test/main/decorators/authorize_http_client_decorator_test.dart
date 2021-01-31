@@ -22,6 +22,15 @@ void main() {
   PostExpectation _mockFetchSecure() =>
       when(fetchSecureCacheStorageSpy.fetchSecure(any));
 
+  PostExpectation _mockHttpAdapter() => when(
+        httpAdapterSpy.request(
+          url: anyNamed("url"),
+          method: anyNamed("method"),
+          body: anyNamed("body"),
+          headers: anyNamed("headers"),
+        ),
+      );
+
   void mockToken() {
     token = faker.guid.guid();
     _mockFetchSecure().thenAnswer((_) async => token);
@@ -31,16 +40,10 @@ void main() {
 
   void mockHttpResponse() {
     httpResponse = faker.randomGenerator.string(50);
-
-    when(
-      httpAdapterSpy.request(
-        url: anyNamed("url"),
-        method: anyNamed("method"),
-        body: anyNamed("body"),
-        headers: anyNamed("headers"),
-      ),
-    ).thenAnswer((_) async => httpResponse);
+    _mockHttpAdapter().thenAnswer((_) async => httpResponse);
   }
+  
+  void mockHttpResponseFail(HttpError error) => _mockHttpAdapter()..thenThrow(error);
 
   setUp(() {
     fetchSecureCacheStorageSpy = FetchSecureCacheStorageSpy();
@@ -87,6 +90,19 @@ void main() {
       throwsA(HttpError.forbidden),
     );
   });
+
+  test("Should rethrow exection if decoratee throws", () async {
+    mockHttpResponseFail(HttpError.badRequest);
+    final future = sut.request(url: url, method: method, body: body);
+
+    expect(
+      future,
+      throwsA(HttpError.badRequest),
+    );
+
+  });
+  
+  
 }
 
 class FetchSecureCacheStorageSpy extends Mock
