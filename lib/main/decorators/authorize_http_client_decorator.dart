@@ -21,7 +21,10 @@ class AuthorizeHttpClientDecorator implements HttpClient {
         ..addAll({'x-access-token': token});
       return await decoratee.request(
           url: url, method: method, body: body, headers: authorizedHeaders);
-    } catch (error) {
+    } on HttpError{
+      rethrow;
+    }
+    catch (error) {
       throw HttpError.forbidden;
     }
   }
