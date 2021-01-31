@@ -13,24 +13,31 @@ class HttpAdapter implements HttpClient {
 
   @override
   Future<Map> request(
-      {@required String url, @required String method, Map body}) async {
-    final headers = {
-      'content-type': 'application/json',
-      'accept': 'application/json',
-    };
+      {@required String url,
+      @required String method,
+      Map body,
+      Map headers}) async {
+    final defaultHeaders = headers?.cast<String, String>() ?? {}
+      ..addAll({
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      });
     var jsonBody = body != null ? jsonEncode(body) : null;
     Response response = Response('', 500);
     try {
       if (method == 'post') {
-        response = await client.post(url, headers: headers, body: jsonBody);
-      }else if (method == "get"){
-        response = await client.get(url, headers: headers,);
+        response =
+            await client.post(url, headers: defaultHeaders, body: jsonBody);
+      } else if (method == "get") {
+        response = await client.get(
+          url,
+          headers: defaultHeaders,
+        );
       }
       log("\n###\n${response.body}\n${response.statusCode} \n###\n");
     } catch (e, stck) {
       log("\n###\n${e.toString()}\n${stck.toString()} \n###\n");
       throw HttpError.serverError;
-  
     }
 
     //if(body?.containsKey("EOQ")??false) return {'any_key':'any_value'}; //FIXME
