@@ -142,4 +142,4 @@ void main() {
   
 }
 
-class HttpClientSpy extends Mock implements HttpClient<List<Map>> {}
+class HttpClientSpy extends Mock implements HttpClient {}
