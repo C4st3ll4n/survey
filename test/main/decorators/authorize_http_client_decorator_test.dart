@@ -19,12 +19,15 @@ void main() {
 
   String httpResponse;
 
+  PostExpectation _mockFetchSecure() =>
+      when(fetchSecureCacheStorageSpy.fetchSecure(any));
+
   void mockToken() {
     token = faker.guid.guid();
-
-    when(fetchSecureCacheStorageSpy.fetchSecure(any))
-        .thenAnswer((_) async => token);
+    _mockFetchSecure().thenAnswer((_) async => token);
   }
+
+  void mockTokenError() => _mockFetchSecure().thenThrow(Exception());
 
   void mockHttpResponse() {
     httpResponse = faker.randomGenerator.string(50);
@@ -73,6 +76,16 @@ void main() {
     final response = await sut.request(url: url, method: method, body: body);
 
     expect(response, httpResponse);
+  });
+  test("Should throw ForbidenError if fetchSecureCacheStorage throws",
+      () async {
+    mockTokenError();
+    final future = sut.request(url: url, method: method, body: body);
+
+    expect(
+      future,
+      throwsA(HttpError.forbidden),
+    );
   });
 }
 
