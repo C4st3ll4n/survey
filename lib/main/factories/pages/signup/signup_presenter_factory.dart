@@ -1,5 +1,5 @@
-import 'package:survey/presentation/presenters/presenters.dart';
-import 'package:survey/ui/pages/pages.dart';
+import '../../../../presentation/presenters/presenters.dart';
+import '../../../../ui/pages/pages.dart';
 
 import '../../factories.dart';
 /*
@@ -10,4 +10,5 @@ LoginPresenter makeStreamLoginPresenter() => StreamLoginPresenter(
 
 SignUpPresenter makeGetXSignupPresenter() => GetXSignUpPresenter(
 		validation: makeSignupValidation(),
-		saveCurrentAccount: makeLocalSaveCurrentAccount(), addAccount: makeAddAccount());
+		saveCurrentAccount: makeLocalSaveCurrentAccount(),
+		addAccount: makeAddAccount());

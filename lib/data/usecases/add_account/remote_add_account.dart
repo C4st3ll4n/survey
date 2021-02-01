@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:meta/meta.dart';
 import '../../models/remote_account_model.dart';
 import '../../http/http.dart';
@@ -6,7 +8,7 @@ import '../../../domain/helpers/helpers.dart';
 import '../../../domain/usecases/usecases.dart';
 
 class RemoteAddAccount implements AddAccount {
-  final HttpClient<Map> httpClient;
+  final HttpClient httpClient;
   final String url;
 
   RemoteAddAccount({this.httpClient, this.url});
@@ -17,12 +19,12 @@ class RemoteAddAccount implements AddAccount {
     try {
       final response =
           await httpClient.request(url: url, method: "post", body: _body);
-
       return RemoteAccountModel.fromJson(response).toEntity();
     } on HttpError catch (error) {
       throw error == HttpError.forbidden
           ? DomainError.emailInUse
           : DomainError.unexpected;
+    } catch (e, stck) {
     }
   }
 }
@@ -51,6 +53,6 @@ class RemoteRegisterParams {
         'email': email,
         'password': password,
         'name': name,
-        "confirmPassword": passwordConfirmation
+        "passwordConfirmation": passwordConfirmation
       };
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:meta/meta.dart';
 
@@ -87,8 +89,12 @@ class GetXSignUpPresenter extends GetxController implements SignUpPresenter {
         case DomainError.emailInUse:
           _mainError.value = UIError.emailInUse;
           break;
+        case DomainError.accessDenied:
+          _mainError.value = UIError.unexpected;
+          break;
       }
       _isLoading.value = false;
+    } catch (e, stck){
     }
   }
 
@@ -113,10 +119,13 @@ class GetXSignUpPresenter extends GetxController implements SignUpPresenter {
         return UIError.invalidField;
         break;
       case ValidationError.tooShortField:
-        return null;
+        return UIError.shortField;
         break;
       case ValidationError.tooLongField:
-        return null;
+        return UIError.longField;
+        break;
+      case ValidationError.unmatchField:
+        return UIError.unmatchField;
         break;
       default:
         return null;

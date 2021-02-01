@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:meta/meta.dart';
 import '../http/http.dart';
 import '../../domain/entities/entities.dart';
 
 const String kId = "id";
 const String kQuestion = "question";
-const String kDateTime = "dateTime";
+const String kDateTime = "date";
 const String kDidAnswer = "didAnswer";
 
 class RemoteSurveyModel {

@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 
 import 'package:survey/domain/usecases/usecases.dart';
 
-class HttpClientSpy extends Mock implements HttpClient<Map> {}
+class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
   AddAccount sut;
@@ -64,7 +64,7 @@ void main() {
             'email': params.email,
             'password': params.password,
             "name": params.name,
-            "confirmPassword": params.password
+            "passwordConfirmation": params.password
           },
         ),
       );

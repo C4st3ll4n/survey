@@ -6,6 +6,7 @@ class EnUS implements Translations{
   String get msgInvalidField => 'Invalid field';
   String get msgRequiredField => 'Campo obrigatório';
   String get msgUnexpectedError => 'Algo errado aconteceu. Tente novamente em breve.';
+  String get msgUnmatchField => "Fields doesn't match";
   
   String get addAccount => 'Criar conta';
   String get confirmPassword => 'Confirmar senha';
@@ -18,5 +19,6 @@ class EnUS implements Translations{
   String get surveys => 'Enquetes';
   String get surveyResult => 'Resultado da enquete';
   String get wait => 'Aguarde...';
+
 	
 }
