@@ -24,7 +24,7 @@ class AuthorizeHttpClientDecorator implements HttpClient {
     } on HttpError{
       rethrow;
     }
-    catch (error) {
+    catch (e, stck) {
       throw HttpError.forbidden;
     }
   }

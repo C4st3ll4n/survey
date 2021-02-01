@@ -34,18 +34,14 @@ class HttpAdapter implements HttpClient {
           headers: defaultHeaders,
         );
       }
-      log("\n###\n${response.body}\n${response.statusCode} \n###\n");
     } catch (e, stck) {
-      log("\n###\n${e.toString()}\n${stck.toString()} \n###\n");
       throw HttpError.serverError;
     }
-
-    //if(body?.containsKey("EOQ")??false) return {'any_key':'any_value'}; //FIXME
 
     return _handleResponse(response);
   }
 
-  Map _handleResponse(Response response) {
+  dynamic _handleResponse(Response response) {
     if (response.statusCode == 200) {
       return response.body.isNotEmpty ? json.decode(response.body) : null;
     } else if (response.statusCode == 204) {
