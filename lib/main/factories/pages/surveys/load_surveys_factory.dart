@@ -3,4 +3,4 @@ import '../../../../domain/usecases/usecases.dart';
 import '../../factories.dart';
 
 LoadSurveys makeLoadsurveys() => RemoteLoadSurveys(
-    httpClient: makeHttpAdapter(), url: makeAPIUrl("surveys"));
+    httpClient: makeAuthorizedHttpAdapter(), url: makeAPIUrl("surveys"));
