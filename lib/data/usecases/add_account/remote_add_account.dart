@@ -25,7 +25,6 @@ class RemoteAddAccount implements AddAccount {
           ? DomainError.emailInUse
           : DomainError.unexpected;
     } catch (e, stck) {
-      log("\n\n${e.toString()}\n${stck.toString()}\n\n");
     }
   }
 }

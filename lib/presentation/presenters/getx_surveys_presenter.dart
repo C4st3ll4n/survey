@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:meta/meta.dart';
@@ -36,7 +38,7 @@ class GetXSurveysPresenter extends GetxController implements SurveysPresenter {
                 didAnswer: e.didAnswer),
           )
           .toList());
-    } on DomainError {
+    } on DomainError catch(e, stck) {
       _dataStream.subject.
       addError(UIError.unexpected.description, StackTrace.empty);
     } finally {

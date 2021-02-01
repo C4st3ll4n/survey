@@ -95,7 +95,6 @@ class GetXSignUpPresenter extends GetxController implements SignUpPresenter {
       }
       _isLoading.value = false;
     } catch (e, stck){
-      log(e.toString());
     }
   }
 
