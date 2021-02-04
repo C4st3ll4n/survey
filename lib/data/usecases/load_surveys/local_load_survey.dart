@@ -32,6 +32,7 @@ class LocalLoadSurveys implements LoadSurveys {
     }
   }
 
-  List<SurveyEntity> _map(List<Map> data) =>
-      data.map<SurveyEntity>((e) => LocalSurveyModel.fromJson(e).toEntity());
+  List<SurveyEntity> _map(data) => data
+      .map<SurveyEntity>((e) => LocalSurveyModel.fromJson(e).toEntity())
+      .toList();
 }
