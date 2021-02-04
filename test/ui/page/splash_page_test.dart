@@ -1,10 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
-import 'package:survey/ui/pages/splash/splash.dart';
+import 'package:survey/ui/pages/pages.dart';
 
 class SplashPresenterSpy extends Mock implements SplashPresenter {}
 

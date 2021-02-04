@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:survey/presentation/protocols/protocols.dart';
-import 'package:survey/validation/validators/compare_field_validation.dart';
+import 'package:survey/validation/validators/validators.dart';
 void main(){
 	
 	CompareFieldValidation sut;

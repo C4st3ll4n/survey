@@ -1,7 +1,7 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:survey/presentation/protocols/protocols.dart';
-import 'package:survey/validation/validators/min_length_field_validation.dart';
+import 'package:survey/validation/validators/validators.dart';
 
 void main() {
   MinLengthFieldValidation sut;
