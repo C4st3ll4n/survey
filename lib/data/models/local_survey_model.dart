@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'models.dart';
 import '../../domain/entities/entities.dart';
 
-class LocalSurveyModel {
+class LocalSurveyModel extends Equatable{
   final String id;
   final String question;
   final DateTime dateTime;
@@ -27,6 +28,22 @@ class LocalSurveyModel {
 
   SurveyEntity toEntity() => SurveyEntity(
       didAnswer: didAnswer, question: question, id: id, dateTime: dateTime);
+
+  factory LocalSurveyModel.fromEntity(SurveyEntity e) => LocalSurveyModel(
+      id: e.id,
+      question: e.question,
+      dateTime: e.dateTime,
+      didAnswer: e.didAnswer);
+
+  Map<String,String>toJson() => {
+        kId: this.id,
+        kQuestion: this.question,
+        kDateTime: this.dateTime.toIso8601String(),
+        kDidAnswer: this.didAnswer.toString()
+      };
+
+  @override
+  List<Object> get props => [id, question, didAnswer, dateTime];
 }
 
 extension BoolParsing on String {

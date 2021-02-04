@@ -192,11 +192,61 @@ void main() {
       await sut.validate();
       verify(cacheStorageSpy.delete("surveys")).called(1);
     });
-    
+
     test("Should delete cache if its invalid", () async {
       _mockFCSError();
       await sut.validate();
       verify(cacheStorageSpy.delete("surveys")).called(1);
+    });
+  });
+
+  group("save", () {
+    LocalLoadSurveys sut;
+    CacheStorage cacheStorageSpy;
+    List<SurveyEntity> surveys;
+    List<SurveyEntity> mockSurveys() => [
+          SurveyEntity(
+              id: faker.guid.guid(),
+              question: faker.randomGenerator.string(50),
+              dateTime: DateTime.utc(2020, 2, 2),
+              didAnswer: true),
+          SurveyEntity(
+              id: faker.guid.guid(),
+              question: faker.randomGenerator.string(50),
+              dateTime: DateTime.utc(2018, 6, 3),
+              didAnswer: false),
+        ];
+    PostExpectation _mockFCSCall() => when(cacheStorageSpy.fetch(any));
+    void _mockFCSError() async {
+      _mockFCSCall().thenThrow(Exception());
+    }
+
+    setUp(
+      () {
+        cacheStorageSpy = CacheStorageSpy();
+        sut = LocalLoadSurveys(cacheStorage: cacheStorageSpy);
+
+        surveys = mockSurveys();
+      },
+    );
+
+    test("Should call CacheStorage with correct values", () async {
+      final list = [
+        {
+          "id": surveys.elementAt(0).id,
+          "question": surveys.elementAt(0).question,
+          "date": "2020-02-02T00:00:00.000Z",
+          "didAnswer": "true",
+        },
+        {
+          "id": surveys.elementAt(1).id,
+          "question": surveys.elementAt(1).question,
+          "date": "2018-06-03T00:00:00.000Z",
+          "didAnswer": "false",
+        }
+      ];
+      await sut.save(surveys);
+      verify(cacheStorageSpy.save(key: 'surveys', value: list)).called(1);
     });
   });
 }
