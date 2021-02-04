@@ -15,8 +15,9 @@ class LocalStorageAdapter implements CacheStorage{
   }
 
   @override
-  Future<void> save({@required String key,@required dynamic value}) {
-    localStorage.setItem(key, value);
+  Future<void> save({@required String key,@required dynamic value}) async{
+    await localStorage.deleteItem(key);
+    await localStorage.setItem(key, value);
   }
 
 }

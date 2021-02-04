@@ -19,6 +19,7 @@ void main(){
 	
 	test("Ensure calls save with correct values",()async{
 		await sut.save(key: key,value: value);
+		verify(localStorageSpy.deleteItem(key)).called(1);
 		verify(localStorageSpy.setItem(key, value)).called(1);
 	});
 	
