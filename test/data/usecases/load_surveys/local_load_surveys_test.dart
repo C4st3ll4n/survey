@@ -81,6 +81,18 @@ void main() {
       );
     },
   );
+  
+  test(
+    "Should throw UnexpectedError if cach is null",
+    () async {
+      _mockFCSSuccess(null);
+      final future =  sut.load();
+      expect(
+        future,
+        throwsA(DomainError.unexpected)
+      );
+    },
+  );
 }
 
 class FetchCacheStorageSpy extends Mock implements FetchCacheStorage {}
