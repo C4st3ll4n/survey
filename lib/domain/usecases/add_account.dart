@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:survey/domain/entities/account_entity.dart';
+import '../entities/entities.dart';
 
 abstract class AddAccount {
   Future<AccountEntity> register(RegisterParams params) {}

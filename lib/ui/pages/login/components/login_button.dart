@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:survey/ui/pages/login/login_presenter.dart';
+import '../login_presenter.dart';
 
 class LoginButton extends StatelessWidget {
 	@override

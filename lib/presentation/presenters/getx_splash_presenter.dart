@@ -1,7 +1,6 @@
-
 import 'package:get/get.dart';
-import 'package:survey/domain/usecases/usecases.dart';
-import 'package:survey/ui/pages/splash/splash.dart';
+import '../../domain/usecases/usecases.dart';
+import '../../ui/pages/splash/splash.dart';
 
 class GetXSplashPresenter implements SplashPresenter {
 	final LoadCurrentAccount localLoadCurrentAccount;

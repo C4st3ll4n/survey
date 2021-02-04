@@ -1,4 +1,4 @@
-import '../entities/account_entity.dart';
+import '../entities/entities.dart';
 
 abstract class LoadCurrentAccount{
 	Future<AccountEntity> load();

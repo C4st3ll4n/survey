@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../helpers/helpers.dart';
-
 import '../../pages.dart';
+import '../../../helpers/helpers.dart';
 
 class EmailInput extends StatelessWidget {
 	

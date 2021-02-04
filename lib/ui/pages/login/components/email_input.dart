@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:survey/ui/helpers/errors/errors.dart';
 import '../login_presenter.dart';
+import '../../../helpers/errors/errors.dart';
 
 class EmailInput extends StatelessWidget {
 	

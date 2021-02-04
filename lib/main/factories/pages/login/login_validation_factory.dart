@@ -1,5 +1,4 @@
 import '../../../builders/builders.dart';
-
 import '../../../../validation/protocols/field_validate.dart';
 import '../../../../presentation/protocols/protocols.dart';
 import '../../../../validation/validators/validators.dart';

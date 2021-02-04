@@ -1,5 +1,4 @@
 import 'package:meta/meta.dart';
-
 import '../../cache/cache.dart';
 import '../../../domain/entities/entities.dart';
 import '../../../domain/helpers/helpers.dart';

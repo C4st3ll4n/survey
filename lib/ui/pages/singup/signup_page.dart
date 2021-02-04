@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
+import 'components/components.dart';
+import '../pages.dart';
 import '../../helpers/helpers.dart';
-
 import '../../helpers/errors/errors.dart';
 import '../../components/components.dart';
-import '../pages.dart';
-import 'components/components.dart';
 
 class SignUpPage extends StatelessWidget {
   final SignUpPresenter presenter;
