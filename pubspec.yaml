@@ -9,6 +9,7 @@ environment:
 dependencies:
   carousel_slider:
   flutter_secure_storage:
+  localstorage:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.0
