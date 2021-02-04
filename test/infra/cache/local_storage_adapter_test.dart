@@ -22,5 +22,10 @@ void main(){
 		verify(localStorageSpy.setItem(key, value)).called(1);
 	});
 	
+	test("Ensure calls delete with correct values",()async{
+		await sut.delete(key);
+		verify(localStorageSpy.deleteItem(key)).called(1);
+	});
+	
 }
 	class LocalStorageSpy extends Mock implements LocalStorage{}
