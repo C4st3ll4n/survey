@@ -216,7 +216,7 @@ void main() {
               dateTime: DateTime.utc(2018, 6, 3),
               didAnswer: false),
         ];
-    PostExpectation _mockFCSCall() => when(cacheStorageSpy.fetch(any));
+    PostExpectation _mockFCSCall() => when(cacheStorageSpy.save(key: anyNamed("key"), value: anyNamed("value")));
     void _mockFCSError() async {
       _mockFCSCall().thenThrow(Exception());
     }
@@ -247,6 +247,14 @@ void main() {
       ];
       await sut.save(surveys);
       verify(cacheStorageSpy.save(key: 'surveys', value: list)).called(1);
+    });
+    
+    test("Should throw UnexpectedError if save throws", () async {
+      _mockFCSError();
+    
+      final future = sut.save(surveys);
+      
+      expect(future, throwsA(DomainError.unexpected));
     });
   });
 }
