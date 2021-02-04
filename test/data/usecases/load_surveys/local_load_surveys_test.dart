@@ -146,7 +146,7 @@ void main() {
     );
   });
 
-  group("load", (){
+  group("validate", (){
   
     LocalLoadSurveys sut;
     List<Map> listData;
@@ -187,101 +187,11 @@ void main() {
       },
     );
   
-    test("Should call FetchCacheStorage with correct key", () async {
-      await sut.load();
+    test("Should call CacheStorage with correct key", () async {
+      await sut.validate();
       verify(cacheStorageSpy.fetch('surveys')).called(1);
     });
   
-    test(
-      "Should return list of survey on success",
-          () async {
-        final surveys = await sut.load();
-        expect(
-          surveys,
-          [
-            SurveyEntity(
-              id: listData[0]['id'],
-              question: listData[0]['question'],
-              dateTime: DateTime.utc(2020,07,20),
-              didAnswer: true,
-            ),
-            SurveyEntity(
-              id: listData[1]['id'],
-              question: listData[1]['question'],
-              dateTime: DateTime.utc(2020,12,20),
-              didAnswer: false,
-            ),
-          ],
-        );
-      },
-    );
-  
-    test(
-      "Should throw UnexpectedError if cach is empty",
-          () async {
-        _mockFCSSuccess([]);
-        final future =  sut.load();
-        expect(
-            future,
-            throwsA(DomainError.unexpected)
-        );
-      },
-    );
-  
-    test(
-      "Should throw UnexpectedError if cach is null",
-          () async {
-        _mockFCSSuccess(null);
-        final future =  sut.load();
-        expect(
-            future,
-            throwsA(DomainError.unexpected)
-        );
-      },
-    );
-  
-    test(
-      "Should throw UnexpectedError if cach is invalid",
-          () async {
-        _mockFCSSuccess([
-          {
-            "id": faker.guid.guid(),
-            "question": faker.randomGenerator.string(50),
-            "didAnswer": "true",
-            "date": "invalid date"
-          },
-        ]);
-        var future =  sut.load();
-        expect(
-            future,
-            throwsA(DomainError.unexpected)
-        );
-        //Incomplete data
-        _mockFCSSuccess([
-          {
-            "didAnswer": "true",
-            "date": "2020-07-20T00:00:00Z",
-          },
-        ]);
-        future =  sut.load();
-        expect(
-            future,
-            throwsA(DomainError.unexpected)
-        );
-      },
-    );
-  
-    test(
-      "Should throw UnexpectedError if loadCacheSurveys fails",
-          () async {
-        _mockFCSError();
-        final future =  sut.load();
-        expect(
-            future,
-            throwsA(DomainError.unexpected)
-        );
-      },
-    );
   });
 
   
