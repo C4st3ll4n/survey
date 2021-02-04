@@ -192,6 +192,19 @@ void main() {
       verify(cacheStorageSpy.fetch('surveys')).called(1);
     });
   
+    test("Should delete cache if its invalid", () async {
+      _mockFCSSuccess([
+        {
+          "id": faker.guid.guid(),
+          "question": faker.randomGenerator.string(50),
+          "didAnswer": "invalid bool",
+          "date": "invalid data"
+        },
+      ]);
+      await sut.validate();
+      verify(cacheStorageSpy.delete("surveys")).called(1);
+    });
+  
   });
 
   
