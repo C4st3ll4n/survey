@@ -1,14 +1,10 @@
 import 'package:get/get.dart';
 import 'package:meta/meta.dart';
-import 'package:survey/domain/entities/account_entity.dart';
-import 'package:survey/domain/usecases/save_current_account.dart';
-import 'package:survey/ui/helpers/errors/errors.dart';
-
 import '../protocols/protocols.dart';
-
+import '../../domain/usecases/usecases.dart';
+import '../../domain/entities/entities.dart';
+import '../../ui/helpers/errors/errors.dart';
 import '../../domain/helpers/domain_error.dart';
-import '../../domain/usecases/authentication.dart';
-
 import '../../ui/pages/login/login_presenter.dart';
 
 class GetXLoginPresenter extends GetxController implements LoginPresenter {

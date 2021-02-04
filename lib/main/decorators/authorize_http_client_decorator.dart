@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
-import 'package:survey/data/cache/cache.dart';
-import 'package:survey/data/http/http.dart';
+import '../../data/cache/cache.dart';
+import '../../data/http/http.dart';
 
 class AuthorizeHttpClientDecorator implements HttpClient {
   final FetchSecureCacheStorage fetchSecureCacheStorage;

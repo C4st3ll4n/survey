@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import '../../presentation/protocols/protocols.dart';
 import '../protocols/protocols.dart';
+import '../../presentation/protocols/protocols.dart';
 
 class MaxLengthFieldValidation extends Equatable implements FieldValidation {
 	MaxLengthFieldValidation({ @required this.field, @required this.maxLength});

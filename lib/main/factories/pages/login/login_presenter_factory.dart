@@ -1,6 +1,6 @@
+import '../../factories.dart';
 import '../../../../presentation/presenters/presenters.dart';
 import '../../../../ui/pages/login/login_presenter.dart';
-import '../../factories.dart';
 /*
 
 LoginPresenter makeStreamLoginPresenter() => StreamLoginPresenter(

@@ -1,12 +1,10 @@
-import 'package:faker/faker.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:survey/ui/components/components.dart';
-import 'package:survey/ui/helpers/helpers.dart';
-import 'package:survey/ui/pages/pages.dart';
-import 'package:survey/ui/pages/surveys/surveys_presenter.dart';
-import '../../../data/models/models.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'surveys_presenter.dart';
 import 'components/components.dart';
+import '../pages.dart';
+import '../../components/components.dart';
+import '../../helpers/helpers.dart';
 
 class SurveysPage extends StatelessWidget {
   final SurveysPresenter presenter;

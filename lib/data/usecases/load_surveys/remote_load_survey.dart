@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:meta/meta.dart';
 import '../../http/http.dart';
 import '../../models/models.dart';
-import '../../../domain/entities/survey_entity.dart';
+import '../../../domain/entities/entities.dart';
 import '../../../domain/helpers/helpers.dart';
 import '../../../domain/usecases/usecases.dart';
 

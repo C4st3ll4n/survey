@@ -1,5 +1,5 @@
-import 'package:survey/validation/validation.dart';
-import 'package:survey/validation/validators/compare_field_validation.dart';
+import '../../validation/validation.dart';
+import '../../validation/validators/validators.dart';
 
 class ValidationBuilder {
   static ValidationBuilder _instace;

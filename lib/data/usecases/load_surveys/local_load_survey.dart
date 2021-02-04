@@ -1,8 +1,8 @@
 import 'package:meta/meta.dart';
-import 'package:survey/data/models/local_survey_model.dart';
-import 'package:survey/domain/helpers/domain_error.dart';
 import '../../cache/cache.dart';
-import '../../../domain/entities/survey_entity.dart';
+import '../../models/models.dart';
+import '../../../domain/helpers/helpers.dart';
+import '../../../domain/entities/entities.dart';
 import '../../../domain/usecases/usecases.dart';
 
 class LocalLoadSurveys implements LoadSurveys {

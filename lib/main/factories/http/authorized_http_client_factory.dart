@@ -1,7 +1,6 @@
-import 'package:survey/main/factories/http/http.dart';
-import '../../decorators/decorators.dart';
+import 'http.dart';
 import '../cache/cache.dart';
-
+import '../../decorators/decorators.dart';
 import '../../../data/http/http.dart';
 
 HttpClient makeAuthorizedHttpAdapter() {

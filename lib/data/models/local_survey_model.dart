@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:meta/meta.dart';
-import 'package:survey/data/models/models.dart';
-import '../http/http.dart';
+import 'models.dart';
 import '../../domain/entities/entities.dart';
 
 class LocalSurveyModel {
@@ -18,7 +15,8 @@ class LocalSurveyModel {
       @required this.didAnswer});
 
   factory LocalSurveyModel.fromJson(Map json) {
-    if (!json.keys.toSet().containsAll([kId, kQuestion, kDateTime, kDidAnswer])) throw Exception("One or more keys are missing");
+    if (!json.keys.toSet().containsAll([kId, kQuestion, kDateTime, kDidAnswer]))
+      throw Exception("One or more keys are missing");
     return LocalSurveyModel(
       id: json[kId],
       didAnswer: json[kDidAnswer].toString().parseBool(),

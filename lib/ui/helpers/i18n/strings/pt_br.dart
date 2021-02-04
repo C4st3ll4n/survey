@@ -1,4 +1,3 @@
-
 import 'translations.dart';
 
 class PtBR implements Translations{

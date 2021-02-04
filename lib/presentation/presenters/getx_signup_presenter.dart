@@ -1,10 +1,6 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:meta/meta.dart';
-
 import '../protocols/protocols.dart';
-
 import '../../domain/entities/account_entity.dart';
 import '../../domain/usecases/add_account.dart';
 import '../../domain/usecases/save_current_account.dart';

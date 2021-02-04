@@ -1,5 +1,5 @@
-import '../../presentation/protocols/protocols.dart';
 import '../protocols/protocols.dart';
+import '../../presentation/protocols/protocols.dart';
 
 class ValidationComposite implements Validation {
 	ValidationComposite(this.validations);

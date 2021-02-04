@@ -1,4 +1,4 @@
-import 'package:survey/ui/pages/pages.dart';
+import '../pages.dart';
 
 abstract class SurveysPresenter{
 	Stream<bool> get isLoadingStream;
