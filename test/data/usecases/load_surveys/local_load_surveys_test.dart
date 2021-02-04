@@ -27,10 +27,16 @@ void main() {
       ];
 
   PostExpectation _mockFCSCall() => when(fetchCacheStorageSpy.fetch(any));
+  
   void _mockFCSSuccess(List<Map> data) async {
     listData = data;
     _mockFCSCall().thenAnswer((_) async => data);
   }
+
+  void _mockFCSError() async {
+    _mockFCSCall().thenThrow(Exception());
+  }
+
 
   setUp(
     () {
@@ -121,6 +127,18 @@ void main() {
       expect(
         future,
         throwsA(DomainError.unexpected)
+      );
+    },
+  );
+
+  test(
+    "Should throw UnexpectedError if loadCacheSurveys fails",
+        () async {
+      _mockFCSError();
+      final future =  sut.load();
+      expect(
+          future,
+          throwsA(DomainError.unexpected)
       );
     },
   );

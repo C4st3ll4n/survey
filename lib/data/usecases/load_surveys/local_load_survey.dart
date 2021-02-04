@@ -12,8 +12,8 @@ class LocalLoadSurveys implements LoadSurveys {
 
   @override
   Future<List<SurveyEntity>> load() async {
-    final response = await fetchCacheStorage.fetch("surveys");
     try{
+    final response = await fetchCacheStorage.fetch("surveys");
       if(response?.isEmpty!=false){
         throw Exception("Cache data is invalid or null");
       }
