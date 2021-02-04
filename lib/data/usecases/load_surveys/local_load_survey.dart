@@ -17,7 +17,7 @@ class LocalLoadSurveys implements LoadSurveys {
       if (response?.isEmpty != false) {
         throw Exception("Cache data is invalid or null");
       }
-      return _map(response);
+      return _mapToEntity(response);
     } catch (e) {
       throw DomainError.unexpected;
     }
@@ -26,13 +26,28 @@ class LocalLoadSurveys implements LoadSurveys {
   Future<void> validate() async {
     try {
       final data = await cacheStorage.fetch("surveys");
-      _map(data);
+      _mapToEntity(data);
     } catch (e) {
       await cacheStorage.delete("surveys");
     }
   }
 
-  List<SurveyEntity> _map(data) => data
-      .map<SurveyEntity>((e) => LocalSurveyModel.fromJson(e).toEntity())
+  List<SurveyEntity> _mapToEntity(data) => data
+      .map<SurveyEntity>(
+        (e) => LocalSurveyModel.fromJson(e).toEntity(),
+      )
       .toList();
+
+  List<Map> _mapToJson(List<SurveyEntity> data) => data
+      .map(
+        (e) => LocalSurveyModel.fromEntity(e).toJson(),
+      )
+      .toList();
+
+  Future<void> save(List<SurveyEntity> surveys) async {
+    await cacheStorage.save(
+      key: "surveys",
+      value: _mapToJson(surveys),
+    );
+  }
 }
