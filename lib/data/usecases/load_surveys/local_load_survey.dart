@@ -13,13 +13,18 @@ class LocalLoadSurveys implements LoadSurveys {
   @override
   Future<List<SurveyEntity>> load() async {
     final response = await fetchCacheStorage.fetch("surveys");
-    if(response?.isEmpty!=false){
+    try{
+      if(response?.isEmpty!=false){
+        throw Exception("Cache data is invalid or null");
+      }
+      return response
+          .map<SurveyEntity>(
+              (e) =>LocalSurveyModel.fromJson(e).toEntity()
+      )
+          .toList();
+    }catch(e){
       throw DomainError.unexpected;
     }
-    return response
-        .map<SurveyEntity>(
-          (e) =>LocalSurveyModel.fromJson(e).toEntity()
-        )
-        .toList();
+    
   }
 }

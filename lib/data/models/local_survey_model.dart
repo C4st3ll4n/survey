@@ -18,7 +18,7 @@ class LocalSurveyModel {
       @required this.didAnswer});
 
   factory LocalSurveyModel.fromJson(Map json) {
-    if (!json.keys.toSet().containsAll([kId, kQuestion, kDateTime, kDidAnswer])) throw HttpError.invalidData;
+    if (!json.keys.toSet().containsAll([kId, kQuestion, kDateTime, kDidAnswer])) throw Exception("One or more keys are missing");
     return LocalSurveyModel(
       id: json[kId],
       didAnswer: json[kDidAnswer].toString().parseBool(),
