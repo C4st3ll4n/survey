@@ -192,6 +192,12 @@ void main() {
       await sut.validate();
       verify(cacheStorageSpy.delete("surveys")).called(1);
     });
+    
+    test("Should delete cache if its invalid", () async {
+      _mockFCSError();
+      await sut.validate();
+      verify(cacheStorageSpy.delete("surveys")).called(1);
+    });
   });
 }
 
