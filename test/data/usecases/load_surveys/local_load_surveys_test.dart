@@ -93,6 +93,37 @@ void main() {
       );
     },
   );
+  
+  test(
+    "Should throw UnexpectedError if cach is invalid",
+    () async {
+      _mockFCSSuccess([
+        {
+          "id": faker.guid.guid(),
+          "question": faker.randomGenerator.string(50),
+          "didAnswer": "true",
+          "date": "invalid date"
+        },
+      ]);
+      var future =  sut.load();
+      expect(
+        future,
+        throwsA(DomainError.unexpected)
+      );
+      //Incomplete data
+      _mockFCSSuccess([
+        {
+          "didAnswer": "true",
+          "date": "2020-07-20T00:00:00Z",
+        },
+      ]);
+      future =  sut.load();
+      expect(
+        future,
+        throwsA(DomainError.unexpected)
+      );
+    },
+  );
 }
 
 class FetchCacheStorageSpy extends Mock implements FetchCacheStorage {}
