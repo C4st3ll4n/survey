@@ -1,9 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
-import 'package:survey/domain/entities/account_entity.dart';
+import 'package:survey/domain/entities/entities.dart';
 import 'package:survey/domain/usecases/usecases.dart';
-import 'package:survey/presentation/presenters/getx_splash_presenter.dart';
+import 'package:survey/presentation/presenters/presenters.dart';
 import 'package:survey/ui/pages/splash/splash.dart';
 
 void main() {

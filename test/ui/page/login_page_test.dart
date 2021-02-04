@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
-import 'package:survey/ui/helpers/errors/errors.dart';
+import 'package:survey/ui/helpers/helpers.dart';
 import 'package:survey/ui/pages/pages.dart';
 
 void main() {

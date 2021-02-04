@@ -1,17 +1,13 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
-import 'package:survey/domain/entities/account_entity.dart';
-import 'package:survey/domain/helpers/domain_error.dart';
-import 'package:survey/domain/usecases/authentication.dart';
+import 'package:survey/domain/entities/entities.dart';
+import 'package:survey/domain/helpers/helpers.dart';
 import 'package:survey/domain/usecases/usecases.dart';
-import 'package:survey/presentation/presenters/getx_signup_presenter.dart';
-
 import 'package:survey/presentation/presenters/presenters.dart';
-import 'package:survey/presentation/protocols/protocols.dart';
-import 'package:survey/ui/helpers/errors/errors.dart';
-import 'package:survey/ui/pages/login/login_presenter.dart';
+import 'package:survey/presentation/protocols/validation.dart';
+import 'package:survey/ui/helpers/helpers.dart';
+
 
 class ValidationSpy extends Mock implements Validation {}
 
