@@ -7,26 +7,24 @@ import 'package:survey/domain/entities/entities.dart';
 import 'package:survey/domain/helpers/domain_error.dart';
 
 void main() {
-  
-  group("load", (){
-  
+  group("load", () {
     LocalLoadSurveys sut;
     List<Map> listData;
     CacheStorage cacheStorageSpy;
     List<Map> mockValidData() => [
-      {
-        "id": faker.guid.guid(),
-        "question": faker.randomGenerator.string(50),
-        "didAnswer": "true",
-        "date": "2020-07-20T00:00:00Z"
-      },
-      {
-        "id": faker.guid.guid(),
-        "question": faker.randomGenerator.string(50),
-        "didAnswer": "false",
-        "date": "2020-12-20T00:00:00Z",
-      },
-    ];
+          {
+            "id": faker.guid.guid(),
+            "question": faker.randomGenerator.string(50),
+            "didAnswer": "true",
+            "date": "2020-07-20T00:00:00Z"
+          },
+          {
+            "id": faker.guid.guid(),
+            "question": faker.randomGenerator.string(50),
+            "didAnswer": "false",
+            "date": "2020-12-20T00:00:00Z",
+          },
+        ];
 
     PostExpectation _mockFCSCall() => when(cacheStorageSpy.fetch(any));
 
@@ -39,24 +37,23 @@ void main() {
       _mockFCSCall().thenThrow(Exception());
     }
 
-
     setUp(
-          () {
+      () {
         cacheStorageSpy = CacheStorageSpy();
         sut = LocalLoadSurveys(cacheStorage: cacheStorageSpy);
-    
+
         _mockFCSSuccess(mockValidData());
       },
     );
 
     test("Should call FetchCacheStorage with correct key", () async {
       await sut.load();
-      verify(cacheStorageSpy.fetch('surveys')).called(1);
+      verify(cacheStorageSpy.fetch("surveys")).called(1);
     });
 
     test(
       "Should return list of survey on success",
-          () async {
+      () async {
         final surveys = await sut.load();
         expect(
           surveys,
@@ -64,13 +61,13 @@ void main() {
             SurveyEntity(
               id: listData[0]['id'],
               question: listData[0]['question'],
-              dateTime: DateTime.utc(2020,07,20),
+              dateTime: DateTime.utc(2020, 07, 20),
               didAnswer: true,
             ),
             SurveyEntity(
               id: listData[1]['id'],
               question: listData[1]['question'],
-              dateTime: DateTime.utc(2020,12,20),
+              dateTime: DateTime.utc(2020, 12, 20),
               didAnswer: false,
             ),
           ],
@@ -80,31 +77,25 @@ void main() {
 
     test(
       "Should throw UnexpectedError if cach is empty",
-          () async {
+      () async {
         _mockFCSSuccess([]);
-        final future =  sut.load();
-        expect(
-            future,
-            throwsA(DomainError.unexpected)
-        );
+        final future = sut.load();
+        expect(future, throwsA(DomainError.unexpected));
       },
     );
 
     test(
       "Should throw UnexpectedError if cach is null",
-          () async {
+      () async {
         _mockFCSSuccess(null);
-        final future =  sut.load();
-        expect(
-            future,
-            throwsA(DomainError.unexpected)
-        );
+        final future = sut.load();
+        expect(future, throwsA(DomainError.unexpected));
       },
     );
 
     test(
       "Should throw UnexpectedError if cach is invalid",
-          () async {
+      () async {
         _mockFCSSuccess([
           {
             "id": faker.guid.guid(),
@@ -113,11 +104,8 @@ void main() {
             "date": "invalid date"
           },
         ]);
-        var future =  sut.load();
-        expect(
-            future,
-            throwsA(DomainError.unexpected)
-        );
+        var future = sut.load();
+        expect(future, throwsA(DomainError.unexpected));
         //Incomplete data
         _mockFCSSuccess([
           {
@@ -125,73 +113,65 @@ void main() {
             "date": "2020-07-20T00:00:00Z",
           },
         ]);
-        future =  sut.load();
-        expect(
-            future,
-            throwsA(DomainError.unexpected)
-        );
+        future = sut.load();
+        expect(future, throwsA(DomainError.unexpected));
       },
     );
 
     test(
       "Should throw UnexpectedError if loadCacheSurveys fails",
-          () async {
+      () async {
         _mockFCSError();
-        final future =  sut.load();
-        expect(
-            future,
-            throwsA(DomainError.unexpected)
-        );
+        final future = sut.load();
+        expect(future, throwsA(DomainError.unexpected));
       },
     );
   });
 
-  group("validate", (){
-  
+  group("validate", () {
     LocalLoadSurveys sut;
     List<Map> listData;
     CacheStorage cacheStorageSpy;
     List<Map> mockValidData() => [
-      {
-        "id": faker.guid.guid(),
-        "question": faker.randomGenerator.string(50),
-        "didAnswer": "true",
-        "date": "2020-07-20T00:00:00Z"
-      },
-      {
-        "id": faker.guid.guid(),
-        "question": faker.randomGenerator.string(50),
-        "didAnswer": "false",
-        "date": "2020-12-20T00:00:00Z",
-      },
-    ];
-  
+          {
+            "id": faker.guid.guid(),
+            "question": faker.randomGenerator.string(50),
+            "didAnswer": "true",
+            "date": "2020-07-20T00:00:00Z"
+          },
+          {
+            "id": faker.guid.guid(),
+            "question": faker.randomGenerator.string(50),
+            "didAnswer": "false",
+            "date": "2020-12-20T00:00:00Z",
+          },
+        ];
+
     PostExpectation _mockFCSCall() => when(cacheStorageSpy.fetch(any));
-  
+
     void _mockFCSSuccess(List<Map> data) async {
       listData = data;
       _mockFCSCall().thenAnswer((_) async => data);
     }
-  
+
     void _mockFCSError() async {
       _mockFCSCall().thenThrow(Exception());
     }
-  
-  
+
     setUp(
-          () {
+      () {
         cacheStorageSpy = CacheStorageSpy();
         sut = LocalLoadSurveys(cacheStorage: cacheStorageSpy);
-      
+
         _mockFCSSuccess(mockValidData());
       },
     );
-  
+
     test("Should call CacheStorage with correct key", () async {
       await sut.validate();
       verify(cacheStorageSpy.fetch('surveys')).called(1);
     });
-  
+
     test("Should delete cache if its invalid", () async {
       _mockFCSSuccess([
         {
@@ -204,10 +184,15 @@ void main() {
       await sut.validate();
       verify(cacheStorageSpy.delete("surveys")).called(1);
     });
-  
-  });
 
-  
+    test("Should delete cache if its invalid", () async {
+      _mockFCSSuccess([
+        {"didAnswer": "true", "date": "2020-12-20T00:00:00Z"},
+      ]);
+      await sut.validate();
+      verify(cacheStorageSpy.delete("surveys")).called(1);
+    });
+  });
 }
 
 class CacheStorageSpy extends Mock implements CacheStorage {}
