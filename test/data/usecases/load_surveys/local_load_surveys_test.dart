@@ -4,6 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:survey/data/cache/cache.dart';
 import 'package:survey/data/usecases/load_surveys/load_surveys.dart';
 import 'package:survey/domain/entities/entities.dart';
+import 'package:survey/domain/helpers/domain_error.dart';
 
 void main() {
   LocalLoadSurveys sut;
@@ -65,6 +66,18 @@ void main() {
             didAnswer: false,
           ),
         ],
+      );
+    },
+  );
+  
+  test(
+    "Should throw UnexpectedError if cach is empty",
+    () async {
+      _mockFCSSuccess([]);
+      final future =  sut.load();
+      expect(
+        future,
+        throwsA(DomainError.unexpected)
       );
     },
   );
