@@ -2,7 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/data/http/http.dart';
-import 'package:survey/infra/http/http_adapter.dart';
+import 'package:survey/infra/http/http.dart';
 import 'package:test/test.dart';
 
 class ClientSpy extends Mock implements Client {}

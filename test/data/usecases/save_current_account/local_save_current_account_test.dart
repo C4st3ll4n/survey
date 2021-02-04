@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/data/cache/cache.dart';
 import 'package:survey/data/usecases/usecases.dart';
-
 import 'package:survey/domain/entities/entities.dart';
 import 'package:survey/domain/helpers/helpers.dart';
 

@@ -1,10 +1,10 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:survey/data/cache/fetch_secure_cache_storage.dart';
-import 'package:survey/data/usecases/load_current_account/load_current_account.dart';
-import 'package:survey/domain/entities/account_entity.dart';
-import 'package:survey/domain/helpers/domain_error.dart';
+import 'package:survey/data/cache/cache.dart';
+import 'package:survey/data/usecases/usecases.dart';
+import 'package:survey/domain/entities/entities.dart';
+import 'package:survey/domain/helpers/helpers.dart';
 
 void main() {
   LocalLoadCurrentAccount sut;

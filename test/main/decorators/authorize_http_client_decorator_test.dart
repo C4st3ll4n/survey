@@ -1,11 +1,9 @@
 import 'package:faker/faker.dart';
-import 'package:meta/meta.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/data/cache/cache.dart';
 import 'package:survey/data/http/http.dart';
-import 'package:survey/infra/http/http.dart';
-import 'package:survey/main/decorators/authorize_http_client_decorator.dart';
+import 'package:survey/main/decorators/decorators.dart';
 
 void main() {
   AuthorizeHttpClientDecorator sut;

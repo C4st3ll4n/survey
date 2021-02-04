@@ -2,7 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/data/cache/cache.dart';
-import 'package:survey/data/usecases/load_surveys/load_surveys.dart';
+import 'package:survey/data/usecases/usecases.dart';
 import 'package:survey/domain/entities/entities.dart';
 import 'package:survey/domain/helpers/domain_error.dart';
 

@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/domain/entities/entities.dart';
-import 'package:survey/domain/helpers/domain_error.dart';
+import 'package:survey/domain/helpers/helpers.dart';
 import 'package:survey/domain/usecases/usecases.dart';
 import 'package:survey/presentation/presenters/presenters.dart';
-import 'package:survey/ui/helpers/errors/errors.dart';
+import 'package:survey/ui/helpers/helpers.dart';
 import 'package:survey/ui/pages/pages.dart';
 
 class LoadSurveysSpy extends Mock implements LoadSurveys {}
