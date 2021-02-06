@@ -6,6 +6,7 @@ import 'package:survey/data/usecases/usecases.dart';
 import 'package:survey/domain/entities/entities.dart';
 import 'package:survey/domain/helpers/domain_error.dart';
 import 'package:survey/domain/usecases/usecases.dart';
+import 'package:survey/main/composites/composites.dart';
 
 void main() {
   RemoteLoadSurveysWithLocalFallback sut;
@@ -109,29 +110,4 @@ class RemoteLoadSurveysSpy extends Mock implements RemoteLoadSurveys {}
 
 class LocalLoadSurveysSpy extends Mock implements LocalLoadSurveys {}
 
-class RemoteLoadSurveysWithLocalFallback implements LoadSurveys {
-  RemoteLoadSurveysWithLocalFallback({
-    @required this.remote,
-    @required this.local,
-  });
-
-  final RemoteLoadSurveys remote;
-  final LocalLoadSurveys local;
-
-  @override
-  Future<List<SurveyEntity>> load() async {
-    try{
-    
-    final data = await remote.load();
-    await local.save(data);
-    return data;
-    }catch(err){
-      if(err == DomainError.accessDenied){
-        rethrow;
-      }
-      await local.validate();
-      return local.load();
-    }
-  }
-}
 
