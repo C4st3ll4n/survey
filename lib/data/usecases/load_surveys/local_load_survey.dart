@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:meta/meta.dart';
 import '../../cache/cache.dart';
 import '../../models/models.dart';
@@ -18,7 +20,8 @@ class LocalLoadSurveys implements LoadSurveys {
         throw Exception("Cache data is invalid or null");
       }
       return _mapToEntity(response);
-    } catch (e) {
+    } catch (e, stck) {
+      log("load::\n\n"+e.toString(), stackTrace: stck);
       throw DomainError.unexpected;
     }
   }
@@ -27,12 +30,13 @@ class LocalLoadSurveys implements LoadSurveys {
     try {
       final data = await cacheStorage.fetch("surveys");
       _mapToEntity(data);
-    } catch (e) {
+    } catch (e, stck) {
+      log("validate::\n\n"+e.toString(), stackTrace: stck);
       await cacheStorage.delete("surveys");
     }
   }
 
-  List<SurveyEntity> _mapToEntity(data) => data
+  List<SurveyEntity> _mapToEntity(dynamic data) => data
       .map<SurveyEntity>(
         (e) => LocalSurveyModel.fromJson(e).toEntity(),
       )
@@ -50,7 +54,8 @@ class LocalLoadSurveys implements LoadSurveys {
         key: "surveys",
         value: _mapToJson(surveys),
       );
-    } catch (e) {
+    } catch (e, stck) {
+      log("validate::\n\n"+e.toString(), stackTrace: stck);
       throw DomainError.unexpected;
     }
   }
