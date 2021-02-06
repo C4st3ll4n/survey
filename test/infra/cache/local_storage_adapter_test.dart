@@ -89,6 +89,7 @@ void main() {
     }
 
     setUp(() {
+      result = faker.randomGenerator.string(50);
       _mockFetchSuccess();
     });
 
