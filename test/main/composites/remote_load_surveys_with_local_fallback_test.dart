@@ -35,9 +35,15 @@ void main() {
     await sut.load();
     verify(remote.load()).called(1);
   });
+
   test("Should call local save with remote data", () async {
     await sut.load();
     verify(local.save(surveys)).called(1);
+  });
+
+  test("Should return remote data", () async {
+    final result = await sut.load();
+    expect(result, surveys);
   });
 }
 
@@ -58,5 +64,6 @@ class RemoteLoadSurveysWithLocalFallback implements LoadSurveys {
   Future<List<SurveyEntity>> load() async {
     final data = await remote.load();
     await local.save(data);
+    return data;
   }
 }
