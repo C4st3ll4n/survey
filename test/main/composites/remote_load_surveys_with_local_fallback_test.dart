@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/data/usecases/usecases.dart';
 import 'package:survey/domain/entities/entities.dart';
+import 'package:survey/domain/helpers/domain_error.dart';
 import 'package:survey/domain/usecases/usecases.dart';
 
 void main() {
@@ -18,11 +19,15 @@ void main() {
             dateTime: faker.date.dateTime(),
             didAnswer: true)
       ];
+  
+  PostExpectation _mockRemoteCall ()=>when(remote.load());
 
   void mockRemoteLoad() {
     surveys = _mockValidSurveys();
-    when(remote.load()).thenAnswer((_) async => surveys);
+    _mockRemoteCall().thenAnswer((_) async => surveys);
   }
+  
+  void mockRemoteError(DomainError error)=> _mockRemoteCall().thenThrow(error);
 
   setUp(() {
     remote = RemoteLoadSurveysSpy();
@@ -45,6 +50,22 @@ void main() {
     final result = await sut.load();
     expect(result, surveys);
   });
+  
+  test("Should rethrow when remote throws AccessDeniedError", () async {
+    mockRemoteError(DomainError.accessDenied);
+    final future = sut.load();
+    expect(future, throwsA(DomainError.accessDenied));
+  });
+  
+  test("Should call local fetch on remote errro", () async {
+    mockRemoteError(DomainError.unexpected);
+    
+    await sut.load();
+    
+    verify(local.validate()).called(1);
+    verify(local.load()).called(1);
+  
+  });
 }
 
 class RemoteLoadSurveysSpy extends Mock implements RemoteLoadSurveys {}
@@ -62,8 +83,18 @@ class RemoteLoadSurveysWithLocalFallback implements LoadSurveys {
 
   @override
   Future<List<SurveyEntity>> load() async {
+    try{
+    
     final data = await remote.load();
     await local.save(data);
     return data;
+    }catch(err){
+      if(err == DomainError.accessDenied){
+        rethrow;
+      }
+      await local.validate();
+      await local.load();
+    }
   }
 }
+
