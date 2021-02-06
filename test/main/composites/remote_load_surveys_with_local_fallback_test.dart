@@ -46,7 +46,7 @@ void main() {
     _mockLocalCall().thenAnswer((_) async => localSurveys);
   }
 
-  void mockLocalError(DomainError error)=> _mockLocalCall().thenThrow(error);
+  void mockLocalError()=> _mockLocalCall().thenThrow(DomainError.unexpected);
 
 
   setUp(() {
@@ -95,6 +95,14 @@ void main() {
     
     expect(localSurveys, surveys);
   });
+  
+  test("Should rethrow when local throws ", () async {
+    mockRemoteError(DomainError.unexpected);
+    mockLocalError();
+    final future = sut.load();
+    expect(future, throwsA(DomainError.unexpected));
+  });
+  
 }
 
 class RemoteLoadSurveysSpy extends Mock implements RemoteLoadSurveys {}
