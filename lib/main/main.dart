@@ -20,7 +20,7 @@ class App extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Survey",
-      initialRoute: "/",
+      initialRoute: "/survey_result/1",
       theme: appTheme(),
       getPages: [
         GetPage(name: "/", page: makeSplashPage, transition: Transition.fade),
@@ -34,8 +34,13 @@ class App extends StatelessWidget {
           name: "/surveys",
           transition: Transition.fadeIn,
           page: makeSurveysPage,
+        ),GetPage(
+          name: "/survey_result/:survey_id",
+          page: makeSurveyResultPage,
         ),
       ],
     );
   }
+
+  
 }
