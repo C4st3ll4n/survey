@@ -5,9 +5,17 @@ final primaryColorDark = Color.fromRGBO(96, 0, 39, 1);
 final primaryColorLight = Color.fromRGBO(188, 71, 123, 1);
 
 final secondaryColorDark = Color.fromRGBO(0, 37, 26, 1);
+final secondaryColor = Color.fromRGBO(0, 77, 64, 1);
+
+final disabledColor = Colors.grey[400];
+final dividerClor = Colors.grey;
+
 
 ThemeData appTheme() => ThemeData(
 	primaryColor: primaryColor,
+	dividerColor: dividerClor,
+	highlightColor: secondaryColor,
+	disabledColor: disabledColor,
 	primaryColorDark: primaryColorDark,
 	primaryColorLight: primaryColorLight,
 	accentColor: primaryColor,
