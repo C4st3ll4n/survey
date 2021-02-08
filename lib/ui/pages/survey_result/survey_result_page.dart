@@ -17,10 +17,8 @@ class SurveyResultPage extends StatelessWidget {
       ),
       body: Builder(
         builder:(contexto){
-          
-          presenter.loadData();
-          
-         /* presenter.isLoadingStream.listen(
+  
+          presenter.isLoadingStream.listen(
                 (isLoading) {
               if (isLoading == true) {
                 showSimpleLoading(context);
@@ -28,7 +26,10 @@ class SurveyResultPage extends StatelessWidget {
                 hideLoading(context);
               }
             },
-          );*/
+          );
+          
+          presenter.loadData();
+          
           
           return ListView.builder(
           itemCount: (4 + 1),

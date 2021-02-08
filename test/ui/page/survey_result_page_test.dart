@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:image_test_utils/image_test_utils.dart';
@@ -19,9 +20,9 @@ void main() {
   }
 
   void _mockStream() {
-    /* when(presenter.isLoadingStream)
+     when(presenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
-
+/*
     when(presenter.surveysStream)
         .thenAnswer((_) => loadSurveyResultController.stream);*/
   }
@@ -50,7 +51,7 @@ void main() {
       ],
     );
 
-    provideMockedNetworkImages(() async {
+    await provideMockedNetworkImages(() async {
       await tester.pumpWidget(surveyResultPage);
     });
   }
@@ -60,4 +61,24 @@ void main() {
     await loadPage(tester);
     verify(presenter.loadData()).called(1);
   });
+  testWidgets("Should handle loading", (WidgetTester tester) async {
+    await loadPage(tester);
+  
+    isLoadingController.add(true);
+    await tester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  
+    isLoadingController.add(false);
+    await tester.pump();
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  
+    isLoadingController.add(true);
+    await tester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  
+    isLoadingController.add(null);
+    await tester.pump();
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+  
 }
