@@ -93,5 +93,22 @@ void main() {
       expect(find.text("Recarregar"), findsOneWidget);
     },
   );
+
+
+  testWidgets(
+    "Shoud call loadSurvey refresh clicked",
+        (tester) async {
+      await loadPage(tester);
+      loadSurveyResultController.addError(UIError.unexpected.description);
+      await tester.pump();
+    
+      expect(find.text(UIError.unexpected.description), findsOneWidget);
+      final button = find.text("Recarregar");
+      await tester.ensureVisible(button);
+      await tester.tap(button);
+    
+      verify(presenter.loadData()).called(2);
+    },
+  );
   
 }
