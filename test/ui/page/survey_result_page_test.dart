@@ -23,9 +23,9 @@ void main() {
   void _mockStream() {
      when(presenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
-/*
-    when(presenter.surveysStream)
-        .thenAnswer((_) => loadSurveyResultController.stream);*/
+
+    when(presenter.surveyResultStream)
+        .thenAnswer((_) => loadSurveyResultController.stream);
   }
 
   void _closeStream() {
@@ -91,7 +91,6 @@ void main() {
     
       expect(find.text(UIError.unexpected.description), findsOneWidget);
       expect(find.text("Recarregar"), findsOneWidget);
-      expect(find.text("Question 1"), findsNothing);
     },
   );
   
