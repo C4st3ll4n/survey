@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:survey/ui/components/reload_screen.dart';
 import 'surveys_presenter.dart';
 import 'components/components.dart';
@@ -49,21 +48,7 @@ class SurveysPage extends StatelessWidget {
                   return ReloadScreen(error: snapshot.error, reload: presenter.loadData,);
                 }
                 if (snapshot.hasData) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: CarouselSlider(
-                      items: snapshot.data
-                          .map((e) => SurveyItem(
-                                survey: e,
-                              ))
-                          .toList(),
-                      options: CarouselOptions(
-                        enlargeCenterPage: true,
-                        aspectRatio: 1,
-                        enableInfiniteScroll: true
-                      ),
-                    ),
-                  );
+                  return SurveyItens(data: snapshot.data,);
                 } else {
                   return Container(
                     width: 0,
