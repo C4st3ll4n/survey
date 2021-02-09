@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_test_utils/image_test_utils.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/domain/entities/entities.dart';
+import 'package:survey/ui/helpers/errors/errors.dart';
 import 'package:survey/ui/pages/pages.dart';
 
 class SurveyResultPresenterSpy extends Mock implements SurveyResultPresenter {}
@@ -80,5 +81,18 @@ void main() {
     await tester.pump();
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
+
+  testWidgets(
+    "Shoud present error message if load surveys fails",
+        (tester) async {
+      await loadPage(tester);
+      loadSurveyResultController.addError(UIError.unexpected.description);
+      await tester.pump();
+    
+      expect(find.text(UIError.unexpected.description), findsOneWidget);
+      expect(find.text("Recarregar"), findsOneWidget);
+      expect(find.text("Question 1"), findsNothing);
+    },
+  );
   
 }
