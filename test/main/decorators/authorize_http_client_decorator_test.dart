@@ -8,6 +8,7 @@ import 'package:survey/main/decorators/decorators.dart';
 void main() {
   AuthorizeHttpClientDecorator sut;
   FetchSecureCacheStorage fetchSecureCacheStorageSpy;
+  DeleteSecureCacheStorage deleteSecureCacheStorageSpy;
   HttpClient httpAdapterSpy;
 
   String url, method;
@@ -18,7 +19,7 @@ void main() {
   String httpResponse;
 
   PostExpectation _mockFetchSecure() =>
-      when(fetchSecureCacheStorageSpy.fetchSecure(any));
+      when(fetchSecureCacheStorageSpy.fetch(any));
 
   PostExpectation _mockHttpAdapter() => when(
         httpAdapterSpy.request(
@@ -44,10 +45,12 @@ void main() {
   void mockHttpResponseFail(HttpError error) => _mockHttpAdapter()..thenThrow(error);
 
   setUp(() {
+    deleteSecureCacheStorageSpy = DeleteSecureCacheStorageSpy();
     fetchSecureCacheStorageSpy = FetchSecureCacheStorageSpy();
     httpAdapterSpy = HttpAdapterSpy();
     sut = AuthorizeHttpClientDecorator(
         fetchSecureCacheStorage: fetchSecureCacheStorageSpy,
+        deleteSecureCacheStorage: deleteSecureCacheStorageSpy,
         decoratee: httpAdapterSpy);
 
     url = faker.internet.httpUrl();
@@ -60,7 +63,7 @@ void main() {
 
   test("Should call fetchSecureCacheStorage with correct key", () async {
     await sut.request(url: url, method: method, body: body);
-    verify(fetchSecureCacheStorageSpy.fetchSecure("token")).called(1);
+    verify(fetchSecureCacheStorageSpy.fetch("token")).called(1);
   });
 
   test("Should call decoratee with accessToken on header", () async {
@@ -82,12 +85,15 @@ void main() {
       () async {
     mockTokenError();
     final future = sut.request(url: url, method: method, body: body);
-
+    
     expect(
       future,
       throwsA(HttpError.forbidden),
     );
-  });
+
+    verify(deleteSecureCacheStorageSpy.delete("token")).called(1);
+  
+      });
 
   test("Should rethrow exection if decoratee throws", () async {
     mockHttpResponseFail(HttpError.badRequest);
@@ -99,10 +105,30 @@ void main() {
     );
 
   });
+
+
+  test("Should delete token if decoratee throws", () async {
+    mockHttpResponseFail(HttpError.forbidden);
+    final future = sut.request(url: url, method: method, body: body);
+    await untilCalled(deleteSecureCacheStorageSpy.delete("token"));
+    
+    expect(
+      future,
+      throwsA(HttpError.forbidden),
+    );
+    verify(deleteSecureCacheStorageSpy.delete("token")).called(1);
+
+  
+  });
+  
   
   
 }
 
+
+class DeleteSecureCacheStorageSpy extends Mock
+    implements DeleteSecureCacheStorage {}
+    
 class FetchSecureCacheStorageSpy extends Mock
     implements FetchSecureCacheStorage {}
 

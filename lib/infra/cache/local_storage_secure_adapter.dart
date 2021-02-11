@@ -9,13 +9,13 @@ class LocalStorageSecureAdapter
   LocalStorageSecureAdapter({@required this.secureStorage});
 
   @override
-  Future<void> saveSecure(
+  Future<void> save(
       {@required String key, @required String value}) async {
     await secureStorage.write(key: key, value: value);
   }
 
   @override
-  Future<String> fetchSecure(String key) async {
+  Future<String> fetch(String key) async {
     final value = await secureStorage.read(key: key);
     return value;
   }

@@ -12,7 +12,7 @@ void main() {
   String token;
 
   PostExpectation _mockFetchSecure() =>
-      when(fetchSecureCacheStorage.fetchSecure(any));
+      when(fetchSecureCacheStorage.fetch(any));
 
   void mockFetchSecureSuccess() =>
       _mockFetchSecure().thenAnswer((realInvocation) async => token);
@@ -33,7 +33,7 @@ void main() {
   test("Should call FetchSecureCacheStorage with correct value", () async {
     await sut.load();
 
-    verify(fetchSecureCacheStorage.fetchSecure("token"));
+    verify(fetchSecureCacheStorage.fetch("token"));
   });
 
   test("Should return an accountEntity", () async {

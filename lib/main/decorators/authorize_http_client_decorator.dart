@@ -6,8 +6,10 @@ class AuthorizeHttpClientDecorator implements HttpClient {
   final FetchSecureCacheStorage fetchSecureCacheStorage;
   final HttpClient decoratee;
 
+  final DeleteSecureCacheStorage deleteSecureCacheStorage;
+
   AuthorizeHttpClientDecorator(
-      {@required this.fetchSecureCacheStorage, @required this.decoratee});
+      {@required this.fetchSecureCacheStorage, @required this.decoratee, @required this.deleteSecureCacheStorage});
 
   @override
   Future<dynamic> request(
@@ -16,16 +18,22 @@ class AuthorizeHttpClientDecorator implements HttpClient {
       Map<dynamic, dynamic> body,
       Map<dynamic, dynamic> headers}) async {
     try {
-      String token = await fetchSecureCacheStorage.fetchSecure("token");
+      String token = await fetchSecureCacheStorage.fetch("token");
       final authorizedHeaders = headers ?? {}
         ..addAll({'x-access-token': token});
       return await decoratee.request(
           url: url, method: method, body: body, headers: authorizedHeaders);
-    } on HttpError{
-      rethrow;
     }
-    catch (e, stck) {
+    catch (error, stck) {
+      if( error is HttpError && error != HttpError.forbidden){
+        rethrow;
+      }
+      await deleteToken();
       throw HttpError.forbidden;
     }
+  }
+  
+  Future deleteToken() async{
+    await deleteSecureCacheStorage.delete('token');
   }
 }

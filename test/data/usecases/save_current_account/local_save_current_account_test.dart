@@ -23,7 +23,7 @@ void main() {
     "Should call SaveSecureCacheStorage with correct values",
     () async {
       await sut.save(account);
-      verify(secureCache.saveSecure(key: 'token', value: account.token));
+      verify(secureCache.save(key: 'token', value: account.token));
     },
   );
 
@@ -31,7 +31,7 @@ void main() {
     "Should throw unexpected error if SaveSecureCacheStorage",
     () async {
       when(
-        secureCache.saveSecure(
+        secureCache.save(
           key: anyNamed("key"),
           value: anyNamed("value"),
         ),
