@@ -22,4 +22,5 @@ class SurveyAnswerEntity extends Equatable {
 
   @override
   bool get stringify => true;
+  
 }
