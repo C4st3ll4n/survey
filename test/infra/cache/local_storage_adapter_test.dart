@@ -60,15 +60,7 @@ void main() {
   });
 
   group("delete", () {
-    void _mockSaveError() {
-      when(
-        localStorageSpy.setItem(
-          any,
-          any,
-        ),
-      ).thenThrow(Exception());
-    }
-
+    
     test("Ensure calls delete with correct values", () async {
       await sut.delete(key);
       verify(localStorageSpy.deleteItem(key)).called(1);
