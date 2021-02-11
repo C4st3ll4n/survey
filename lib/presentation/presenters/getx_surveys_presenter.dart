@@ -13,10 +13,14 @@ class GetXSurveysPresenter extends GetxController implements SurveysPresenter {
   final LoadSurveys loadSurveys;
 
   var _isLoading = true.obs;
+  var _navigate = RxString();
   var _dataStream = RxList<SurveyViewModel>();
 
   @override
   Stream<bool> get isLoadingStream => _isLoading.stream.distinct();
+  
+  @override
+  Stream<String> get navigateToStream => _navigate.stream.distinct();
 
   @override
   Stream<List<SurveyViewModel>> get surveysStream =>
@@ -43,4 +47,10 @@ class GetXSurveysPresenter extends GetxController implements SurveysPresenter {
       _isLoading.value = false;
     }
   }
+
+  @override
+  void goToSurveyResult(String id) {
+    _navigate.value = "/survey_result/$id";
+  }
+
 }
