@@ -36,7 +36,7 @@ class App extends StatelessWidget {
           page: makeSurveysPage,
         ),GetPage(
           name: "/survey_result/:survey_id",
-          page: makeSurveyResultPage,
+          page:()=> makeSurveyResultPage(),
         ),
       ],
     );
