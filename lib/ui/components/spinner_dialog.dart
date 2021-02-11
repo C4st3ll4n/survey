@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void showSimpleLoading(BuildContext contexto){
 	showDialog(
@@ -25,7 +26,7 @@ void showSimpleLoading(BuildContext contexto){
 }
 
 void hideLoading(BuildContext contexto){
-	if (Navigator.canPop(contexto)) {
-		Navigator.pop(contexto);
+	if (Navigator.of(contexto).canPop()) {
+		//Navigator.of(contexto).pop();
 	}
 }

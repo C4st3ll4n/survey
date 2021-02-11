@@ -11,14 +11,15 @@ class SurveyResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    presenter.loadData();
+  
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(R.strings.surveys),
       ),
       body: Builder(
-        builder:(contexto){
-  
+        builder:(_){
           presenter.isLoadingStream.listen(
                 (isLoading) {
               if (isLoading == true) {
@@ -28,9 +29,6 @@ class SurveyResultPage extends StatelessWidget {
               }
             },
           );
-          
-          presenter.loadData();
-          
           
           return StreamBuilder<SurveyResultViewModel>(
             stream: presenter.surveyResultStream,
