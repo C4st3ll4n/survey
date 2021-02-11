@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:survey/domain/entities/entities.dart';
 
 import 'survey_answer_view_model.dart';
 
@@ -19,4 +20,12 @@ class SurveyResultViewModel extends Equatable {
 
   @override
   bool get stringify => true;
+
+  factory SurveyResultViewModel.fromEntity(SurveyResultEntity entity) =>
+      SurveyResultViewModel(
+          surveyId: entity.surveyId,
+          question: entity.question,
+          answers: entity.answers
+              .map((e) => SurveyAnswerViewModel.fromEntity(e))
+              .toList());
 }

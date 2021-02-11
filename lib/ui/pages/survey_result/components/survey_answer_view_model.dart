@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:survey/domain/entities/entities.dart';
+import 'package:survey/domain/entities/survey_result_entity.dart';
 
 class SurveyAnswerViewModel extends Equatable {
   final String image;
@@ -16,4 +18,11 @@ class SurveyAnswerViewModel extends Equatable {
 
   @override
   bool get stringify => true;
+
+  factory SurveyAnswerViewModel.fromEntity(SurveyAnswerEntity entity) => SurveyAnswerViewModel(
+      image: entity.image,
+      percent: "%${entity.percent}",
+    isCurrentAnswer: entity.isCurrentAnswer,
+    answer: entity.answer
+    );
 }
