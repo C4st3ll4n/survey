@@ -14,7 +14,8 @@ void main() {
   SurveyResultPresenter sut;
   LoadSurveyResult loadSurveysResult;
   SurveyResultEntity survey;
-
+  String surveyId;
+  
   SurveyResultEntity makeSurvey() =>
       SurveyResultEntity(
           surveyId: faker.guid.guid(),
@@ -44,14 +45,17 @@ void main() {
       _mockLoadSurveysCall().thenThrow(error);
 
   setUp(() {
+    surveyId = faker.guid.guid();
     loadSurveysResult = LoadSurveyResultSpy();
-    sut = GetXSurveyResultPresenter(loadSurveyResult: loadSurveysResult);
+    sut = GetXSurveyResultPresenter(loadSurveyResult: loadSurveysResult,
+    surveyId: surveyId);
     mockLoadSurveyResult(makeSurvey());
   });
 
   test("Should call loadBySurvey on LoadData", () async {
     await sut.loadData();
-    verify(loadSurveysResult.loadBySurvey()).called(1);
+    
+    verify(loadSurveysResult.loadBySurvey(surveyId: surveyId)).called(1);
   });
 
   test("Should emits correct evens on success", () async {
