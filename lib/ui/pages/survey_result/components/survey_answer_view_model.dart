@@ -21,7 +21,7 @@ class SurveyAnswerViewModel extends Equatable {
 
   factory SurveyAnswerViewModel.fromEntity(SurveyAnswerEntity entity) => SurveyAnswerViewModel(
       image: entity.image,
-      percent: "%${entity.percent}",
+      percent: "${entity.percent}%",
     isCurrentAnswer: entity.isCurrentAnswer,
     answer: entity.answer
     );
