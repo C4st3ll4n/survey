@@ -22,7 +22,7 @@ void main() {
 
   group("Save Secure", () {
     test("Shloud call save secure with correct values", () async {
-      await sut.saveSecure(key: key, value: value);
+      await sut.save(key: key, value: value);
 
       verify(secureStorage.write(key: key, value: value));
     });
@@ -36,7 +36,7 @@ void main() {
         ),
       ).thenThrow(e);
 
-      final future = sut.saveSecure(key: key, value: value);
+      final future = sut.save(key: key, value: value);
 
       //verify(secureStorage.write(key: key, value: value));
       expect(future, throwsA(e));
@@ -53,7 +53,7 @@ void main() {
     });
     
     test("Should call fetch secure with correct value", () async {
-      await sut.fetchSecure(key);
+      await sut.fetch(key);
 
       verify(
         secureStorage.read(
@@ -66,7 +66,7 @@ void main() {
       () async {
        
         
-        final fetchedValue = await sut.fetchSecure(key);
+        final fetchedValue = await sut.fetch(key);
 
         expect(fetchedValue, value );
         
@@ -81,7 +81,7 @@ void main() {
         ),
       ).thenThrow(e);
 
-      final future = sut.fetchSecure(key);
+      final future = sut.fetch(key);
 
       //verify(secureStorage.write(key: key, value: value));
       expect(future, throwsA(e));
