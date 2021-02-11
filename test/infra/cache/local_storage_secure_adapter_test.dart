@@ -42,6 +42,26 @@ void main() {
       expect(future, throwsA(e));
     });
   });
+
+
+  group("delete", () {
+  
+    void _mockDeleteError() {
+      when(secureStorage.delete(key: anyNamed("key"))).thenThrow(Exception());
+    }
+  
+    test("Ensure calls delete with correct key", () async {
+      await sut.delete(key);
+      verify(secureStorage.delete(key:key)).called(1);
+    });
+  
+    test("Should throw if Delete throw", () async {
+      _mockDeleteError();
+      final future = sut.delete(key);
+      expect(future, throwsA(Exception));
+    });
+  });
+  
   group("Fetch Secure", () {
     
     setUp((){
