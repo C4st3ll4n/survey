@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:survey/ui/components/reload_screen.dart';
 import 'surveys_presenter.dart';
 import 'components/components.dart';
@@ -30,16 +32,13 @@ class SurveysPage extends StatelessWidget {
               }
             },
           );
-
-          /*
-  
           presenter.navigateToStream.listen(
                   (page) {
-                if (page != null && page.trim().isNotEmpty) {
-                  Get.offAllNamed(page);
+                if (page?.isNotEmpty == true) {
+                  Get.toNamed(page);
                 }
               }
-          );*/
+          );
 
           return StreamBuilder<List<SurveyViewModel>>(
               stream: presenter.surveysStream,
@@ -48,7 +47,8 @@ class SurveysPage extends StatelessWidget {
                   return ReloadScreen(error: snapshot.error, reload: presenter.loadData,);
                 }
                 if (snapshot.hasData) {
-                  return SurveyItens(data: snapshot.data,);
+                  return Provider(create: (BuildContext context) => presenter,
+                  child: SurveyItens(data: snapshot.data,));
                 } else {
                   return Container(
                     width: 0,
