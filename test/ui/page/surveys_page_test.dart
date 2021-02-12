@@ -10,6 +10,7 @@ void main() {
   SurveysPresenter presenter;
 
   StreamController<bool> isLoadingController;
+  StreamController<bool> isSessionExpiredController;
   StreamController<String> navigateToController;
   StreamController<List<SurveyViewModel>> loadSurveysController;
 
@@ -17,15 +18,19 @@ void main() {
     isLoadingController = StreamController();
     navigateToController = StreamController();
     loadSurveysController = StreamController();
+    isSessionExpiredController = StreamController();
   }
 
   void _mockStream() {
     when(presenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
 
+    when(presenter.isSessionExpiredStream)
+        .thenAnswer((_) => isSessionExpiredController.stream);
+
     when(presenter.surveysStream)
         .thenAnswer((_) => loadSurveysController.stream);
-    
+
     when(presenter.navigateToStream)
         .thenAnswer((_) => navigateToController.stream);
   }
@@ -34,6 +39,7 @@ void main() {
     loadSurveysController.close();
     isLoadingController.close();
     navigateToController.close();
+    isSessionExpiredController.close();
   }
 
   tearDown(() {
@@ -52,9 +58,18 @@ void main() {
             page: () => SurveysPage(
                   presenter: presenter,
                 )),
-        GetPage(name: "/fake_page", page:()=> Scaffold(
-          body: Text("Fake Page"),
-        ))
+        GetPage(
+          name: "/fake_page",
+          page: () => Scaffold(
+            body: Text("Fake Page"),
+          ),
+        ),
+        GetPage(
+          name: "/login",
+          page: () => Scaffold(
+            body: Text("Fake Login"),
+          ),
+        ),
       ],
     );
 
@@ -129,38 +144,97 @@ void main() {
       final button = find.text("Recarregar");
       await tester.ensureVisible(button);
       await tester.tap(button);
-      
+
       verify(presenter.loadData()).called(2);
     },
   );
 
-
   testWidgets(
     "Should go to SurveyResult page on click",
-        (tester) async {
+    (tester) async {
       await loadPage(tester);
-      
+
       loadSurveysController.add(makeSurveys());
       await tester.pump();
-      
+
       await tester.tap(find.text("Question 1"));
       await tester.pump();
-    
+
       verify(presenter.goToSurveyResult('1')).called(1);
     },
   );
-  
+
   testWidgets(
     "Shoud change page",
-        (tester) async {
+    (tester) async {
       await loadPage(tester);
       navigateToController.add("/fake_page");
       await tester.pumpAndSettle();
-    
+
       expect(Get.currentRoute, "/fake_page");
       expect(find.text('Fake Page'), findsOneWidget);
     },
   );
+
+  testWidgets("Shouldnt change page", (tester) async {
+    await loadPage(tester);
+
+    navigateToController.add("");
+    await tester.pump();
+    expect(Get.currentRoute, "/surveys");
+
+    navigateToController.add(null);
+    await tester.pump();
+    expect(Get.currentRoute, "/surveys");
+  });
+
+  testWidgets(
+    "Shoud change page",
+    (tester) async {
+      await loadPage(tester);
+      navigateToController.add("/fake_page");
+      await tester.pumpAndSettle();
+
+      expect(Get.currentRoute, "/fake_page");
+      expect(find.text('Fake Page'), findsOneWidget);
+    },
+  );
+
+  testWidgets("Shouldnt change page", (tester) async {
+    await loadPage(tester);
+
+    navigateToController.add("");
+    await tester.pump();
+    expect(Get.currentRoute, "/surveys");
+
+    navigateToController.add(null);
+    await tester.pump();
+    expect(Get.currentRoute, "/surveys");
+  });
+  
+  testWidgets(
+    "Shoud logout",
+    (tester) async {
+      await loadPage(tester);
+      isSessionExpiredController.add(true);
+      await tester.pumpAndSettle();
+
+      expect(Get.currentRoute, "/login");
+      expect(find.text('Fake Login'), findsOneWidget);
+    },
+  );
+
+  testWidgets("Shouldnt logout", (tester) async {
+    await loadPage(tester);
+
+    isSessionExpiredController.add(false);
+    await tester.pump();
+    expect(Get.currentRoute, "/surveys");
+
+    isSessionExpiredController.add(null);
+    await tester.pump();
+    expect(Get.currentRoute, "/surveys");
+  });
 }
 
 List<SurveyViewModel> makeSurveys() => [
