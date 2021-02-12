@@ -13,12 +13,16 @@ class GetXSurveysPresenter extends GetxController implements SurveysPresenter {
   final LoadSurveys loadSurveys;
 
   var _isLoading = true.obs;
+  var _isSessionExpired = RxBool();
   var _navigate = RxString();
   var _dataStream = RxList<SurveyViewModel>();
 
   @override
   Stream<bool> get isLoadingStream => _isLoading.stream.distinct();
-  
+
+  Stream<bool> get isSessionExpiredStream =>
+      _isSessionExpired.stream.distinct();
+
   @override
   Stream<String> get navigateToStream => _navigate.stream.distinct();
 
@@ -40,9 +44,13 @@ class GetXSurveysPresenter extends GetxController implements SurveysPresenter {
                 didAnswer: e.didAnswer),
           )
           .toList());
-    } on DomainError catch(e, stck) {
-      _dataStream.subject.
-      addError(UIError.unexpected.description, StackTrace.empty);
+    } on DomainError catch (e, stck) {
+      if (e == DomainError.accessDenied) {
+        _isSessionExpired.value = true;
+      } else {
+        _dataStream.subject
+            .addError(UIError.unexpected.description, StackTrace.empty);
+      }
     } finally {
       _isLoading.value = false;
     }
@@ -52,5 +60,4 @@ class GetXSurveysPresenter extends GetxController implements SurveysPresenter {
   void goToSurveyResult(String id) {
     _navigate.value = "/survey_result/$id";
   }
-
 }

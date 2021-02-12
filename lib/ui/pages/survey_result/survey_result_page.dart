@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:survey/ui/components/reload_screen.dart';
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
@@ -29,7 +30,16 @@ class SurveyResultPage extends StatelessWidget {
               }
             },
           );
-          
+
+          presenter.isSessionExpiredStream.listen(
+                  (isExpired) {
+                if (isExpired==true) {
+                  Get.offAllNamed("/login");
+                }
+              }
+          );
+
+
           return StreamBuilder<SurveyResultViewModel>(
             stream: presenter.surveyResultStream,
             builder: (context, snapshot) {

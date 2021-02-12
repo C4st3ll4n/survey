@@ -12,20 +12,25 @@ class SurveyResultPresenterSpy extends Mock implements SurveyResultPresenter {}
 
 void main() {
   SurveyResultPresenter presenter;
+  StreamController<bool> isSessionExpiredController;
   StreamController<bool> isLoadingController;
   StreamController<SurveyResultViewModel> loadSurveyResultController;
 
-  SurveyResultViewModel makeSurveyResult() => SurveyResultViewModel(
-      surveyId: "any_id", question: "Questão", answers: [
-        SurveyAnswerViewModel(image: "img 0", answer: "answer 0",
-         isCurrentAnswer: true, percent: "60%"),
-    SurveyAnswerViewModel(answer: "answer 1",
-        isCurrentAnswer: false, percent: "70%"),
-  ]);
+  SurveyResultViewModel makeSurveyResult() =>
+      SurveyResultViewModel(surveyId: "any_id", question: "Questão", answers: [
+        SurveyAnswerViewModel(
+            image: "img 0",
+            answer: "answer 0",
+            isCurrentAnswer: true,
+            percent: "60%"),
+        SurveyAnswerViewModel(
+            answer: "answer 1", isCurrentAnswer: false, percent: "70%"),
+      ]);
 
   void _initStream() {
     isLoadingController = StreamController();
     loadSurveyResultController = StreamController();
+    isSessionExpiredController = StreamController();
   }
 
   void _mockStream() {
@@ -34,11 +39,15 @@ void main() {
 
     when(presenter.surveyResultStream)
         .thenAnswer((_) => loadSurveyResultController.stream);
+
+    when(presenter.isSessionExpiredStream)
+        .thenAnswer((_) => isSessionExpiredController.stream);
   }
 
   void _closeStream() {
     loadSurveyResultController.close();
     isLoadingController.close();
+    isSessionExpiredController.close();
   }
 
   tearDown(() {
@@ -56,6 +65,12 @@ void main() {
         GetPage(
           name: "/survey_result/:survey_id",
           page: () => SurveyResultPage(presenter: presenter),
+        ),
+        GetPage(
+          name: "/login",
+          page: () => Scaffold(
+            body: Text("Fake Login"),
+          ),
         ),
       ],
     );
@@ -100,7 +115,6 @@ void main() {
       expect(find.text(UIError.unexpected.description), findsOneWidget);
       expect(find.text("Recarregar"), findsOneWidget);
       expect(find.text("Questão"), findsNothing);
-  
     },
   );
 
@@ -132,19 +146,42 @@ void main() {
 
       expect(find.text(UIError.unexpected.description), findsNothing);
       expect(find.text("Recarregar"), findsNothing);
-      
+
       expect(find.text("Questão"), findsOneWidget);
       expect(find.text("answer 0"), findsOneWidget);
       expect(find.text("answer 1"), findsOneWidget);
       expect(find.text("60%"), findsOneWidget);
       expect(find.text("70%"), findsOneWidget);
-      
+
       expect(find.byType(ActiveIcon), findsOneWidget);
       expect(find.byType(DisableIcon), findsOneWidget);
-      final img = tester.widget<Image>(find.byType(Image)).image as NetworkImage;
+      final img =
+          tester.widget<Image>(find.byType(Image)).image as NetworkImage;
       expect(img.url, "img 0");
-      
-      
     },
   );
+
+  testWidgets(
+    "Shoud logout",
+    (tester) async {
+      await loadPage(tester);
+      isSessionExpiredController.add(true);
+      await tester.pumpAndSettle();
+
+      expect(Get.currentRoute, "/login");
+      expect(find.text('Fake Login'), findsOneWidget);
+    },
+  );
+
+  testWidgets("Shouldnt logout", (tester) async {
+    await loadPage(tester);
+
+    isSessionExpiredController.add(false);
+    await tester.pump();
+    expect(Get.currentRoute, "/survey_result/any_survey_id");
+
+    isSessionExpiredController.add(null);
+    await tester.pump();
+    expect(Get.currentRoute, "/survey_result/any_survey_id");
+  });
 }

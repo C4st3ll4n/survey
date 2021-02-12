@@ -12,10 +12,13 @@ class GetXSurveyResultPresenter implements SurveyResultPresenter {
   final String surveyId;
   
   var _isLoading = true.obs;
+  var _isSessionExpired = RxBool();
   var _dataStream = Rx<SurveyResultViewModel>();
 
   @override
   Stream<bool> get isLoadingStream => _isLoading.stream.distinct();
+  
+  Stream<bool> get isSessionExpiredStream => _isSessionExpired.stream.distinct();
 
   @override
   Future<void> loadData() async{
@@ -24,7 +27,12 @@ class GetXSurveyResultPresenter implements SurveyResultPresenter {
       final entity = await loadSurveyResult.loadBySurvey(surveyId: surveyId);
       _dataStream.value = SurveyResultViewModel.fromEntity(entity);
     } on DomainError catch (e) {
-      _dataStream.addError(UIError.unexpected.description, StackTrace.empty);
+      if (e == DomainError.accessDenied) {
+        _isSessionExpired.value = true;
+      } else {
+        _dataStream.subject
+            .addError(UIError.unexpected.description, StackTrace.empty);
+      }
     }
     finally {
       _isLoading.value = false;
