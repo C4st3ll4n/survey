@@ -3,7 +3,7 @@ import 'package:survey/presentation/mixins/mixins.dart';
 import '../../domain/usecases/usecases.dart';
 import '../../ui/pages/splash/splash.dart';
 
-class GetXSplashPresenter with NavigationManager implements SplashPresenter {
+class GetXSplashPresenter  extends GetxController with NavigationManager implements SplashPresenter {
 	final LoadCurrentAccount localLoadCurrentAccount;
 	GetXSplashPresenter(this.localLoadCurrentAccount);
 	
