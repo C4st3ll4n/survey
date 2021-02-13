@@ -8,7 +8,7 @@ import '../../helpers/helpers.dart';
 import '../../helpers/errors/errors.dart';
 import '../../components/components.dart';
 
-class SignUpPage extends StatelessWidget with KeyboardManager{
+class SignUpPage extends StatelessWidget with KeyboardManager, LoadingManager{
   final SignUpPresenter presenter;
 
   const SignUpPage({Key key, this.presenter}) : super(key: key);
@@ -19,15 +19,8 @@ class SignUpPage extends StatelessWidget with KeyboardManager{
     return Scaffold(
       body: Builder(
         builder: (contexto) {
-          presenter.isLoadingStream.listen(
-            (isLoading) {
-              if (isLoading) {
-                showSimpleLoading(contexto);
-              } else {
-                hideLoading(contexto);
-              }
-            },
-          );
+          
+          handleLoading(stream: presenter.isLoadingStream, contexto: contexto);
 
           presenter.mainErrorStream.listen((UIError error) {
             if (error != null) {
