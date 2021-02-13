@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'surveys_presenter.dart';
 import 'components/components.dart';
@@ -26,7 +25,7 @@ class SurveysPage extends StatelessWidget
         builder: (_) {
           handleLoading(stream: presenter.isLoadingStream, contexto: _);
 
-          handleNavigation(contexto: _, stream: presenter.navigateToStream);
+          handleNavigation(stream: presenter.navigateToStream);
 
           handleSession(
             stream: presenter.isSessionExpiredStream,
