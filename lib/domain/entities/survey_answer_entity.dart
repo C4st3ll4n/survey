@@ -6,7 +6,6 @@ class SurveyAnswerEntity extends Equatable {
   final String answer;
   final bool isCurrentAnswer;
   final int percent;
-  
 
   SurveyAnswerEntity({
     this.image,
@@ -16,11 +15,8 @@ class SurveyAnswerEntity extends Equatable {
   });
 
   @override
-  List<Object> get props => [
-    answer, isCurrentAnswer, percent
-      ];
+  List<Object> get props => [answer, isCurrentAnswer, percent];
 
   @override
   bool get stringify => true;
-  
 }

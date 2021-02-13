@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:meta/meta.dart';
+import 'package:survey/data/models/local_survey_result_model.dart';
 import '../../cache/cache.dart';
 import '../../models/models.dart';
 import '../../../domain/helpers/helpers.dart';
@@ -26,7 +27,6 @@ class LocalLoadSurveyResult implements LoadSurveyResult {
 		}
 	}
 	
-	@override
 	Future<void> validate(String surveyId) async {
 		try {
 			final data = await cacheStorage.fetch("survey_result/$surveyId");
@@ -34,6 +34,19 @@ class LocalLoadSurveyResult implements LoadSurveyResult {
 		} catch (e, stck) {
 			log("validate::\n\n"+e.toString(), stackTrace: stck);
 			await cacheStorage.delete("survey_result/$surveyId");
+		}
+	}
+	
+	Future<void> save(String surveyId, SurveyResultEntity survey) async {
+		try{
+			final json = LocalSurveyResultModel.fromEntity(survey).toJson();
+			await cacheStorage.save(
+				key: "survey_result/$surveyId",
+				value: json,
+			);
+		} catch (e, stck) {
+			log("validate::\n\n"+e.toString(), stackTrace: stck);
+			throw DomainError.unexpected;
 		}
 	}
 }
