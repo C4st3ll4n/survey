@@ -5,5 +5,5 @@ abstract class CacheStorage {
 
   Future<void> delete(String key);
 
-  Future<void> save({@required String key, @required List<Map> value});
+  Future<void> save({@required String key, @required dynamic value});
 }
