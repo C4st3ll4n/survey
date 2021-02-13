@@ -114,6 +114,111 @@ void main() {
     );
   });
 
+  group("validate", () {
+    LocalLoadSurveyResult sut;
+    Map listData;
+    CacheStorage cacheStorageSpy;
+    String surveyId;
+    Map mockValidData() => {
+      "surveyId": faker.guid.guid(),
+      "question":faker.lorem.sentence(),
+      "answers":[
+        {
+          "image":faker.internet.httpUrl(),
+          "answer":faker.lorem.sentence(),
+          'isCurrentAccountAnswer':"true",
+          'percent':"40"
+        },
+        {
+          "answer":faker.lorem.sentence(),
+          'isCurrentAccountAnswer':"false",
+          'percent':"60"
+        },
+      ]
+    };
+  
+    PostExpectation _mockFCSCall() => when(cacheStorageSpy.fetch(any));
+  
+    void _mockFCSSuccess(Map data) async {
+      listData = data;
+      _mockFCSCall().thenAnswer((_) async => data);
+    }
+  
+    void _mockFCSError() async {
+      _mockFCSCall().thenThrow(Exception());
+    }
+
+
+    setUp(
+          () {
+        surveyId = faker.guid.guid();
+        cacheStorageSpy = CacheStorageSpy();
+        sut = LocalLoadSurveyResult(cacheStorage: cacheStorageSpy);
+    
+        _mockFCSSuccess(mockValidData());
+      },
+    );
+  
+    test("Should call CacheStorage with correct key", () async {
+      await sut.validate(surveyId);
+      verify(cacheStorageSpy.fetch('survey_result/$surveyId')).called(1);
+    });
+  
+    test("Should delete cache if its invalid", () async {
+      _mockFCSSuccess(
+        {
+          "surveyId":000000,
+          "question":faker.lorem.sentence(),
+          "answers":[
+            {
+              "image":faker.internet.httpUrl(),
+              "answer":faker.lorem.sentence(),
+              'isCurrentAccountAnswer':"true",
+              'percent':"40"
+            },
+            {
+              "answer":faker.lorem.sentence(),
+              'isCurrentAccountAnswer':"false",
+              'percent':"invalid int"
+            },
+          ]
+        },
+      );
+      await sut.validate(surveyId);
+      verify(cacheStorageSpy.delete("survey_result/$surveyId")).called(1);
+    });
+  
+    test("Should delete cache if its incomplete", () async {
+      _mockFCSSuccess(
+        {
+          "question":faker.lorem.sentence(),
+          "answers":[
+            {
+              "image":faker.internet.httpUrl(),
+              "answer":faker.lorem.sentence(),
+              'isCurrentAccountAnswer':"true",
+              'percent':"40"
+            },
+            {
+              "answer":faker.lorem.sentence(),
+              'isCurrentAccountAnswer':"false",
+              'percent':"invalid int"
+            },
+          ]
+        },
+      );
+      await sut.validate(surveyId);
+      verify(cacheStorageSpy.delete("survey_result/$surveyId")).called(1);
+    });
+  
+    test("Should delete cache if its fails", () async {
+      _mockFCSError();
+      await sut.validate(surveyId);
+      verify(cacheStorageSpy.delete("survey_result/$surveyId")).called(1);
+    });
+  });
+  
+  
 }
 
 class CacheStorageSpy extends Mock implements CacheStorage {}
