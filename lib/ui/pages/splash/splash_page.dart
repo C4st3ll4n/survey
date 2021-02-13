@@ -18,7 +18,7 @@ class SplashPage extends StatelessWidget with NavigationManager{
 			),
 			body: Builder(
 				builder: (BuildContext contexto) {
-					handleNavigation(stream: presenter.navigateToStream, contexto: contexto);
+					handleNavigation(stream: presenter.navigateToStream, clear: true);
 					
 					return Center(
 						child: CircularProgressIndicator(),

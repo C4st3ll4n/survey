@@ -4,10 +4,14 @@ import '../components/components.dart';
 
 mixin NavigationManager {
   void handleNavigation(
-      {@required Stream<String> stream, @required BuildContext contexto}) {
+      {@required Stream<String> stream, bool clear = false}) {
     stream.listen((page) {
       if (page?.isNotEmpty == true) {
-        Get.toNamed(page);
+        if(clear ==true){
+          Get.offAllNamed(page);
+        }else{
+          Get.toNamed(page);
+        }
       }
     });
   }
