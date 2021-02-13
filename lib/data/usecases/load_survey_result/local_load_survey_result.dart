@@ -25,4 +25,15 @@ class LocalLoadSurveyResult implements LoadSurveyResult {
 		throw DomainError.unexpected;
 		}
 	}
+	
+	@override
+	Future<void> validate(String surveyId) async {
+		try {
+			final data = await cacheStorage.fetch("survey_result/$surveyId");
+			return LocalSurveyResultModel.fromJson(data).toEntity();
+		} catch (e, stck) {
+			log("validate::\n\n"+e.toString(), stackTrace: stck);
+			await cacheStorage.delete("survey_result/$surveyId");
+		}
+	}
 }
