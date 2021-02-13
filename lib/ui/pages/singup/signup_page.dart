@@ -8,34 +8,26 @@ import '../../helpers/helpers.dart';
 import '../../helpers/errors/errors.dart';
 import '../../components/components.dart';
 
-class SignUpPage extends StatelessWidget with KeyboardManager, LoadingManager{
+class SignUpPage extends StatelessWidget
+    with KeyboardManager, LoadingManager, UIErrorManager, NavigationManager {
   final SignUpPresenter presenter;
 
   const SignUpPage({Key key, this.presenter}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Builder(
         builder: (contexto) {
-          
           handleLoading(stream: presenter.isLoadingStream, contexto: contexto);
 
-          presenter.mainErrorStream.listen((UIError error) {
-            if (error != null) {
-              showErrorMessage(contexto, error.description);
-            }
-          });
+          handleError(stream: presenter.mainErrorStream, contexto: contexto);
 
-          presenter.navigateToStream.listen((page) {
-            if (page != null && page.trim().isNotEmpty) {
-              Get.offAllNamed(page);
-            }
-          });
+          handleNavigation(
+              stream: presenter.navigateToStream, contexto: contexto);
 
           return GestureDetector(
-            onTap: ()=> hideKeyboard(context),
+            onTap: () => hideKeyboard(context),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
