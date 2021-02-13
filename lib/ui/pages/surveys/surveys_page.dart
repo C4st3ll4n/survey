@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:survey/ui/components/reload_screen.dart';
 import 'surveys_presenter.dart';
 import 'components/components.dart';
 import '../pages.dart';
-import '../../components/components.dart';
+import '../../components/reload_screen.dart';
+import '../../mixins/mixins.dart';
 import '../../helpers/helpers.dart';
 
-class SurveysPage extends StatelessWidget {
+class SurveysPage extends StatelessWidget with LoadingManager{
   final SurveysPresenter presenter;
 
   const SurveysPage({Key key, @required this.presenter}) : super(key: key);
@@ -23,15 +23,8 @@ class SurveysPage extends StatelessWidget {
       ),
       body: Builder(
         builder: (_) {
-          presenter.isLoadingStream.listen(
-            (isLoading) {
-              if (isLoading == true) {
-                showSimpleLoading(context);
-              } else {
-                hideLoading(context);
-              }
-            },
-          );
+          handleLoading(stream: presenter.isLoadingStream, contexto: _);
+  
           presenter.navigateToStream.listen(
                   (page) {
                 if (page?.isNotEmpty == true) {

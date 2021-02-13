@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:survey/ui/mixins/keyboard_manager.dart';
+import 'package:survey/ui/mixins/mixins.dart';
 import 'components/components.dart';
 import '../pages.dart';
 import '../../helpers/i18n/i18n.dart';
 import '../../components/components.dart';
 import '../../helpers/errors/errors.dart';
 
-class LoginPage extends StatelessWidget with KeyboardManager{
+class LoginPage extends StatelessWidget with KeyboardManager, LoadingManager{
   
   final LoginPresenter presenter;
 
@@ -30,6 +30,8 @@ class LoginPage extends StatelessWidget with KeyboardManager{
               }
             },
           );
+          
+          handleLoading(stream: presenter.isLoadingStream, contexto: contexto);
 
           presenter.mainErrorStream.listen(
             (UIError error) {
