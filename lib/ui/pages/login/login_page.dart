@@ -8,49 +8,26 @@ import '../../helpers/i18n/i18n.dart';
 import '../../components/components.dart';
 import '../../helpers/errors/errors.dart';
 
-class LoginPage extends StatelessWidget with KeyboardManager, LoadingManager{
-  
+class LoginPage extends StatelessWidget
+    with KeyboardManager, LoadingManager, UIErrorManager, NavigationManager {
   final LoginPresenter presenter;
 
   const LoginPage({Key key, this.presenter}) : super(key: key);
-  
-  
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       body: Builder(
         builder: (contexto) {
-          presenter.isLoadingStream.listen(
-            (isLoading) {
-              if (isLoading) {
-                showSimpleLoading(contexto);
-              } else {
-                hideLoading(contexto);
-              }
-            },
-          );
-          
           handleLoading(stream: presenter.isLoadingStream, contexto: contexto);
 
-          presenter.mainErrorStream.listen(
-            (UIError error) {
-              if (error != null) {
-                showErrorMessage(contexto, error.description);
-            }
-            }
-          );
+          handleError(stream: presenter.mainErrorStream, contexto: contexto);
 
-          presenter.navigateToStream.listen(
-                  (page) {
-                if (page != null && page.trim().isNotEmpty) {
-                  Get.offAllNamed(page);
-                }
-              }
-          );
-          
+          handleNavigation(
+              stream: presenter.navigateToStream, contexto: contexto);
+
           return GestureDetector(
-            onTap:()=> hideKeyboard(context),
+            onTap: () => hideKeyboard(context),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -68,7 +45,8 @@ class LoginPage extends StatelessWidget with KeyboardManager, LoadingManager{
                           children: [
                             EmailInput(),
                             Padding(
-                              padding: const EdgeInsets.only(top:8.0, bottom: 32),
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 32),
                               child: PasswordInput(),
                             ),
                             LoginButton(),
@@ -89,9 +67,4 @@ class LoginPage extends StatelessWidget with KeyboardManager, LoadingManager{
       ),
     );
   }
-
-  
 }
-
-
-

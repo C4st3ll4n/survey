@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import '../../mixins/mixins.dart';
 import 'splash_presenter.dart';
 
-class SplashPage extends StatelessWidget {
+class SplashPage extends StatelessWidget with NavigationManager{
 	const SplashPage({Key key, @required this.presenter}) : super(key: key);
 	
 	final SplashPresenter presenter;
@@ -16,14 +17,8 @@ class SplashPage extends StatelessWidget {
 				centerTitle: true,
 			),
 			body: Builder(
-				builder: (BuildContext context) {
-					presenter.navigateToStream.listen(
-								(page) {
-							if (page?.isNotEmpty == true) {
-								Get.offAllNamed(page);
-							}
-						},
-					);
+				builder: (BuildContext contexto) {
+					handleNavigation(stream: presenter.navigateToStream, contexto: contexto);
 					
 					return Center(
 						child: CircularProgressIndicator(),

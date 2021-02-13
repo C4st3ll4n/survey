@@ -5,7 +5,7 @@ mixin LoadingManager {
   void handleLoading({ @required Stream<bool> stream, @required BuildContext contexto}) {
     stream.listen(
       (isLoading) {
-        if (isLoading) {
+        if (isLoading==true) {
           showSimpleLoading(contexto);
         } else {
           hideLoading(contexto);
