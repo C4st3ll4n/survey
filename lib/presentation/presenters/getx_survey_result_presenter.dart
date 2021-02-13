@@ -6,7 +6,7 @@ import '../../ui/helpers/errors/errors.dart';
 import '../../domain/usecases/usecases.dart';
 import '../../ui/pages/pages.dart';
 
-class GetXSurveyResultPresenter  with SessionManager, LoadingManager implements SurveyResultPresenter {
+class GetXSurveyResultPresenter extends GetxController  with SessionManager, LoadingManager implements SurveyResultPresenter {
   GetXSurveyResultPresenter({@required this.loadSurveyResult, @required this.surveyId});
 
   final LoadSurveyResult loadSurveyResult;

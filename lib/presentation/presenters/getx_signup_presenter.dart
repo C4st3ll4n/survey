@@ -9,7 +9,7 @@ import '../../ui/helpers/errors/errors.dart';
 import '../../ui/pages/pages.dart';
 import '../../domain/helpers/domain_error.dart';
 
-class GetXSignUpPresenter with LoadingManager, NavigationManager, FormManager, UIErrorManager implements SignUpPresenter {
+class GetXSignUpPresenter extends GetxController with LoadingManager, NavigationManager, FormManager, UIErrorManager implements SignUpPresenter {
   final Validation validation;
   final AddAccount addAccount;
   final SaveCurrentAccount saveCurrentAccount;
