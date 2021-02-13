@@ -8,7 +8,8 @@ import '../../components/reload_screen.dart';
 import '../../mixins/mixins.dart';
 import '../../helpers/helpers.dart';
 
-class SurveysPage extends StatelessWidget with LoadingManager{
+class SurveysPage extends StatelessWidget
+    with LoadingManager, SessionManager, NavigationManager {
   final SurveysPresenter presenter;
 
   const SurveysPage({Key key, @required this.presenter}) : super(key: key);
@@ -24,32 +25,29 @@ class SurveysPage extends StatelessWidget with LoadingManager{
       body: Builder(
         builder: (_) {
           handleLoading(stream: presenter.isLoadingStream, contexto: _);
-  
-          presenter.navigateToStream.listen(
-                  (page) {
-                if (page?.isNotEmpty == true) {
-                  Get.toNamed(page);
-                }
-              }
-          );
-          
-          presenter.isSessionExpiredStream.listen(
-                  (isExpired) {
-                if (isExpired==true) {
-                  Get.offAllNamed("/login");
-                }
-              }
+
+          handleNavigation(contexto: _, stream: presenter.navigateToStream);
+
+          handleSession(
+            stream: presenter.isSessionExpiredStream,
+            contexto: _,
           );
 
           return StreamBuilder<List<SurveyViewModel>>(
               stream: presenter.surveysStream,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return ReloadScreen(error: snapshot.error, reload: presenter.loadData,);
+                  return ReloadScreen(
+                    error: snapshot.error,
+                    reload: presenter.loadData,
+                  );
                 }
                 if (snapshot.hasData) {
-                  return Provider(create: (BuildContext context) => presenter,
-                  child: SurveyItens(data: snapshot.data,));
+                  return Provider(
+                      create: (BuildContext context) => presenter,
+                      child: SurveyItens(
+                        data: snapshot.data,
+                      ));
                 } else {
                   return Container(
                     width: 0,
