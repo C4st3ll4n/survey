@@ -9,7 +9,7 @@ import '../../ui/helpers/errors/errors.dart';
 import '../../ui/pages/pages.dart';
 import '../../domain/helpers/domain_error.dart';
 
-class GetXSignUpPresenter with LoadingManager, NavigationManager implements SignUpPresenter {
+class GetXSignUpPresenter with LoadingManager, NavigationManager, FormManager, UIErrorManager implements SignUpPresenter {
   final Validation validation;
   final AddAccount addAccount;
   final SaveCurrentAccount saveCurrentAccount;
@@ -23,9 +23,7 @@ class GetXSignUpPresenter with LoadingManager, NavigationManager implements Sign
   var _nameError = Rx<UIError>();
   var _passwordConfirmationError = Rx<UIError>();
   var _passwordError = Rx<UIError>();
-  var _mainError = Rx<UIError>();
 
-  var _isFormValid = false.obs;
   GetXSignUpPresenter(
       {@required this.validation,
       @required this.addAccount,
@@ -42,13 +40,13 @@ class GetXSignUpPresenter with LoadingManager, NavigationManager implements Sign
   Stream<UIError> get emailErrorStream => _emailError.stream.distinct();
 
   @override
-  Stream<bool> get isFormValidStream => _isFormValid.stream.distinct();
+  Stream<bool> get isFormValidStream => validFormStream;
 
   @override
   Stream<bool> get isLoadingStream => loadingStream;
 
   @override
-  Stream<UIError> get mainErrorStream => _mainError.stream.distinct();
+  Stream<UIError> get mainErrorStream => uiErrorStream;
 
   @override
   Stream<UIError> get passwordErrorStream => _passwordError.stream.distinct();
@@ -58,7 +56,7 @@ class GetXSignUpPresenter with LoadingManager, NavigationManager implements Sign
 
   @override
   Future<void> signup() async {
-    _mainError.value = null;
+    uiError = null;
     isLoading = true;
 
     try {
@@ -75,16 +73,16 @@ class GetXSignUpPresenter with LoadingManager, NavigationManager implements Sign
     } on DomainError catch (error) {
       switch (error) {
         case DomainError.unexpected:
-          _mainError.value = UIError.unexpected;
+          uiError = UIError.unexpected;
           break;
         case DomainError.invalidCredentials:
-          _mainError.value = UIError.invalidCredentials;
+          uiError = UIError.invalidCredentials;
           break;
         case DomainError.emailInUse:
-          _mainError.value = UIError.emailInUse;
+          uiError = UIError.emailInUse;
           break;
         case DomainError.accessDenied:
-          _mainError.value = UIError.unexpected;
+          uiError = UIError.unexpected;
           break;
       }
       isLoading = false;
@@ -140,7 +138,7 @@ class GetXSignUpPresenter with LoadingManager, NavigationManager implements Sign
     validateForm();
   }
 
-  void validateForm() => _isFormValid.value = _emailError.value == null &&
+  void validateForm() => formStatus = _emailError.value == null &&
       _nameError.value == null &&
       _passwordConfirmationError.value == null &&
       _passwordError.value == null &&
