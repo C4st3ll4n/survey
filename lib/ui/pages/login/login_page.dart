@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:survey/ui/mixins/keyboard_manager.dart';
 import 'components/components.dart';
 import '../pages.dart';
 import '../../helpers/i18n/i18n.dart';
 import '../../components/components.dart';
 import '../../helpers/errors/errors.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatelessWidget with KeyboardManager{
   
   final LoginPresenter presenter;
 
@@ -17,13 +18,6 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
   
-    void _hideKeyboard() {
-      final _currentFocus = FocusScope.of(context);
-      if(_currentFocus.hasPrimaryFocus){
-        _currentFocus.unfocus();
-      }
-    }
-    
     return Scaffold(
       body: Builder(
         builder: (contexto) {
@@ -54,7 +48,7 @@ class LoginPage extends StatelessWidget {
           );
           
           return GestureDetector(
-            onTap: _hideKeyboard,
+            onTap:()=> hideKeyboard(context),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
