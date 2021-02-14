@@ -2,6 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:survey/data/usecases/usecases.dart';
 import 'package:survey/domain/entities/entities.dart';
+import 'package:survey/domain/helpers/helpers.dart';
 import 'package:survey/main/composites/composites.dart';
 import 'package:test/test.dart';
 
@@ -31,6 +32,9 @@ void main() {
   void mockRemoteSuccess({SurveyResultEntity entity}) =>
       _mockRemoteCall().thenAnswer((_) async => entity);
 
+  void mockLocalSuccess({SurveyResultEntity entity}) =>
+      _mockLocalCall().thenAnswer((_) async => entity);
+
   SurveyResultEntity mockSurveyResult() => SurveyResultEntity(
         surveyId: faker.guid.guid(),
         question: faker.lorem.sentence(),
@@ -42,6 +46,11 @@ void main() {
         ],
       );
 
+  void mockLocalError()=> _mockLocalCall().thenThrow(DomainError.unexpected);
+
+  void mockRemoteError(DomainError error)=> _mockRemoteCall().thenThrow(error);
+
+
   setUp(() {
     remoteSpy = RemoteSpy();
     localSpy = LocalSpy();
@@ -52,6 +61,7 @@ void main() {
 
     mockedSurvey = mockSurveyResult();
     mockRemoteSuccess(entity: mockedSurvey);
+    mockLocalSuccess(entity: mockedSurvey);
   });
   test("Should call remote loadBySurvey", () async {
     await sut.loadBySurvey(surveyId: surveyId);
@@ -68,4 +78,27 @@ void main() {
     final resultEntity = await sut.loadBySurvey(surveyId: surveyId);
     expect(resultEntity, mockedSurvey);
   });
+
+  test("Should return local surveys", () async {
+    mockRemoteError(DomainError.unexpected);
+    final survey = await sut.loadBySurvey(surveyId: surveyId);
+  
+    expect(mockedSurvey, survey);
+  });
+
+
+
+  test("Should rethrow when remote throws AccessDeniedError", () async {
+    mockRemoteError(DomainError.accessDenied);
+    final future = sut.loadBySurvey(surveyId: surveyId);
+    expect(future, throwsA(DomainError.accessDenied));
+  });
+
+  test("Should rethrow when local throws ", () async {
+    mockRemoteError(DomainError.unexpected);
+    mockLocalError();
+    final future = sut.loadBySurvey(surveyId: surveyId);
+    expect(future, throwsA(DomainError.unexpected));
+  });
+  
 }
