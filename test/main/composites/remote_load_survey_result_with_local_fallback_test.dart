@@ -74,6 +74,16 @@ void main() {
     verify(localSpy.save(surveyId, resultEntity)).called(1);
   });
 
+
+  test("Should call local fetch on remote errro", () async {
+    mockRemoteError(DomainError.unexpected);
+    await sut.loadBySurvey(surveyId: surveyId);
+    verify(localSpy.validate(surveyId)).called(1);
+    verify(localSpy.loadBySurvey(surveyId: surveyId)).called(1);
+  
+  });
+
+
   test("Should return remote data", () async {
     final resultEntity = await sut.loadBySurvey(surveyId: surveyId);
     expect(resultEntity, mockedSurvey);
@@ -85,8 +95,6 @@ void main() {
   
     expect(mockedSurvey, survey);
   });
-
-
 
   test("Should rethrow when remote throws AccessDeniedError", () async {
     mockRemoteError(DomainError.accessDenied);
