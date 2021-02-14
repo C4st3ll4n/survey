@@ -64,5 +64,8 @@ void main() {
     verify(localSpy.save(surveyId, resultEntity)).called(1);
   });
 
-  test("Should return remote data", () async {});
+  test("Should return remote data", () async {
+    final resultEntity = await sut.loadBySurvey(surveyId: surveyId);
+    expect(resultEntity, mockedSurvey);
+  });
 }
