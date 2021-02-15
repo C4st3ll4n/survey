@@ -71,7 +71,7 @@ void main() {
 
   test("Should call local save with remote data", () async {
     final resultEntity = await sut.loadBySurvey(surveyId: surveyId);
-    verify(localSpy.save(surveyId, resultEntity)).called(1);
+    verify(localSpy.save(resultEntity)).called(1);
   });
 
 
