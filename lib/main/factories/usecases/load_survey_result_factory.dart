@@ -15,4 +15,4 @@ LoadSurveyResult _makeRemoteLoadSurveyResult(String surveyId) =>
     );
 
 LoadSurveyResult _makeLocalLoadSurveyResult(String surveyId) =>
-    LocalLoadSurveyResult(cacheStorage: makeLocalStorageAdapter());//FIXME
+    LocalLoadSurveyResult(cacheStorage: makeLocalStorageAdapter());

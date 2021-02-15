@@ -275,7 +275,7 @@ void main() {
         ]
       };
 
-      await sut.save(resultEntity.surveyId, resultEntity);
+      await sut.save(resultEntity);
       verify(cacheStorageSpy.save(
               key: 'survey_result/${resultEntity.surveyId}', value: list))
           .called(1);
@@ -284,7 +284,7 @@ void main() {
     test("Should throw UnexpectedError if save throws", () async {
       _mockFCSError();
 
-      final future = sut.save(resultEntity.surveyId, resultEntity);
+      final future = sut.save( resultEntity);
 
       expect(future, throwsA(DomainError.unexpected));
     });

@@ -18,7 +18,7 @@ class RemoteLoadSurveyResultWithLocalFallback implements LoadSurveyResult {
 	  try{
 		
 		  final survey = await remote.loadBySurvey(surveyId: surveyId);
-		  await local.save(surveyId, survey);
+		  await local.save(survey);
 		  return survey;
 	  }catch(err){
 		  if(err == DomainError.accessDenied){
