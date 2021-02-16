@@ -14,8 +14,8 @@ class RemoteSaveSurveyResult implements SaveSurveyResult {
   @override
   Future<SurveyResultEntity> save({String answer}) async{
     try{
-      final response = await httpClient.request(url: url, method: "put", body: {'answer':answer});
-      //return response;
+      final json = await httpClient.request(url: url, method: "put", body: {'answer':answer});
+      return RemoteSurveyResultModel.fromJson(json).toEntity();
     }on HttpError catch(error){
       throw error == HttpError.forbidden?
           DomainError.accessDenied:
