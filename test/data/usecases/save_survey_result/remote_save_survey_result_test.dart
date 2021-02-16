@@ -72,6 +72,45 @@ void main() {
     );
   });
 
+
+  test("Should return survey on 200", () async {
+    final response = await sut.save(answer: mockedAnswer);
+  
+    expect(response,
+      SurveyResultEntity(
+        surveyId: surveyResult['surveyId'],
+        question: surveyResult['question'],
+        answers: [
+          SurveyAnswerEntity(
+              answer: surveyResult['answers'][0]['answer'],
+              percent: surveyResult['answers'][0]['percent'],
+              isCurrentAnswer: surveyResult['answers'][0]
+              ['isCurrentAccountAnswer'],
+              image: surveyResult['answers'][0]['image']),
+          SurveyAnswerEntity(
+            answer: surveyResult['answers'][1]['answer'],
+            percent: surveyResult['answers'][1]['percent'],
+            isCurrentAnswer: surveyResult['answers'][1]
+            ['isCurrentAccountAnswer'],
+          ),
+        ],
+      ),
+    );
+  });
+
+  test(
+    "Shoud throw an UnexpectedError if HttpClient returns 200 with invalid data",
+        () async {
+      mockSuccessCall({"random": faker.randomGenerator.string(50)});
+
+      final future = sut.save(answer: mockedAnswer);
+    
+      expect(
+        future,
+        throwsA(DomainError.unexpected),
+      );
+    },
+  );
   
 
   /// TEST ON 404
