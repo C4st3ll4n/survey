@@ -7,9 +7,10 @@ import '../../domain/usecases/usecases.dart';
 import '../../ui/pages/pages.dart';
 
 class GetXSurveyResultPresenter extends GetxController  with SessionManager, LoadingManager implements SurveyResultPresenter {
-  GetXSurveyResultPresenter({@required this.loadSurveyResult, @required this.surveyId});
+  GetXSurveyResultPresenter({@required this.loadSurveyResult, @required this.surveyId, @required this.saveSurveyResult, });
 
   final LoadSurveyResult loadSurveyResult;
+  final SaveSurveyResult saveSurveyResult;
   final String surveyId;
   
   var _dataStream = Rx<SurveyResultViewModel>();
@@ -43,7 +44,7 @@ class GetXSurveyResultPresenter extends GetxController  with SessionManager, Loa
       _dataStream.stream.distinct();
 
   @override
-  Future<void> save({String answer}) {
-    throw UnimplementedError();
+  Future<void> save({String answer}) async {
+    await saveSurveyResult.save(answer: answer);
   }
 }
