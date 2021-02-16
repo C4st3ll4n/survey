@@ -196,9 +196,25 @@ void main() {
         await tester.pump();
       });
     
+      await tester.tap(find.text("answer 1"));
+    
+      verify(presenter.save(answer:"answer 1")).called(1);
+    },
+  );
+  
+  testWidgets(
+    "Shouldnt call save on list item clicked when its the current answer",
+        (tester) async {
+      await loadPage(tester);
+    
+      loadSurveyResultController.add(makeSurveyResult());
+      await provideMockedNetworkImages(()async{
+        await tester.pump();
+      });
+    
       await tester.tap(find.text("answer 0"));
     
-      verify(presenter.save(answer:"answer 0")).called(1);
+      verifyNever(presenter.save(answer:"answer 0"));
     },
   );
   

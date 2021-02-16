@@ -24,10 +24,12 @@ class SurveyResult extends StatelessWidget {
             question: viewModel.question,
           );
         } else {
+          final answer = viewModel.answers[indice - 1];
           return GestureDetector(
-              onTap:()=>onSave(answer:viewModel.answers[indice - 1].answer),
+              onTap: () =>
+                  answer.isCurrentAnswer ? null : onSave(answer: answer.answer),
               child: SurveyAnswer(
-                viewModel: viewModel.answers[indice - 1],
+                viewModel: answer,
               ));
         }
       },
