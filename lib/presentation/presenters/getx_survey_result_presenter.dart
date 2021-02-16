@@ -41,4 +41,9 @@ class GetXSurveyResultPresenter extends GetxController  with SessionManager, Loa
   @override
   Stream<SurveyResultViewModel> get surveyResultStream =>
       _dataStream.stream.distinct();
+
+  @override
+  Future<void> save({String answer}) {
+    throw UnimplementedError();
+  }
 }
