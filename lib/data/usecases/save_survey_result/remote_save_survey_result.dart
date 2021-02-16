@@ -12,19 +12,14 @@ class RemoteSaveSurveyResult implements SaveSurveyResult {
   RemoteSaveSurveyResult({@required this.httpClient, @required this.url});
 
   @override
-  Future<SurveyResultEntity> loadBySurvey({String surveyId}) async{
-    try{
-      final json = await httpClient.request(url: url, method: 'get');
-      return RemoteSurveyResultModel.fromJson(json).toEntity();
-    }
-    on HttpError catch(e, stck){
-      throw e == HttpError.forbidden? DomainError.accessDenied:
-      DomainError.unexpected;
-    }
-  }
-
-  @override
   Future<SurveyResultEntity> save({String answer}) async{
-    await httpClient.request(url: url, method: "put", body: {'answer':answer});
+    try{
+      final response = await httpClient.request(url: url, method: "put", body: {'answer':answer});
+      //return response;
+    }on HttpError catch(error){
+      throw error == HttpError.forbidden?
+          DomainError.accessDenied:
+          DomainError.unexpected;
+    }
   }
 }
