@@ -45,7 +45,7 @@ class GetXSurveyResultPresenter extends GetxController
     isLoading = true;
     try {
       final entity = await action();
-      _dataStream.value = SurveyResultViewModel.fromEntity(entity);
+      _dataStream.subject.add(SurveyResultViewModel.fromEntity(entity));
     } on DomainError catch (e) {
       if (e == DomainError.accessDenied) {
         isExpired = true;
