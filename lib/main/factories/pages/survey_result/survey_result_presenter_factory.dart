@@ -4,4 +4,4 @@ import '../../../../presentation/presenters/presenters.dart';
 
 SurveyResultPresenter makeGetXSurveyResultPresenter(String surveyId)
 => GetXSurveyResultPresenter(loadSurveyResult: makeLoadSurveyResult(surveyId),
-		surveyId: surveyId);
+		surveyId: surveyId, saveSurveyResult: makeSaveSurveyResult(surveyId));
