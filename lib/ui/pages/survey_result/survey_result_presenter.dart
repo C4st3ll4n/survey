@@ -1,4 +1,5 @@
-import 'package:survey/ui/pages/survey_result/survey_result.dart';
+import 'package:meta/meta.dart';
+import 'survey_result.dart';
 
 abstract class SurveyResultPresenter{
 	Stream<bool> get isSessionExpiredStream;
@@ -7,4 +8,5 @@ abstract class SurveyResultPresenter{
 	Stream<SurveyResultViewModel> get surveyResultStream;
 	
 	Future<void> loadData();
+	Future<void> save({@required String answer});
 }

@@ -184,4 +184,22 @@ void main() {
     await tester.pump();
     expect(Get.currentRoute, "/survey_result/any_survey_id");
   });
+
+
+  testWidgets(
+    "Shoud call save on list item clicked",
+        (tester) async {
+      await loadPage(tester);
+    
+      loadSurveyResultController.add(makeSurveyResult());
+      await provideMockedNetworkImages(()async{
+        await tester.pump();
+      });
+    
+      await tester.tap(find.text("answer 0"));
+    
+      verify(presenter.save(answer:"answer 0")).called(1);
+    },
+  );
+  
 }
