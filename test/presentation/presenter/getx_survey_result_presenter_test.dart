@@ -15,7 +15,8 @@ void main() {
   SurveyResultPresenter sut;
   LoadSurveyResult loadSurveysResult;
   SaveSurveyResult saveSurveyResult;
-  SurveyResultEntity survey;
+  SurveyResultEntity loadSurveyEntity;
+  SurveyResultEntity saveSurveyEntity;
   String surveyId, answer;
   
   SurveyResultEntity makeSurvey() =>
@@ -34,18 +35,6 @@ void main() {
                 isCurrentAnswer: faker.randomGenerator.boolean()),
           ],);
 
-  PostExpectation _mockLoadSurveysCall() => when(
-    loadSurveysResult.loadBySurvey(surveyId: anyNamed("surveyId")),
-      );
-
-  void mockLoadSurveyResult(SurveyResultEntity data) {
-    survey = data;
-    _mockLoadSurveysCall().thenAnswer((_) async => survey);
-  }
-
-  void mockErrorLoadSurveys(DomainError error) =>
-      _mockLoadSurveysCall().thenThrow(error);
-
   setUp(() {
     surveyId = faker.guid.guid();
     answer = faker.lorem.sentence();
@@ -53,10 +42,25 @@ void main() {
     saveSurveyResult = SaveSurveyResultSpy();
     sut = GetXSurveyResultPresenter(loadSurveyResult: loadSurveysResult,
     surveyId: surveyId, saveSurveyResult: saveSurveyResult);
-    mockLoadSurveyResult(makeSurvey());
   });
 
   group("Load", (){
+  
+    PostExpectation _mockLoadSurveysCall() => when(
+      loadSurveysResult.loadBySurvey(surveyId: anyNamed("surveyId")),
+    );
+  
+    void mockLoadSurveyResult(SurveyResultEntity data) {
+      loadSurveyEntity = data;
+      _mockLoadSurveysCall().thenAnswer((_) async => loadSurveyEntity);
+    }
+  
+    void mockErrorLoadSurveys(DomainError error) =>
+        _mockLoadSurveysCall().thenThrow(error);
+  
+    setUp((){
+      mockLoadSurveyResult(makeSurvey());
+    });
   
     test("Should call loadBySurvey on LoadData", () async {
       await sut.loadData();
@@ -72,7 +76,7 @@ void main() {
               (surveyResult) {
             expect(
                 surveyResult,
-                SurveyResultViewModel.fromEntity(survey)
+                SurveyResultViewModel.fromEntity(loadSurveyEntity)
             );
           },
         ),
@@ -111,13 +115,48 @@ void main() {
 
   group("Save", (){
   
+  
+    PostExpectation _mockSaveSurveysCall() => when(
+      saveSurveyResult.save(answer: anyNamed("answer")),
+    );
+  
+    void mockSaveSurveyResult(SurveyResultEntity data) {
+      saveSurveyEntity = data;
+      _mockSaveSurveysCall().thenAnswer((_) async => saveSurveyEntity);
+    }
+  
+    void mockErrorSaveSurveys(DomainError error) =>
+        _mockSaveSurveysCall().thenThrow(error);
+  
+    
+    setUp((){
+      mockSaveSurveyResult(makeSurvey());
+    });
+  
     test("Should call save on SaveSurveyResult", () async {
       await sut.save(answer: answer);
     
       verify(saveSurveyResult.save(answer: answer)).called(1);
     });
-    
-    
+
+
+    test("Should emits correct evens on success", () async {
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+  
+      sut.surveyResultStream.listen(
+        expectAsync1(
+              (surveyResult) {
+            expect(
+                surveyResult,
+                SurveyResultViewModel.fromEntity(saveSurveyEntity)
+            );
+          },
+        ),
+      );
+
+      await sut.save(answer: answer);
+    });
+  
   
   });
   
