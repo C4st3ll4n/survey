@@ -80,7 +80,7 @@ void main() {
 
   test("Should emits correct evens on failure", () async {
     mockErrorLoadSurveys(DomainError.unexpected);
-    
+
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     sut.surveysStream.listen(
       null,
@@ -96,15 +96,22 @@ void main() {
 
   test("Should emits correct events on accessDenied", () async {
     mockErrorLoadSurveys(DomainError.accessDenied);
-    
+
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     expectLater(sut.isSessionExpiredStream, emits(true));
 
     await sut.loadData();
   });
 
-  test("Should go to survey Result Page page on click", () async{
-    sut.navigateToStream.listen((page) => expect(page, "/survey_result/1"));
+  test("Should go to survey Result Page page on click", () async {
+    expectLater(
+        sut.navigateToStream,
+        emitsInOrder([
+          "/survey_result/1",
+          "/survey_result/1",
+        ]));
+
+    sut.goToSurveyResult('1');
     sut.goToSurveyResult('1');
   });
 }
