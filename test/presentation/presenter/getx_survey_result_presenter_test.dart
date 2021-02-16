@@ -156,6 +156,33 @@ void main() {
 
       await sut.save(answer: answer);
     });
+
+
+    test("Should emits correct evens on failure", () async {
+      mockErrorSaveSurveys(DomainError.unexpected);
+  
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+      sut.surveyResultStream.listen(
+        null,
+        onError: expectAsync1(
+              (error) {
+            expect(error, UIError.unexpected.description);
+          },
+        ),
+      );
+
+      await sut.save(answer: answer);
+    });
+
+
+    test("Should emits correct events on accessDenied", () async {
+      mockErrorSaveSurveys(DomainError.accessDenied);
+  
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+      expectLater(sut.isSessionExpiredStream, emits(true));
+  
+      await sut.save(answer: answer);
+    });
   
   
   });
