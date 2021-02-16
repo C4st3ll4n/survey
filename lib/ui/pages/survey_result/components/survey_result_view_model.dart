@@ -23,8 +23,8 @@ class SurveyResultViewModel extends Equatable {
 
   factory SurveyResultViewModel.fromEntity(SurveyResultEntity entity) =>
       SurveyResultViewModel(
-          surveyId: entity.surveyId,
           question: entity.question,
+          surveyId: entity.surveyId,
           answers: entity.answers
               .map((e) => SurveyAnswerViewModel.fromEntity(e))
               .toList());
