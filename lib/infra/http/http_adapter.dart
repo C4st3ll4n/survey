@@ -41,6 +41,9 @@ class HttpAdapter implements HttpClient {
             .timeout(
               Duration(seconds: 10),
             );
+      } else if (method == "put") {
+        response =
+            await client.put(url, headers: defaultHeaders, body: jsonBody);
       }
     } catch (e, stck) {
       throw HttpError.serverError;
