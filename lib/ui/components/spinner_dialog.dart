@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 void showSimpleLoading(BuildContext contexto){
 	showDialog(
 		context: contexto,
-		barrierDismissible: false,
+		barrierDismissible: true,
 		child: SimpleDialog(
 			children: [
 				Column(

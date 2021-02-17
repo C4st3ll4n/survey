@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:meta/meta.dart';
 import 'package:survey/domain/entities/entities.dart';
@@ -53,7 +55,10 @@ class GetXSurveyResultPresenter extends GetxController
         _dataStream.subject
             .addError(UIError.unexpected.description, StackTrace.empty);
       }
-    } finally {
+    } catch(e, stck){
+      log(e.toString(), stackTrace: stck);
+    }
+    finally {
       isLoading = false;
     }
   }

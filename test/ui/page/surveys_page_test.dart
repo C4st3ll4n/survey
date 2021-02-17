@@ -50,8 +50,13 @@ void main() {
     presenter = SurveysPresenterSpy();
     _initStream();
     _mockStream();
+    final routeObserver = Get.put<RouteObserver>(RouteObserver<PageRoute>());
+
     final surveysPage = GetMaterialApp(
       initialRoute: "/surveys",
+      navigatorObservers: [
+        routeObserver,
+      ],
       getPages: [
         GetPage(
             name: "/surveys",
@@ -61,6 +66,9 @@ void main() {
         GetPage(
           name: "/fake_page",
           page: () => Scaffold(
+            appBar: AppBar(
+              title: Text("Fake tittle"),
+            ),
             body: Text("Fake Page"),
           ),
         ),
@@ -211,7 +219,7 @@ void main() {
     await tester.pump();
     expect(Get.currentRoute, "/surveys");
   });
-  
+
   testWidgets(
     "Shoud logout",
     (tester) async {
@@ -234,6 +242,15 @@ void main() {
     isSessionExpiredController.add(null);
     await tester.pump();
     expect(Get.currentRoute, "/surveys");
+  });
+
+  testWidgets("Should call LoadSurveys on page reload",
+      (WidgetTester tester) async {
+    await loadPage(tester);
+    navigateToController.add("/fake_page");
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    verify(presenter.loadData()).called(2);
   });
 }
 
